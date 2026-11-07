@@ -850,7 +850,7 @@ export interface components {
         };
         /**
          * @description * `pending_payment` - Aguardando pagamento
-         *     * `paid` - Recebido
+         *     * `paid` - Confirmado
          *     * `in_production` - Em produção
          *     * `shipped` - Enviado
          *     * `delivered` - Entregue

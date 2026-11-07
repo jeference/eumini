@@ -323,7 +323,7 @@ stateDiagram-v2
 
 **No MVP**, o pagamento cria os jobs em `unassigned`, e nenhuma tela os avança. As transições de produção e envio só serão acionadas pelo app de parceiros, com o status do pedido derivado dos jobs. Neste app, os estados alcançáveis do pedido são `pending_payment`, `paid`, `expired` e `refunded`.
 
-**Rótulos para o cliente:** `pending_payment` = Aguardando pagamento · `paid` = Recebido · `in_production` = Em produção · `shipped` = Enviado · `delivered` = Entregue · `expired` = Expirado · `refunded` = Reembolsado.
+**Rótulos para o cliente:** `pending_payment` = Aguardando pagamento · `paid` = Confirmado · `in_production` = Em produção · `shipped` = Enviado · `delivered` = Entregue · `expired` = Expirado · `refunded` = Reembolsado.
 
 ---
 

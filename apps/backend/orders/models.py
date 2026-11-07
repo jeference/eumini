@@ -70,7 +70,7 @@ class Order(BaseModel):
 
     class Status(models.TextChoices):
         PENDING_PAYMENT = "pending_payment", "Aguardando pagamento"
-        PAID = "paid", "Recebido"
+        PAID = "paid", "Confirmado"
         IN_PRODUCTION = "in_production", "Em produção"
         SHIPPED = "shipped", "Enviado"
         DELIVERED = "delivered", "Entregue"

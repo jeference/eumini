@@ -14,7 +14,7 @@ export type CreationStatus = "generating_image" | "image_failed" | "ready";
 /** `Record` exaustivo: um status novo sem rótulo é erro de compilação. */
 export const ORDER_STATUS: Record<OrderStatus, { label: string; tone: StatusTone }> = {
   pending_payment: { label: "Aguardando pagamento", tone: "neutral" },
-  paid: { label: "Recebido", tone: "progress" },
+  paid: { label: "Confirmado", tone: "progress" },
   in_production: { label: "Em produção", tone: "progress" },
   shipped: { label: "Enviado", tone: "progress" },
   delivered: { label: "Entregue", tone: "success" },

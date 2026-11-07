@@ -122,7 +122,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | 6 | **Checkout** | Informa e-mail, nome, CPF, telefone e endereço. Escolhe o frete | Preenche o endereço pelo CEP (P1), cota o frete e mostra o total |
 | 7 | **Pagamento** | Paga o PIX por QR Code ou copia e cola | Mostra o prazo de 30 minutos e aguarda a confirmação |
 | 8 | **Pedido confirmado** | Vê o número e o prazo | Envia e-mail com link de acompanhamento |
-| 9 | **Acompanhar** | Consulta o status e o rastreio | Mostra Recebido → Em produção → Enviado → Entregue |
+| 9 | **Acompanhar** | Consulta o status e o rastreio | Mostra Confirmado → Em produção → Enviado → Entregue |
 
 ### 5.2 Estados de exceção
 
@@ -142,7 +142,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 
 ### 5.3 Depois do pagamento
 
-O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Recebido**. Os status seguintes (Em produção, Enviado, Entregue) e o rastreio aparecem para o cliente assim que são informados pelo app de parceiros, fora deste app.
+O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confirmado**. Os status seguintes (Em produção, Enviado, Entregue) e o rastreio aparecem para o cliente assim que são informados pelo app de parceiros, fora deste app.
 
 ---
 
@@ -316,7 +316,7 @@ Não há metas numéricas ainda: as primeiras semanas servem para formar a linha
 | **Abuso da geração aberta** | Alto: gasto sem venda | Cotas, limite por IP e teto global |
 | **Margem incorreta.** O preço é fixo por tamanho, e nenhuma peça é medida antes da compra. Uma peça maciça, ou a purga das 4 cores, pode custar mais que o previsto | Alto: venda com prejuízo, sem ninguém perceber | Calibrar a tabela com impressões reais e acompanhar o custo de cada pedido |
 | **Peça muito pequena.** 4 cm em FDM com várias cores pode não ser viável | Médio | Testar antes de lançar. Tamanhos inviáveis ficam inativos |
-| **Pedido pago sem tratamento.** Este app não tem operação: sem o app de parceiros, nenhuma tela do sistema mostra pedidos, entrega os arquivos ou registra o rastreio, e o cliente fica parado em "Recebido" | **Crítico** | O app de parceiros é o próximo passo depois do app do cliente, e vendas reais só começam com a operação pronta |
+| **Pedido pago sem tratamento.** Este app não tem operação: sem o app de parceiros, nenhuma tela do sistema mostra pedidos, entrega os arquivos ou registra o rastreio, e o cliente fica parado em "Confirmado" | **Crítico** | O app de parceiros é o próximo passo depois do app do cliente, e vendas reais só começam com a operação pronta |
 | **Só PIX reduz a conversão** em compras de maior valor | Médio | Medir o abandono no pagamento. O gateway também oferece cartão |
 | **Provedor único de IA** | Médio | Toda integração fica isolada, permitindo trocar de provedor |
 
