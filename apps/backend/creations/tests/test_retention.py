@@ -15,12 +15,25 @@ def test_deleted_creation_without_order_is_purged_after_period(visitor_client):
     detail = make_ready_creation(visitor_client)
     creation = Creation.objects.get(globalid=detail["id"])
     Creation.objects.filter(pk=creation.pk).update(deleted_at=timezone.now() - timedelta(days=31))
-    # A imagem gerada e a foto enviada.
-    assert purge_expired_assets()["generated"] == 2
+    # A imagem gerada, a foto normalizada e a foto original.
+    assert purge_expired_assets()["generated"] == 3
     creation.current_version.asset.refresh_from_db()
     creation.input.photo.refresh_from_db()
+    creation.input.original_photo.refresh_from_db()
     assert creation.current_version.asset.purged_at is not None
     assert creation.input.photo.purged_at is not None
+    assert creation.input.original_photo.purged_at is not None
+
+
+def test_original_photo_expires_with_the_normalized_photo(visitor_client):
+    detail = make_ready_creation(visitor_client)
+    creation = Creation.objects.get(globalid=detail["id"])
+    Creation.objects.filter(pk=creation.pk).update(created_at=timezone.now() - timedelta(days=91))
+    assert purge_expired_assets()["photos"] == 1
+    creation.input.photo.refresh_from_db()
+    creation.input.original_photo.refresh_from_db()
+    assert creation.input.photo.purged_at is not None
+    assert creation.input.original_photo.purged_at is not None
 
 
 def test_assets_on_orders_are_never_purged(visitor_client):
@@ -34,6 +47,7 @@ def test_assets_on_orders_are_never_purged(visitor_client):
     )
     assert purge_expired_assets()["generated"] == 0
     assert item.version.asset.purged_at is None
+    assert item.creation.input.original_photo.purged_at is None
 
 
 def test_inactive_visitor_is_removed_and_creation_hidden(visitor_client):

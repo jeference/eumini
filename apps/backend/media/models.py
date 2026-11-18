@@ -7,6 +7,7 @@ class Asset(BaseModel):
     """Um arquivo no storage. O arquivo pode ser expurgado; o registro permanece."""
 
     class Kind(models.TextChoices):
+        ORIGINAL = "original", "Foto original do cliente"
         PHOTO = "photo", "Foto do cliente"
         IMAGE = "image", "Imagem gerada"
         PRODUCTION = "production", "Arquivo de produção"

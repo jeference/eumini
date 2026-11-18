@@ -21,7 +21,8 @@ class S3MediaAdapter(MediaStoragePort):
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY or None,
             endpoint_url=settings.AWS_S3_ENDPOINT_URL or None,
             region_name=settings.AWS_S3_REGION_NAME or None,
-            config=Config(signature_version="s3v4"),
+            # Endpoint regional: o global redireciona buckets novos e invalida a URL assinada.
+            config=Config(signature_version="s3v4", s3={"addressing_style": "virtual"}),
         )
 
     @property
@@ -36,7 +37,8 @@ class S3MediaAdapter(MediaStoragePort):
             response = self._client.get_object(Bucket=self._bucket, Key=key)
         except self._client.exceptions.NoSuchKey:
             return None
-        return response["Body"].read()
+        with response["Body"] as body:
+            return body.read()
 
     def delete(self, *, key: str) -> None:
         self._client.delete_object(Bucket=self._bucket, Key=key)

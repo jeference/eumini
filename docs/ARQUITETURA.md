@@ -480,25 +480,32 @@ A tabela é conferida com impressões reais antes do lançamento ([PRD](PRD.md#c
 
 ## 15. Storage e acesso
 
-**Um bucket privado:** fotos, imagens e arquivos de produção, sempre por URL assinada. Miniaturas de estilo são arquivos estáticos do próprio app. Em desenvolvimento, o adapter local serve os arquivos por `/api/media/<token>/`, com token assinado.
+**Um bucket privado por ambiente** (`kubo-media-dev` e `kubo-media-prod`, em `sa-east-1`): fotos, imagens e arquivos de produção, sempre por URL assinada. Miniaturas de estilo são arquivos estáticos do próprio app. O adapter local, com arquivos servidos por `/api/media/<token>/` e token assinado, continua disponível para os testes.
+
+O script `apps/backend/scripts/provision_s3.py` cria e mantém essa configuração:
+
+- **Sem acesso público:** Block Public Access completo e ACLs desligadas (`BucketOwnerEnforced`).
+- **Criptografia:** AES256 em repouso, SSE-C bloqueado e acesso negado sem TLS.
+- **Versionamento:** versões antigas expiram em 7 dias, para que o expurgo apague o arquivo de verdade.
+- **Acesso da aplicação:** um usuário IAM por ambiente (`kubo-app-<env>`), limitado ao bucket do próprio ambiente.
 
 Como as URLs assinadas mudam a cada resposta, o frontend reaproveita a URL de cada imagem enquanto ela vale, para o polling não baixar tudo de novo.
 
-- **Upload de foto:** o frontend envia à API, que valida o tipo real, corrige a orientação, reduz a no máximo 1.024 px e grava. O caminho é mais simples que um upload pré-assinado e garante a validação no servidor. A limitação de 10 MB fica no servidor e no Next.
-- **Leitura:** a API verifica a posse e devolve URLs assinadas de curta duração (5 min [Proposta]) nos detalhes da criação.
+- **Upload de foto:** o frontend envia à API, que valida o tipo real, corrige a orientação e grava duas versões sem metadados (EXIF, GPS, XMP): o **original**, na resolução e no formato enviados, e a **normalizada**, em PNG de no máximo 1.024 px, usada na geração. O caminho é mais simples que um upload pré-assinado e garante a validação no servidor. A limitação de 10 MB fica no servidor e no Next.
+- **Leitura:** a API verifica a posse e devolve URLs assinadas de curta duração (5 min [Proposta]) nos detalhes da criação. O original nunca é entregue ao cliente.
 - **Produção:** arquivos e downloads só pelo app de parceiros, com acesso registrado. Nenhum endpoint deste app os entrega.
 
 ### Retenção [Proposta, depende de validação jurídica]
 
 | Dado | Sem pedido | Com pedido |
 |---|---|---|
-| Foto enviada | 90 dias, ou até 30 dias após exclusão | Até o fim do prazo legal e de garantia |
+| Foto enviada (original e normalizada) | 90 dias, ou até 30 dias após exclusão | Até o fim do prazo legal e de garantia |
 | Imagens geradas | Mantidas, ou até 30 dias após exclusão | Mantidas (RN-28) |
 | Prompts, custos e metadados de tarefas | Mantidos. Texto e dados pessoais são removidos a pedido | Mantidos |
 | Dados do pedido | - | Conforme obrigações fiscais |
 | Visitante inativo | Removido após 12 meses | Relação do pedido preservada |
 
-A tarefa `purge_expired_assets` aplica essas regras e nunca apaga arquivos ligados a um `OrderItem`.
+A tarefa `purge_expired_assets` aplica essas regras e nunca apaga arquivos ligados a um `OrderItem`. Depois do expurgo, a versão antiga do arquivo some do bucket em até 7 dias.
 
 **Volume esperado:** cerca de 1 a 2 MB por imagem PNG de 1.024 px, então o custo de storage não é preocupação inicial.
 

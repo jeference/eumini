@@ -3,14 +3,19 @@
 from __future__ import annotations
 
 import base64
+import io
 import json
+from urllib.parse import parse_qs, urlparse
 
 import pytest
 import requests
 import responses
+from botocore.response import StreamingBody
+from botocore.stub import Stubber
 
 from common.exceptions import ServiceBusy, UpstreamUnavailable
 from integrations.adapters.abacatepay import AbacatePayAdapter
+from integrations.adapters.media_s3 import S3MediaAdapter
 from integrations.adapters.melhor_envio import MelhorEnvioAdapter
 from integrations.adapters.runware import RunwareImageGenerationAdapter
 from integrations.adapters.viacep import ViaCepAdapter
@@ -266,3 +271,42 @@ def test_viacep():
     assert ViaCepAdapter().lookup(postal_code="01001000").city == "São Paulo"
     responses.get("https://viacep.com.br/ws/99999999/json/", json={"erro": "true"})
     assert ViaCepAdapter().lookup(postal_code="99999999") is None
+
+
+# --- S3 ---
+
+
+@pytest.fixture
+def s3_adapter(settings):
+    settings.AWS_ACCESS_KEY_ID = "AKIATESTE"
+    settings.AWS_SECRET_ACCESS_KEY = "segredo-teste"
+    settings.AWS_S3_ENDPOINT_URL = ""
+    settings.AWS_S3_REGION_NAME = "sa-east-1"
+    settings.AWS_STORAGE_BUCKET_NAME = "kubo-media-teste"
+    return S3MediaAdapter()
+
+
+def test_s3_put_and_get_use_the_private_bucket(s3_adapter):
+    target = {"Bucket": "kubo-media-teste", "Key": "photo/a.png"}
+    with Stubber(s3_adapter._client) as stub:
+        stub.add_response("put_object", {}, {**target, "Body": b"foto", "ContentType": "image/png"})
+        stub.add_response("get_object", {"Body": StreamingBody(io.BytesIO(b"foto"), 4)}, target)
+        s3_adapter.put(key="photo/a.png", data=b"foto", content_type="image/png")
+        assert s3_adapter.get(key="photo/a.png") == b"foto"
+        stub.assert_no_pending_responses()
+
+
+def test_s3_get_returns_none_for_missing_object(s3_adapter):
+    with Stubber(s3_adapter._client) as stub:
+        stub.add_client_error("get_object", "NoSuchKey", http_status_code=404)
+        assert s3_adapter.get(key="photo/nao-existe.png") is None
+
+
+def test_s3_signed_url_expires_and_is_signed(s3_adapter):
+    url = urlparse(s3_adapter.signed_url(key="image/a.png", ttl_seconds=300))
+    query = parse_qs(url.query)
+    assert url.hostname == "kubo-media-teste.s3.sa-east-1.amazonaws.com"
+    assert url.path == "/image/a.png"
+    assert query["X-Amz-Expires"] == ["300"]
+    assert query["X-Amz-Algorithm"] == ["AWS4-HMAC-SHA256"]
+    assert query["X-Amz-Signature"]

@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from conftest import creation_payload, drain_worker, make_ready_creation
-from creations.models import ProviderTask, QuotaReservation
+from creations.models import CreationInput, ProviderTask, QuotaReservation
+from media.models import Asset
 
 
 def _create(client, **fields):
@@ -25,6 +26,17 @@ def test_create_from_photo_and_request_is_ready_to_buy(visitor_client):
     assert task.kind == ProviderTask.Kind.PHOTO_TO_IMAGE
     assert "um gato" in task.rendered_prompt and task.prompt_version
     assert task.status == ProviderTask.Status.SUCCEEDED
+
+
+def test_create_stores_original_photo_without_exposing_it(visitor_client):
+    response = _create(visitor_client)
+    source = CreationInput.objects.get(creation__globalid=response.data["id"])
+    assert source.original_photo.kind == Asset.Kind.ORIGINAL
+    assert source.original_photo.key.startswith("original/")
+    drain_worker()
+    detail = visitor_client.get(f"/api/creations/{response.data['id']}/")
+    assert source.original_photo.key not in detail.content.decode()
+    assert "original_photo" not in detail.data
 
 
 def test_create_requires_photo(visitor_client):

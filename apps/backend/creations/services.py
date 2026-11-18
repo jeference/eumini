@@ -68,8 +68,11 @@ def start_creation(
     text = text.strip()
     if style not in prompts.STYLE_IDS:
         raise GuardFailed("Estilo inválido.", code="invalid_style")
-    normalized = media.normalize_photo(photo_bytes)
-    photo = media.store(data=normalized, kind=Asset.Kind.PHOTO, mime="image/png")
+    prepared = media.prepare_photo(photo_bytes)
+    original_photo = media.store(
+        data=prepared.original, kind=Asset.Kind.ORIGINAL, mime=prepared.original_mime
+    )
+    photo = media.store(data=prepared.normalized, kind=Asset.Kind.PHOTO, mime="image/png")
 
     with transaction.atomic():
         creation = Creation.objects.create(style=style, **actor.owner_fields())
@@ -77,6 +80,7 @@ def start_creation(
             creation=creation,
             text=text,
             photo=photo,
+            original_photo=original_photo,
             terms_version=settings.BUSINESS["TERMS_VERSION"],
         )
         _enqueue_image(actor=actor, ip_hash=ip_hash, creation=creation)
@@ -234,8 +238,10 @@ def purge_expired_assets() -> dict:
     photos = CreationInput.objects.filter(
         photo__isnull=False, photo__purged_at__isnull=True, creation__created_at__lt=photo_cutoff
     ).exclude(creation_id__in=with_order)
-    for source in photos.select_related("photo"):
+    for source in photos.select_related("photo", "original_photo"):
         media.purge(source.photo)
+        if source.original_photo is not None:
+            media.purge(source.original_photo)
         purged["photos"] += 1
 
     deleted_cutoff = now - timedelta(days=business["DELETED_CREATION_PURGE_DAYS"])
@@ -245,6 +251,8 @@ def purge_expired_assets() -> dict:
         source = getattr(creation, "input", None)
         if source is not None:
             assets.append(source.photo)
+            if source.original_photo is not None:
+                assets.append(source.original_photo)
         for asset in assets:
             if asset.purged_at is None:
                 media.purge(asset)

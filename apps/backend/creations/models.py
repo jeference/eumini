@@ -45,6 +45,9 @@ class CreationInput(BaseModel):
     creation = models.OneToOneField(Creation, on_delete=models.CASCADE, related_name="input")
     text = models.TextField(blank=True)
     photo = models.ForeignKey("media.Asset", on_delete=models.PROTECT, related_name="+")
+    original_photo = models.ForeignKey(
+        "media.Asset", null=True, blank=True, on_delete=models.PROTECT, related_name="+"
+    )
     terms_version = models.CharField(max_length=16, blank=True)
 
 
