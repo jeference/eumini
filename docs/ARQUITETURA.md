@@ -213,7 +213,7 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 | `Creation` | user **ou** visitor, status, categoria pedida (da página), categoria da foto, motivo da recusa, versão atual, excluída em | ● |
 | `CreationInput` | creation, pedido de alteração do cliente, foto (`Asset`, obrigatória), versão dos termos | ● |
 | `ImageVersion` | creation, parent (árvore de versões), origem (`text`, `photo`, `edit`), instrução, asset, tarefa, categoria (nula até ser classificada) | ● |
-| `Classification` | creation, versão (nula quando é a foto), tarefa, categoria pedida, resultado (categoria vendida ou motivo de recusa), contagem de pessoas e pets, confiança, probabilidades por classe, decisão (`accepted`, `rejected`, `asked`), resposta do cliente | ● |
+| `Classification` | creation, versão (nula quando é a foto), tarefa, categoria pedida, resultado (categoria vendida ou motivo de recusa), confiança e probabilidades por classe de quem aparece, probabilidade de personagem, decisão (`accepted`, `rejected`), modelo, versão do conjunto de perguntas | ● |
 | `WaitlistEntry` | e-mail, classificação que recusou, motivo, ator, consentimento (versão do texto e data), avisado em | ● |
 | `ProviderTask` | creation, tipo (`classify`, `generate`, `edit`), provedor, modelo, status, tentativas, próxima tentativa, prompt renderizado, versão do prompt, parâmetros, custo em USD, início e fim, erro, trava (`locked_until`) | ● |
 | `QuotaReservation` | ator, hash do IP, tipo, dia, estado (`reserved`, `consumed`, `released`), tarefa | ● |
@@ -229,7 +229,7 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 
 **Categorias são um enum em código:** `person`, `pet`, `couple`, `person_pet`. Os motivos de recusa também: `three_or_more_people`, `multiple_pets`, `group_with_pets`, `no_subject`, `protected_character`. Os quatro primeiros seguem a taxonomia da Pockella.
 
-**O estilo e os prompts ficam em código** (`catalog/prompts.py`), com uma versão explícita, montados em camadas: o estilo único, mais o bloco da categoria, mais o pedido do cliente. Os templates futuros entram como mais uma camada, entre a categoria e o pedido ([PRD](PRD.md#templates)). Mudar um prompt exige novo deploy e reteste contra as referências, e cada `ProviderTask` guarda o texto final enviado. Os estilos Livre, Pixar e Mini Pop saem do código, sem camada de compatibilidade.
+**O estilo e os prompts ficam em código** (`catalog/prompts.py`), com uma versão explícita, montados em camadas: o estilo único, mais o bloco da categoria, mais o pedido do cliente. Os templates futuros entram como mais uma camada, entre a categoria e o pedido ([PRD](PRD.md#templates)). Mudar um prompt exige novo deploy e reteste contra as referências, e cada `ProviderTask` guarda o texto final enviado. O estilo único é o que hoje se chama Pixar no código: o nome interno não importa, porque o cliente nunca vê o estilo. Os estilos Livre, Mini Pop e Chibi saem do código, sem camada de compatibilidade.
 
 ### Pedido (`orders`, `shipping`)
 
@@ -284,8 +284,6 @@ stateDiagram-v2
     [*] --> classifying
     classifying --> generating_image: foto aceita
     classifying --> rejected: fora das categorias
-    classifying --> needs_subject: classificador em dúvida
-    needs_subject --> generating_image: cliente escolheu
     classifying --> failed: erro do classificador
     generating_image --> ready: imagem pronta e classificada
     generating_image --> failed: falha ou recusa
@@ -293,7 +291,7 @@ stateDiagram-v2
     failed --> generating_image: tentar de novo, se falhou a geração
 ```
 
-`rejected` é final: outra foto é uma nova criação. `needs_subject` é [Proposta] e depende do limite de confiança definido no teste comparativo. Em `ready`, a compra já está aberta. Editar não muda o status da criação: a tarefa de edição produz uma nova `ImageVersion`, e só **concluir** altera a versão atual. Itens do carrinho guardam a própria versão, então uma edição posterior não os altera nem invalida. A exclusão é um campo à parte, não um estado.
+`rejected` é final: outra foto é uma nova criação. Em `ready`, a compra já está aberta. Editar não muda o status da criação: a tarefa de edição produz uma nova `ImageVersion`, e só **concluir** altera a versão atual. Itens do carrinho guardam a própria versão, então uma edição posterior não os altera nem invalida. A exclusão é um campo à parte, não um estado.
 
 ### `ProviderTask`
 
@@ -420,7 +418,7 @@ Os ports ficam em `integrations/ports/`, e cada adapter é escolhido por um cami
 | Port | Operações | Adapter do MVP | Stub |
 |---|---|---|---|
 | `ImageGenerationPort` | gerar de foto, editar; recebe o modelo de cada chamada | Runware (`openai:gpt-image@2`, reserva `google:4@2`) | Sim |
-| `ImageClassificationPort` | classificar foto, classificar versão; devolve resultado, contagens, confiança e probabilidades | A definir no teste comparativo, com reserva de outro provedor | Sim |
+| `ImageClassificationPort` | classificar foto, classificar versão; devolve resultado, confiança, probabilidades e a versão do conjunto de perguntas | Jev 1.14 (TypeSafe); reserva de outro provedor a definir | Sim |
 | `PaymentGatewayPort` | criar cobrança, consultar; reembolsar com o app de parceiros | AbacatePay | Sim |
 | `ShippingPort` | cotar | Melhor Envio | Sim |
 | `MediaStoragePort` | URL de upload, URL de download, gravar, apagar | S3 | Disco local |
@@ -646,7 +644,6 @@ Valores vêm do protótipo: `accent #7C3AED`, `accent-soft #F0E9FF`, `highlight 
 | `GET /api/quota/` | Ator | Cota restante |
 | `GET /api/catalog/products/` | Público | Categorias, com tamanhos ativos e preços |
 | `GET, POST /api/creations/` | Ator | Listar e criar (foto e categoria pedida obrigatórias, pedido de alteração opcional) |
-| `POST /api/creations/{id}/subject/` | Dono | Responder "Quem está na foto?" [Proposta] |
 | `POST /api/waitlist/` | Ator | Entrar na lista de espera a partir de uma criação recusada, com consentimento |
 | `GET, DELETE /api/creations/{id}/` | Dono | Detalhe (status, versões, edições) e exclusão |
 | `POST /api/creations/{id}/retry/` | Dono | Tentar de novo |
@@ -769,7 +766,7 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 | 5 | Prazos de retenção e redação de termos | Revisão jurídica |
 | 6 | Hospedagem e domínios definitivos. Os arquivos Docker existem, mas não foram executados | Decidir e testar antes de homologação |
 | 7 | Limites de cota e teto de gasto | Ajustar com dados reais |
-| 8 | Modelo e provedor do classificador, limite de confiança para o "Quem está na foto?" e modelo de reserva | Jev 1.14, direto na TypeSafe, aprovado no [teste de 19/11](classificador/README.md): 47 de 48 casos certos. Faltam o modelo de reserva, a comparação com OpenAI e Google, e um segundo conjunto de casos |
+| 8 | Modelo e provedor do classificador, e modelo de reserva | Jev 1.14, direto na TypeSafe, aprovado no [teste de 19/11](classificador/README.md): 47 de 48 casos certos. Faltam o modelo de reserva, a comparação com OpenAI e Google, e um segundo conjunto de casos |
 | 9 | Valores da tabela de preços por categoria | Provisórios no PRD; definitivos antes de produção |
 | 10 | Embalagem de Casal e Pessoa + Pet, mais largos que uma figura do mesmo tamanho | Medir nas amostras impressas |
 

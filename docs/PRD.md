@@ -97,7 +97,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | Catálogo de quatro figuras | Pockella | Igual: Pessoa, Pet, Casal e Pessoa + Pet, com os tamanhos de cada uma. Sem chaveiro |
 | Categoria decidida pela foto | Pockella | Igual: o classificador roda antes de gerar, e a página de entrada é só uma sugestão |
 | Recusa com caminho | Pockella | Igual: "Escolher outra foto" e, para grupos, "Recorte e nós fazemos", com lista de espera |
-| Estilo único | Pockella | Um estilo de figura, ajustado contra os designs da Pockella |
+| Estilo único | Pockella | Um estilo de figura. A Pockella usa chibi; a Kubo usa uma animação 3D estilizada, com cabeça só um pouco maior que a real, menos desproporcional que o chibi |
 | Cota reservada e debitada só no sucesso | Jujubit | Igual, valendo também para edição |
 | Retomar tarefas em andamento | Meshy Shop | Igual |
 | Botões de compra fixos no celular | Jujubit | Igual, sempre com o preço ao lado |
@@ -144,7 +144,6 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | Foto sem pessoa nem pet, personagem ou marca | "Precisamos de uma pessoa ou um pet na foto", com **Escolher outra foto** | Nada é gerado, a cota de geração não é tocada, a recusa é registrada |
 | Foto com 3 ou mais pessoas, 2 ou mais pets, ou grupo com pets | "Recorte e nós fazemos": explica as combinações aceitas, com **Enviar foto recortada** e **Me avise quando estiver pronto** | Igual à linha acima. O e-mail entra na lista de espera, com consentimento |
 | Categoria detectada diferente da página | Aviso com a categoria detectada e o novo preço "a partir de" | A geração segue na categoria detectada. O cliente pode cancelar e trocar a foto |
-| Classificador em dúvida [Proposta] | "Quem está na foto?", com as quatro opções e **Escolher outra foto** | A geração segue na categoria escolhida. A versão gerada é classificada de novo (RN-34) |
 | Edição muda quem aparece na imagem | A versão mostra a nova categoria e o novo preço. Se a nova categoria não for vendida, a versão não pode ser comprada, e o cliente vê o motivo | As outras versões continuam disponíveis |
 | Falha na geração | Mensagem clara e **Tentar de novo** | Cota devolvida |
 | Conteúdo recusado | O motivo em linguagem simples, junto da criação, e sugestão de ajuste | Cota devolvida, recusa registrada |
@@ -182,7 +181,6 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RF-CRI-10 | Classificar a foto antes de gerar e seguir na categoria detectada, avisando quando ela for diferente da página | P0 |
 | RF-CRI-11 | Recusar fotos fora das categorias com o motivo e o caminho: outra foto, ou recortar o grupo | P0 |
 | RF-CRI-14 | Classificar cada versão gerada ou editada e mostrar a categoria e o preço dela | P0 |
-| RF-CRI-15 | Perguntar "Quem está na foto?" quando o classificador estiver em dúvida [Proposta] | P1 |
 | RF-CRI-16 | Lista de espera: quem foi recusado deixa o e-mail para ser avisado quando a categoria existir | P1 |
 | RF-CRI-12 | Mostrar etapas e tempo decorrido durante cada espera | P0 |
 | RF-CRI-13 | Retomar qualquer criação e tarefa em andamento após recarregar | P0 |
@@ -268,7 +266,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RN-33 | A classificação acontece antes de qualquer geração. **Uma foto recusada não gera imagem nem consome a cota de geração.** A classificação tem limite próprio por sessão e por IP [Proposta: 30 por dia]. |
 | RN-34 | **Toda versão gerada ou editada também é classificada.** A categoria e o preço da versão vêm dessa classificação. Se ela cair numa categoria recusada, a versão não pode ser comprada. Isso fecha a brecha de pedir, por edição, uma figura que custaria mais. |
 | RN-35 | **Casal e Pessoa + Pet são uma peça única**, com as figuras encostadas: abraçadas, de mãos dadas, ou o pet no colo ou junto à pessoa. É assim nos concorrentes, mantém a altura como a maior dimensão (RN-12) e permite imprimir numa peça só. |
-| RN-36 | **Toda classificação fica registrada:** quem pediu (sessão ou conta, e hash do IP), a foto ou a versão, a categoria pedida, a detectada, a confiança, a decisão, o modelo, o custo e a data. |
+| RN-36 | **Toda classificação fica registrada:** quem pediu (sessão ou conta, e hash do IP), a foto ou a versão, a categoria pedida, a detectada, a confiança, a decisão, o modelo, a versão do conjunto de perguntas, o custo e a data. Mudar o texto de uma pergunta cria uma nova versão do conjunto, e só entra em uso depois de passar pelo [teste do classificador](classificador/README.md). |
 | RN-37 | **Lista de espera:** o e-mail só entra com consentimento explícito, registrado com a versão do texto e a data, e só é usado para avisar sobre a categoria pedida. |
 | RN-38 | O classificador é o **Jev 1.14** (TypeSafe) [Proposta]. No [teste de 19/11](classificador/README.md), ele acertou 47 de 48 casos, inclusive os que a Pockella errou, em 0,22 s e por cerca de US$ 0,0001 por imagem. A comparação com a OpenAI e o Google, feita quando houver chaves, define o modelo de reserva. |
 
@@ -346,7 +344,7 @@ A retenção de arquivos tem prazos próprios, porque fotos e rostos são dados 
 | Grupo | Métrica |
 |---|---|
 | **Funil** | Foto enviada → foto aceita → 2D gerado → tamanho escolhido → item no carrinho → checkout iniciado → PIX gerado → pago, por categoria |
-| **Classificação** | Recusas por motivo; categoria pedida × detectada; respostas ao "Quem está na foto?"; versões que mudaram de categoria na edição; inscrições na lista de espera por categoria |
+| **Classificação** | Recusas por motivo; categoria pedida × detectada; versões que mudaram de categoria na edição; inscrições na lista de espera por categoria |
 | **Custo** | Custo de IA por criação e por venda; custo total por dia |
 | **Confiabilidade** | Taxa de falha e de recusa por etapa; tarefas presas |
 | **Tempo** | Tempo por etapa (p50 e p95) |
@@ -364,7 +362,7 @@ Não há metas numéricas ainda: as primeiras semanas servem para formar a linha
 | Risco | Impacto | Como tratamos |
 |---|---|---|
 | **Vender sem saber se dá para imprimir.** O cliente compra uma imagem, e o 3D só é feito depois do pagamento. Nada foi impresso, e a preparação de impressão ficou fora do MVP | **Crítico:** pedidos parados ou reembolsados | Teste real, da imagem à peça impressa, como condição de lançamento |
-| **A peça difere da imagem.** O cliente não vê o 3D antes de pagar, o modelo pode mudar a forma, a impressão FDM tem até 4 cores, e o limite de cores nas imagens não é garantido (14 de 18 imagens no estilo Chibi, contadas a olho) | Alto: frustração e pedidos de reembolso | Aviso claro no produto e nos termos, e revisão antes de produzir |
+| **A peça difere da imagem.** O cliente não vê o 3D antes de pagar, o modelo pode mudar a forma, a impressão FDM tem até 4 cores, e o limite de cores nas imagens não é garantido (no teste de 03/11, 14 de 18 imagens no estilo Chibi; o estilo escolhido ainda não foi contado). Proporções mais próximas das reais também deixam braços e pernas mais finos, o que pesa nos tamanhos pequenos | Alto: frustração e pedidos de reembolso | Aviso claro no produto e nos termos, e revisão antes de produzir |
 | **O classificador erra.** A Pockella aceitou um personagem e um desenho infantil como pessoa, e uma pelúcia como pet. Erro para mais vende o que não devia; erro para menos perde venda | Médio: peça fora das regras, preço errado ou cliente recusado sem motivo | Teste comparativo antes de escolher o modelo, nova classificação de cada versão (RN-34) e acompanhamento das recusas por motivo |
 | **Entrada de imagem do Jev ainda experimental.** A TypeSafe diz que ela não está pronta para produção | Médio, se o Jev for o escolhido | Modelo de reserva de outro provedor, como na geração |
 | **Abuso da geração aberta** | Alto: gasto sem venda | Cotas, limite por IP e teto global |
