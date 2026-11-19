@@ -71,7 +71,7 @@ Cada app web tem domínio próprio, portanto cookies e sessões são independent
 | **Frontend** | Next.js 15 (App Router), React 19, TypeScript estrito, Tailwind 3, componentes Radix no padrão shadcn, TanStack Query 5, Zustand 5, React Hook Form + Zod, sonner, lucide |
 | **Contrato** | drf-spectacular → openapi-typescript → openapi-fetch |
 | **Ferramentas** | pnpm (workspace, via `npx`), uv, Makefile, ruff, pytest + factory_boy + freezegun + responses, ESLint, Vitest + Testing Library, GitHub Actions |
-| **Serviços externos** | Runware (IA), classificador de imagem [a definir: Jev 1.14 via AIMLAPI, OpenAI ou Google], AbacatePay (PIX), Melhor Envio (frete) [Proposta], storage compatível com S3, SMTP transacional |
+| **Serviços externos** | Runware (IA), TypeSafe (classificador Jev 1.14) [Proposta], AbacatePay (PIX), Melhor Envio (frete) [Proposta], storage compatível com S3, SMTP transacional |
 
 As versões exatas ficam nos arquivos de lock. PostGIS não é necessário, porque nenhuma regra do MVP depende de geolocalização.
 
@@ -227,7 +227,7 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 | `ProductPrice` | categoria, tamanho, preço em centavos, ativo; único por par. Só existem as combinações vendidas (RN-11) | ● |
 | `Filament` | nome, hex, marca, ativo | ○ Hoje só orienta prompts |
 
-**Categorias são um enum em código:** `person`, `pet`, `couple`, `person_pet`. Os motivos de recusa também: `three_or_more_people`, `multiple_pets`, `group_with_pets`, `no_subject`, `not_a_photo`, `protected_character`. Os quatro primeiros seguem a taxonomia da Pockella.
+**Categorias são um enum em código:** `person`, `pet`, `couple`, `person_pet`. Os motivos de recusa também: `three_or_more_people`, `multiple_pets`, `group_with_pets`, `no_subject`, `protected_character`. Os quatro primeiros seguem a taxonomia da Pockella.
 
 **O estilo e os prompts ficam em código** (`catalog/prompts.py`), com uma versão explícita, montados em camadas: o estilo único, mais o bloco da categoria, mais o pedido do cliente. Os templates futuros entram como mais uma camada, entre a categoria e o pedido ([PRD](PRD.md#templates)). Mudar um prompt exige novo deploy e reteste contra as referências, e cada `ProviderTask` guarda o texto final enviado. Os estilos Livre, Pixar e Mini Pop saem do código, sem camada de compatibilidade.
 
@@ -372,8 +372,8 @@ sequenceDiagram
 
 ### Classificação
 
-- **A foto** é classificada com a taxonomia completa: as quatro categorias vendidas e os seis motivos de recusa. Se aceita, a categoria da foto define o prompt.
-- **Cada versão** gerada ou editada é classificada só quanto a quem aparece e a personagem ou marca, já que a imagem gerada nunca é foto real. A categoria da versão define o preço (RN-34). Se a imagem já está no storage e o classificador falhar, a tarefa repete só a classificação, sem gerar a imagem de novo.
+- **A foto** é classificada com duas perguntas numa chamada só: quem aparece (as quatro categorias vendidas e quatro motivos de recusa) e se há personagem ou marca. Se aceita, a categoria da foto define o prompt.
+- **Cada versão** gerada ou editada passa pelas mesmas duas perguntas, com a descrição de quem aparece adaptada a uma miniatura. A categoria da versão define o preço (RN-34). Se a imagem já está no storage e o classificador falhar, a tarefa repete só a classificação, sem gerar a imagem de novo.
 - **Recusa na foto:** a criação vai para `rejected`, sem reservar cota de geração. A classificação conta só no próprio limite (RN-33).
 - **Custo:** o custo de cada classificação fica na `ProviderTask` e entra no teto global.
 - **Tempo:** a classificação roda no worker, como a geração, para não prender a API. O frontend já faz polling, então a resposta aparece em segundos.
@@ -519,7 +519,7 @@ O script `apps/backend/scripts/provision_s3.py` cria e mantém essa configuraç�
 
 Como as URLs assinadas mudam a cada resposta, o frontend reaproveita a URL de cada imagem enquanto ela vale, para o polling não baixar tudo de novo.
 
-- **Upload de foto:** o frontend envia à API, que valida o tipo real, corrige a orientação e grava duas versões sem metadados (EXIF, GPS, XMP): o **original**, na resolução e no formato enviados, e a **normalizada**, em PNG de no máximo 1.024 px, usada na geração. O caminho é mais simples que um upload pré-assinado e garante a validação no servidor. A limitação de 10 MB fica no servidor e no Next.
+- **Upload de foto:** o frontend envia à API, que valida o tipo real, corrige a orientação e grava duas versões sem metadados (EXIF, GPS, XMP): o **original**, na resolução e no formato enviados, e a **normalizada**, em PNG de no máximo 1.024 px, usada na geração e na classificação. Imagens com o menor lado abaixo de 280 px são ampliadas até esse mínimo, porque o classificador as recusa. O caminho é mais simples que um upload pré-assinado e garante a validação no servidor. A limitação de 10 MB fica no servidor e no Next.
 - **Leitura:** a API verifica a posse e devolve URLs assinadas de curta duração (5 min [Proposta]) nos detalhes da criação. O original nunca é entregue ao cliente.
 - **Produção:** arquivos e downloads só pelo app de parceiros, com acesso registrado. Nenhum endpoint deste app os entrega.
 
@@ -769,7 +769,7 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 | 5 | Prazos de retenção e redação de termos | Revisão jurídica |
 | 6 | Hospedagem e domínios definitivos. Os arquivos Docker existem, mas não foram executados | Decidir e testar antes de homologação |
 | 7 | Limites de cota e teto de gasto | Ajustar com dados reais |
-| 8 | Modelo e provedor do classificador, limite de confiança para o "Quem está na foto?" e modelo de reserva | Teste comparativo: Jev 1.14 (via AIMLAPI), OpenAI e Google |
+| 8 | Modelo e provedor do classificador, limite de confiança para o "Quem está na foto?" e modelo de reserva | Jev 1.14, direto na TypeSafe, aprovado no [teste de 19/11](classificador/README.md): 47 de 48 casos certos. Faltam o modelo de reserva, a comparação com OpenAI e Google, e um segundo conjunto de casos |
 | 9 | Valores da tabela de preços por categoria | Provisórios no PRD; definitivos antes de produção |
 | 10 | Embalagem de Casal e Pessoa + Pet, mais largos que uma figura do mesmo tamanho | Medir nas amostras impressas |
 

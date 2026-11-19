@@ -1,0 +1,5199 @@
+{
+ "resumo": {
+  "modelo": "jev-1.14.0",
+  "repeticoes": 3,
+  "chamadas": 144,
+  "erros": 0,
+  "por_tipo": {
+   "foto": {
+    "casos": 30,
+    "certos": 29,
+    "venda_certa": 29,
+    "instaveis": 0
+   },
+   "versao": {
+    "casos": 18,
+    "certos": 18,
+    "venda_certa": 18,
+    "instaveis": 0
+   }
+  },
+  "segundos_p50": 0.234,
+  "segundos_p95": 0.422,
+  "tokens_entrada_medio": 2754,
+  "custo_medio_usd": 0.000116
+ },
+ "resultados": [
+  {
+   "id": "f-pessoa-einstein",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pessoa-einstein.jpg",
+   "esperado": [
+    "person"
+   ],
+   "nota": "Foto real de uma pessoa famosa",
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.468,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2686,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.235,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2691,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2688,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "f-pessoa-mulher",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pessoa-mulher.jpg",
+   "esperado": [
+    "person"
+   ],
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2615,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.204,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2615,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2616,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "f-pessoa-homem-moderno",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pessoa-homem-moderno.jpg",
+   "esperado": [
+    "person"
+   ],
+   "credito": "21st-century portrait photographs of men, Wikimedia Commons, CC BY-SA 4.0",
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 2171,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 2174,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 2172,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "f-pessoa-homem-antigo",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pessoa-homem-antigo.jpg",
+   "esperado": [
+    "person"
+   ],
+   "credito": "Nathan Francis Mossell, H.D. Carns & Co, Wikimedia Commons, domínio público",
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2319,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.406,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2318,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.282,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2319,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "f-pessoa-sullivan",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pessoa-sullivan.jpg",
+   "esperado": [
+    "person"
+   ],
+   "credito": "H.J. Whitlock, Photograph of Arthur Sullivan, Wikimedia Commons, domínio público",
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2243,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.188,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2245,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2246,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "f-pessoa-telefone-pb",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pessoa-telefone-pb.jpg",
+   "esperado": [
+    "person"
+   ],
+   "credito": "Sigmund and the Sea Monsters, Margaret Hamilton, 1973, Wikimedia Commons, domínio público",
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.297,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.17
+      }
+     },
+     "tokens": {
+      "input_tokens": 2687,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.281,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.22
+      }
+     },
+     "tokens": {
+      "input_tokens": 2689,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.422,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.25
+      }
+     },
+     "tokens": {
+      "input_tokens": 2691,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "f-casal",
+   "tipo": "foto",
+   "arquivo": "imagens/f-casal.jpg",
+   "esperado": [
+    "couple"
+   ],
+   "decisoes": [
+    "couple",
+    "couple",
+    "couple"
+   ],
+   "maioria": "couple",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 0.99,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.99,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.01,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1905,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 0.99,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.99,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.01,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1905,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    },
+    {
+     "segundos": 0.344,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 0.99,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.99,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.01,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1904,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    }
+   ]
+  },
+  {
+   "id": "f-pet-cachorro",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pet-cachorro.jpg",
+   "esperado": [
+    "pet"
+   ],
+   "decisoes": [
+    "pet",
+    "pet",
+    "pet"
+   ],
+   "maioria": "pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.235,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1530,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1531,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.39,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1528,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    }
+   ]
+  },
+  {
+   "id": "f-pet-gato",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pet-gato.jpg",
+   "esperado": [
+    "pet"
+   ],
+   "decisoes": [
+    "pet",
+    "pet",
+    "pet"
+   ],
+   "maioria": "pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.547,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2690,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.484,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 2691,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.266,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2688,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    }
+   ]
+  },
+  {
+   "id": "f-pet-gato-casa",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pet-gato-casa.jpg",
+   "esperado": [
+    "pet"
+   ],
+   "nota": "Foto enviada no app em desenvolvimento",
+   "decisoes": [
+    "pet",
+    "pet",
+    "pet"
+   ],
+   "maioria": "pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.218,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2687,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2685,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2693,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    }
+   ]
+  },
+  {
+   "id": "f-pet-papagaio",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pet-papagaio.jpg",
+   "esperado": [
+    "pet"
+   ],
+   "credito": "Portrait of Yellow-headed Amazon Parrot, Wikimedia Commons, CC BY-SA 3.0",
+   "decisoes": [
+    "pet",
+    "pet",
+    "pet"
+   ],
+   "maioria": "pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2689,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2686,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.296,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2690,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    }
+   ]
+  },
+  {
+   "id": "f-pessoa-pet-cavalo",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pessoa-pet-cavalo.jpg",
+   "esperado": [
+    "person_pet"
+   ],
+   "nota": "A Pockella vendeu como Pessoa + Pet",
+   "credito": "Horse portrait near Quebec City, Canada, Wikimedia Commons, CC BY-SA 4.0",
+   "decisoes": [
+    "person_pet",
+    "person_pet",
+    "person_pet"
+   ],
+   "maioria": "person_pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.204,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 0.82,
+       "probabilities": {
+        "person": 0.01,
+        "pet": 0.15,
+        "couple": 0.0,
+        "person_pet": 0.84,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 2465,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    },
+    {
+     "segundos": 0.218,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 0.83,
+       "probabilities": {
+        "person": 0.01,
+        "pet": 0.14,
+        "couple": 0.0,
+        "person_pet": 0.85,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2470,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 0.83,
+       "probabilities": {
+        "person": 0.01,
+        "pet": 0.14,
+        "couple": 0.0,
+        "person_pet": 0.85,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2468,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    }
+   ]
+  },
+  {
+   "id": "f-pessoa-pet-abraco",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pessoa-pet-abraco.jpg",
+   "esperado": [
+    "person_pet"
+   ],
+   "nota": "Foto enviada no app em desenvolvimento",
+   "decisoes": [
+    "person_pet",
+    "person_pet",
+    "person_pet"
+   ],
+   "maioria": "person_pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.188,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 0.97,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.01,
+        "couple": 0.0,
+        "person_pet": 0.97,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.02
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1025,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    },
+    {
+     "segundos": 0.171,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 0.95,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.01,
+        "couple": 0.0,
+        "person_pet": 0.96,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.03
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1025,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    },
+    {
+     "segundos": 0.188,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 0.95,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.01,
+        "couple": 0.0,
+        "person_pet": 0.96,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.03
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1025,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    }
+   ]
+  },
+  {
+   "id": "f-tres-homens",
+   "tipo": "foto",
+   "arquivo": "imagens/f-tres-homens.jpg",
+   "esperado": [
+    "three_or_more_people"
+   ],
+   "credito": "Unknown 19th Century, Portrait of Three Men, c. 1860, NGA, Wikimedia Commons, CC0",
+   "decisoes": [
+    "three_or_more_people",
+    "three_or_more_people",
+    "three_or_more_people"
+   ],
+   "maioria": "three_or_more_people",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.281,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 0.69,
+       "probabilities": {
+        "person": 0.01,
+        "pet": 0.0,
+        "couple": 0.25,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.73,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.01
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 2615,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 0.78,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.19,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.81,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.06
+      }
+     },
+     "tokens": {
+      "input_tokens": 2614,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 0.78,
+       "probabilities": {
+        "person": 0.01,
+        "pet": 0.0,
+        "couple": 0.18,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.81,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.06
+      }
+     },
+     "tokens": {
+      "input_tokens": 2619,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    }
+   ]
+  },
+  {
+   "id": "f-multidao",
+   "tipo": "foto",
+   "arquivo": "imagens/f-multidao.jpg",
+   "esperado": [
+    "three_or_more_people"
+   ],
+   "credito": "Crowd gathering on a street, Puerto Rico, Wikimedia Commons, sem restrições",
+   "decisoes": [
+    "three_or_more_people",
+    "three_or_more_people",
+    "three_or_more_people"
+   ],
+   "maioria": "three_or_more_people",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 1.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 2511,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 1.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.06
+      }
+     },
+     "tokens": {
+      "input_tokens": 2508,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    },
+    {
+     "segundos": 0.359,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 1.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 2507,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    }
+   ]
+  },
+  {
+   "id": "f-dois-caes",
+   "tipo": "foto",
+   "arquivo": "imagens/f-dois-caes.jpg",
+   "esperado": [
+    "multiple_pets"
+   ],
+   "credito": "Two dogs sitting outdoors, Wikimedia Commons, CC BY 4.0",
+   "decisoes": [
+    "multiple_pets",
+    "multiple_pets",
+    "multiple_pets"
+   ],
+   "maioria": "multiple_pets",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.235,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "multiple_pets",
+       "confidence": 0.98,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.02,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.98,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2014,
+      "output_tokens": 103
+     },
+     "decisao": "multiple_pets"
+    },
+    {
+     "segundos": 0.312,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "multiple_pets",
+       "confidence": 0.97,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.02,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.97,
+        "group_with_pets": 0.0,
+        "no_subject": 0.01
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2018,
+      "output_tokens": 103
+     },
+     "decisao": "multiple_pets"
+    },
+    {
+     "segundos": 0.344,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "multiple_pets",
+       "confidence": 0.99,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.01,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.99,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2016,
+      "output_tokens": 103
+     },
+     "decisao": "multiple_pets"
+    }
+   ]
+  },
+  {
+   "id": "f-pessoa-dois-caes",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pessoa-dois-caes.jpg",
+   "esperado": [
+    "group_with_pets"
+   ],
+   "credito": "Woman with two dogs, circa 1960, Wikimedia Commons, CC BY 2.0",
+   "decisoes": [
+    "person_pet",
+    "person_pet",
+    "person_pet"
+   ],
+   "maioria": "person_pet",
+   "certo": false,
+   "rodadas": [
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 0.68,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.72,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.01,
+        "group_with_pets": 0.27,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 2298,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 0.75,
+       "probabilities": {
+        "person": 0.01,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.78,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.01,
+        "group_with_pets": 0.2,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2295,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    },
+    {
+     "segundos": 0.5,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 0.78,
+       "probabilities": {
+        "person": 0.01,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.81,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.01,
+        "group_with_pets": 0.17,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2298,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    }
+   ]
+  },
+  {
+   "id": "f-pessoa-varios-caes",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pessoa-varios-caes.jpg",
+   "esperado": [
+    "group_with_pets"
+   ],
+   "nota": "Foto enviada no app em desenvolvimento",
+   "decisoes": [
+    "group_with_pets",
+    "group_with_pets",
+    "group_with_pets"
+   ],
+   "maioria": "group_with_pets",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.625,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "group_with_pets",
+       "confidence": 0.97,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.02,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.01,
+        "group_with_pets": 0.97,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2764,
+      "output_tokens": 104
+     },
+     "decisao": "group_with_pets"
+    },
+    {
+     "segundos": 0.625,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "group_with_pets",
+       "confidence": 0.98,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.01,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.01,
+        "group_with_pets": 0.98,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2764,
+      "output_tokens": 104
+     },
+     "decisao": "group_with_pets"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "group_with_pets",
+       "confidence": 0.98,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.01,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.01,
+        "group_with_pets": 0.98,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2764,
+      "output_tokens": 104
+     },
+     "decisao": "group_with_pets"
+    }
+   ]
+  },
+  {
+   "id": "f-objeto-carro",
+   "tipo": "foto",
+   "arquivo": "imagens/f-objeto-carro.jpg",
+   "esperado": [
+    "no_subject"
+   ],
+   "decisoes": [
+    "no_subject",
+    "no_subject",
+    "no_subject"
+   ],
+   "maioria": "no_subject",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.36,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.62,
+       "probabilities": {
+        "person": 0.2,
+        "pet": 0.0,
+        "couple": 0.08,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.05,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.67
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 3133,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.359,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.59,
+       "probabilities": {
+        "person": 0.23,
+        "pet": 0.0,
+        "couple": 0.08,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.05,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.64
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 3134,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.375,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.68,
+       "probabilities": {
+        "person": 0.17,
+        "pet": 0.0,
+        "couple": 0.07,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.04,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.72
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.04
+      }
+     },
+     "tokens": {
+      "input_tokens": 3132,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    }
+   ]
+  },
+  {
+   "id": "f-objeto-hamburguer",
+   "tipo": "foto",
+   "arquivo": "imagens/f-objeto-hamburguer.jpg",
+   "esperado": [
+    "no_subject"
+   ],
+   "decisoes": [
+    "no_subject",
+    "no_subject",
+    "no_subject"
+   ],
+   "maioria": "no_subject",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2987,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.235,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2986,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2981,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    }
+   ]
+  },
+  {
+   "id": "f-objeto-eiffel",
+   "tipo": "foto",
+   "arquivo": "imagens/f-objeto-eiffel.jpg",
+   "esperado": [
+    "no_subject"
+   ],
+   "decisoes": [
+    "no_subject",
+    "no_subject",
+    "no_subject"
+   ],
+   "maioria": "no_subject",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.187,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.92,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.01,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.06,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.93
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2097,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.94,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.05,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.95
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2097,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.188,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.95,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.04,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.96
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2096,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    }
+   ]
+  },
+  {
+   "id": "f-documento-cartao",
+   "tipo": "foto",
+   "arquivo": "imagens/f-documento-cartao.jpg",
+   "esperado": [
+    "no_subject"
+   ],
+   "nota": "Verso de um cartão-postal manuscrito",
+   "credito": "Photograph of a couple with a dog, DPLA (page 1), Wikimedia Commons, sem restrições",
+   "decisoes": [
+    "no_subject",
+    "no_subject",
+    "no_subject"
+   ],
+   "maioria": "no_subject",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.06
+      }
+     },
+     "tokens": {
+      "input_tokens": 2225,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.235,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 2226,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.281,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 2224,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    }
+   ]
+  },
+  {
+   "id": "f-pelucia",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pelucia.jpg",
+   "esperado": [
+    "no_subject"
+   ],
+   "nota": "A Pockella aceitou pelúcia como pet",
+   "decisoes": [
+    "no_subject",
+    "no_subject",
+    "no_subject"
+   ],
+   "maioria": "no_subject",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.36
+      }
+     },
+     "tokens": {
+      "input_tokens": 2316,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.35
+      }
+     },
+     "tokens": {
+      "input_tokens": 2316,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.39
+      }
+     },
+     "tokens": {
+      "input_tokens": 2320,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    }
+   ]
+  },
+  {
+   "id": "f-busto-batman",
+   "tipo": "foto",
+   "arquivo": "imagens/f-busto-batman.jpg",
+   "esperado": [
+    "protected_character",
+    "no_subject"
+   ],
+   "nota": "Foto de um busto do Batman",
+   "decisoes": [
+    "protected_character",
+    "protected_character",
+    "protected_character"
+   ],
+   "maioria": "protected_character",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.172,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 876,
+      "output_tokens": 102
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.188,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 876,
+      "output_tokens": 102
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.187,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 879,
+      "output_tokens": 102
+     },
+     "decisao": "protected_character"
+    }
+   ]
+  },
+  {
+   "id": "f-desenho-infantil",
+   "tipo": "foto",
+   "arquivo": "imagens/f-desenho-infantil.jpg",
+   "esperado": [
+    "no_subject",
+    "person"
+   ],
+   "nota": "A Pockella aceitou como pessoa. Desenhos são aceitos (RN-31), então vender como pessoa também está certo",
+   "decisoes": [
+    "no_subject",
+    "no_subject",
+    "no_subject"
+   ],
+   "maioria": "no_subject",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.6,
+       "probabilities": {
+        "person": 0.35,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.65
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 2024,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.187,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.67,
+       "probabilities": {
+        "person": 0.29,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.71
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 2025,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.235,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.63,
+       "probabilities": {
+        "person": 0.32,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.68
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 2028,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    }
+   ]
+  },
+  {
+   "id": "f-mickey",
+   "tipo": "foto",
+   "arquivo": "imagens/f-mickey.jpg",
+   "esperado": [
+    "protected_character"
+   ],
+   "nota": "A Pockella aceitou como pessoa",
+   "credito": "Mickey Mouse, Steamboat Willie (1928), Wikimedia Commons, domínio público",
+   "decisoes": [
+    "protected_character",
+    "protected_character",
+    "protected_character"
+   ],
+   "maioria": "protected_character",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.266,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.85,
+       "probabilities": {
+        "person": 0.06,
+        "pet": 0.07,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.87
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 2716,
+      "output_tokens": 102
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.87,
+       "probabilities": {
+        "person": 0.05,
+        "pet": 0.06,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.89
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 2717,
+      "output_tokens": 102
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.89,
+       "probabilities": {
+        "person": 0.05,
+        "pet": 0.05,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.9
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 2714,
+      "output_tokens": 102
+     },
+     "decisao": "protected_character"
+    }
+   ]
+  },
+  {
+   "id": "f-pintura-dama",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pintura-dama.jpg",
+   "esperado": [
+    "person"
+   ],
+   "nota": "Pinturas são aceitas (RN-31)",
+   "credito": "Domenico Tintoretto, Portrait of a Lady Holding a Lute, Wikimedia Commons, domínio público",
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.97,
+       "probabilities": {
+        "person": 0.97,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.03
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2982,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.563,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.97,
+       "probabilities": {
+        "person": 0.97,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.03
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2984,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.95,
+       "probabilities": {
+        "person": 0.96,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.04
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2985,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "f-pintura-vestido",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pintura-vestido.jpg",
+   "esperado": [
+    "person"
+   ],
+   "nota": "Pinturas são aceitas (RN-31)",
+   "credito": "English School, Portrait of a Lady in a red and White Dress, Wikimedia Commons, domínio público",
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.375,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.97,
+       "probabilities": {
+        "person": 0.97,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.03
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2761,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.95,
+       "probabilities": {
+        "person": 0.96,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.04
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2760,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.391,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.95,
+       "probabilities": {
+        "person": 0.96,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.04
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2760,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "f-pintura-john-jay",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pintura-john-jay.jpg",
+   "esperado": [
+    "person"
+   ],
+   "nota": "Pinturas são aceitas (RN-31)",
+   "credito": "Gilbert Stuart, John Jay, Wikimedia Commons, domínio público",
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2763,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.328,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2764,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.344,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2762,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "f-pintura-tres-irmas",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pintura-tres-irmas.jpg",
+   "esperado": [
+    "three_or_more_people"
+   ],
+   "nota": "Pinturas são aceitas (RN-31), mas aqui são 3 pessoas",
+   "credito": "Marcus Gheeraerts the younger, Portrait of the Three Egerton Sisters, Wikimedia Commons, domínio público",
+   "decisoes": [
+    "three_or_more_people",
+    "three_or_more_people",
+    "three_or_more_people"
+   ],
+   "maioria": "three_or_more_people",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 0.94,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.95,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.05
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 3133,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 0.93,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.94,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.06
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 3136,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 0.94,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.95,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.05
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 3135,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    }
+   ]
+  },
+  {
+   "id": "v-pet-gatinho",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pet-gatinho.jpg",
+   "esperado": [
+    "pet"
+   ],
+   "decisoes": [
+    "pet",
+    "pet",
+    "pet"
+   ],
+   "maioria": "pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3346,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.09
+      }
+     },
+     "tokens": {
+      "input_tokens": 3344,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.09
+      }
+     },
+     "tokens": {
+      "input_tokens": 3348,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    }
+   ]
+  },
+  {
+   "id": "v-pet-gatinha-laco",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pet-gatinha-laco.jpg",
+   "esperado": [
+    "pet"
+   ],
+   "decisoes": [
+    "pet",
+    "pet",
+    "pet"
+   ],
+   "maioria": "pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.344,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.59
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.65
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.218,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.67
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    }
+   ]
+  },
+  {
+   "id": "v-pet-gato-laranja",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pet-gato-laranja.jpg",
+   "esperado": [
+    "pet"
+   ],
+   "decisoes": [
+    "pet",
+    "pet",
+    "pet"
+   ],
+   "maioria": "pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.04
+      }
+     },
+     "tokens": {
+      "input_tokens": 3346,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.235,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 0.99,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.99,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.01,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 3346,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.218,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.04
+      }
+     },
+     "tokens": {
+      "input_tokens": 3348,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    }
+   ]
+  },
+  {
+   "id": "v-pet-gato-skate",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pet-gato-skate.jpg",
+   "esperado": [
+    "pet"
+   ],
+   "nota": "Gato vestido, de boné, num skate",
+   "decisoes": [
+    "pet",
+    "pet",
+    "pet"
+   ],
+   "maioria": "pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.11
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.16
+      }
+     },
+     "tokens": {
+      "input_tokens": 3344,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.12
+      }
+     },
+     "tokens": {
+      "input_tokens": 3346,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    }
+   ]
+  },
+  {
+   "id": "v-pet-gato-astronauta",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pet-gato-astronauta.jpg",
+   "esperado": [
+    "pet"
+   ],
+   "decisoes": [
+    "pet",
+    "pet",
+    "pet"
+   ],
+   "maioria": "pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.265,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3349,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    }
+   ]
+  },
+  {
+   "id": "v-pet-gato-foguete",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pet-gato-foguete.jpg",
+   "esperado": [
+    "pet"
+   ],
+   "nota": "Gato dentro de um foguete",
+   "decisoes": [
+    "pet",
+    "pet",
+    "pet"
+   ],
+   "maioria": "pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.328,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 3348,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.344,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3348,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.187,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 3345,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    }
+   ]
+  },
+  {
+   "id": "v-pessoa-skatista",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pessoa-skatista.jpg",
+   "esperado": [
+    "person"
+   ],
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.187,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.09
+      }
+     },
+     "tokens": {
+      "input_tokens": 3348,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.281,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.09
+      }
+     },
+     "tokens": {
+      "input_tokens": 3346,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.266,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3345,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "v-pessoa-menino-caminhao",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pessoa-menino-caminhao.jpg",
+   "esperado": [
+    "person"
+   ],
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.188,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 3349,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.312,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 3343,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.188,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.06
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "v-pessoa-chibi-mulher",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pessoa-chibi-mulher.jpg",
+   "esperado": [
+    "person"
+   ],
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.06
+      }
+     },
+     "tokens": {
+      "input_tokens": 3344,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 3349,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.297,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 3348,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "v-pessoa-chibi-avo",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pessoa-chibi-avo.jpg",
+   "esperado": [
+    "person"
+   ],
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.06
+      }
+     },
+     "tokens": {
+      "input_tokens": 3346,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 3348,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 3344,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "v-pessoa-chibi-caneca",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pessoa-chibi-caneca.jpg",
+   "esperado": [
+    "person"
+   ],
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.391,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3350,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.297,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3344,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "v-casal-chibi",
+   "tipo": "versao",
+   "arquivo": "imagens/v-casal-chibi.jpg",
+   "esperado": [
+    "couple"
+   ],
+   "decisoes": [
+    "couple",
+    "couple",
+    "couple"
+   ],
+   "maioria": "couple",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 1.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 3344,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 1.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.04
+      }
+     },
+     "tokens": {
+      "input_tokens": 3345,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 1.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.06
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    }
+   ]
+  },
+  {
+   "id": "v-casal-noivos",
+   "tipo": "versao",
+   "arquivo": "imagens/v-casal-noivos.jpg",
+   "esperado": [
+    "couple"
+   ],
+   "decisoes": [
+    "couple",
+    "couple",
+    "couple"
+   ],
+   "maioria": "couple",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 1.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.04
+      }
+     },
+     "tokens": {
+      "input_tokens": 3348,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    },
+    {
+     "segundos": 0.265,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 1.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.04
+      }
+     },
+     "tokens": {
+      "input_tokens": 3344,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    },
+    {
+     "segundos": 0.235,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 1.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.04
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    }
+   ]
+  },
+  {
+   "id": "v-pessoa-pet-abraco",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pessoa-pet-abraco.jpg",
+   "esperado": [
+    "person_pet"
+   ],
+   "decisoes": [
+    "person_pet",
+    "person_pet",
+    "person_pet"
+   ],
+   "maioria": "person_pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.266,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 1.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 3349,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    },
+    {
+     "segundos": 0.359,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 1.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 3344,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    },
+    {
+     "segundos": 0.282,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 1.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 3350,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    }
+   ]
+  },
+  {
+   "id": "v-pessoa-varios-caes",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pessoa-varios-caes.jpg",
+   "esperado": [
+    "group_with_pets"
+   ],
+   "decisoes": [
+    "group_with_pets",
+    "group_with_pets",
+    "group_with_pets"
+   ],
+   "maioria": "group_with_pets",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.218,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "group_with_pets",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 1.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 3345,
+      "output_tokens": 104
+     },
+     "decisao": "group_with_pets"
+    },
+    {
+     "segundos": 0.297,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "group_with_pets",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 1.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 104
+     },
+     "decisao": "group_with_pets"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "group_with_pets",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 1.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 3345,
+      "output_tokens": 104
+     },
+     "decisao": "group_with_pets"
+    }
+   ]
+  },
+  {
+   "id": "v-batman",
+   "tipo": "versao",
+   "arquivo": "imagens/v-batman.jpg",
+   "esperado": [
+    "protected_character"
+   ],
+   "decisoes": [
+    "protected_character",
+    "protected_character",
+    "protected_character"
+   ],
+   "maioria": "protected_character",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.99,
+       "probabilities": {
+        "person": 0.99,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.01
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 3344,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.422,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.98,
+       "probabilities": {
+        "person": 0.98,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.02
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 3343,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.98,
+       "probabilities": {
+        "person": 0.98,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.02
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 3345,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    }
+   ]
+  },
+  {
+   "id": "v-batman-vermelho",
+   "tipo": "versao",
+   "arquivo": "imagens/v-batman-vermelho.jpg",
+   "esperado": [
+    "protected_character"
+   ],
+   "decisoes": [
+    "protected_character",
+    "protected_character",
+    "protected_character"
+   ],
+   "maioria": "protected_character",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.98,
+       "probabilities": {
+        "person": 0.98,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.02
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.98
+      }
+     },
+     "tokens": {
+      "input_tokens": 3348,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.98,
+       "probabilities": {
+        "person": 0.98,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.02
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 3348,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.98,
+       "probabilities": {
+        "person": 0.98,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.02
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    }
+   ]
+  },
+  {
+   "id": "v-gato-batman",
+   "tipo": "versao",
+   "arquivo": "imagens/v-gato-batman.jpg",
+   "esperado": [
+    "protected_character"
+   ],
+   "nota": "Gato fantasiado de Batman",
+   "decisoes": [
+    "protected_character",
+    "protected_character",
+    "protected_character"
+   ],
+   "maioria": "protected_character",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.97
+      }
+     },
+     "tokens": {
+      "input_tokens": 3344,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.218,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.97
+      }
+     },
+     "tokens": {
+      "input_tokens": 3344,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.641,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.98
+      }
+     },
+     "tokens": {
+      "input_tokens": 3348,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    }
+   ]
+  }
+ ]
+}

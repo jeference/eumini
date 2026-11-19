@@ -57,7 +57,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 - **Qualquer funcionalidade de operação neste app:** ela fica toda no app de parceiros.
 - Troca de cor pelo cliente.
 - **Escolha de estilo:** a figura sai num estilo único.
-- **Categorias além das quatro:** grupos de 3 ou mais pessoas, mais de um pet, objetos, personagens e desenhos.
+- **Categorias além das quatro:** grupos de 3 ou mais pessoas, mais de um pet, objetos e personagens.
 - Chaveiros.
 - Assinaturas, créditos pagos, cupons e programas de desconto.
 - Galeria pública, Remix, compartilhamento e templates (ver [seção 11](#templates)).
@@ -111,7 +111,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | Preço que muda depois do 3D (Meshy Shop) | Preço fixo por categoria e tamanho, visível junto com a imagem |
 | Categoria trocada em silêncio, com outro preço (Pockella) | Aviso com a categoria detectada e o novo preço |
 | Pessoa + Pet mais barato que Pet sozinho (Pockella) | Peças com duas figuras sempre custam mais que as de uma, no mesmo tamanho |
-| Desenho infantil e personagem aceitos como pessoa, pelúcia aceita como pet (Pockella) | O classificador também recusa desenhos, personagens e marcas |
+| Desenho infantil e personagem aceitos como pessoa, pelúcia aceita como pet (Pockella) | O classificador recusa personagens, marcas e o que não for pessoa nem pet |
 | Aviso de que a peça pode variar em um só produto (Pockella) | O aviso aparece em toda tela de compra |
 | Mensagem genérica em recusa de conteúdo | Explicar o motivo e o que fazer |
 | Links de produção expostos ao navegador antes do pagamento | Arquivos de produção só no servidor |
@@ -141,7 +141,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 
 | Situação | O que o cliente vê | O que acontece |
 |---|---|---|
-| Foto sem pessoa nem pet, desenho, personagem ou marca | "Precisamos de uma pessoa ou um pet na foto", com **Escolher outra foto** | Nada é gerado, a cota de geração não é tocada, a recusa é registrada |
+| Foto sem pessoa nem pet, personagem ou marca | "Precisamos de uma pessoa ou um pet na foto", com **Escolher outra foto** | Nada é gerado, a cota de geração não é tocada, a recusa é registrada |
 | Foto com 3 ou mais pessoas, 2 ou mais pets, ou grupo com pets | "Recorte e nós fazemos": explica as combinações aceitas, com **Enviar foto recortada** e **Me avise quando estiver pronto** | Igual à linha acima. O e-mail entra na lista de espera, com consentimento |
 | Categoria detectada diferente da página | Aviso com a categoria detectada e o novo preço "a partir de" | A geração segue na categoria detectada. O cliente pode cancelar e trocar a foto |
 | Classificador em dúvida [Proposta] | "Quem está na foto?", com as quatro opções e **Escolher outra foto** | A geração segue na categoria escolhida. A versão gerada é classificada de novo (RN-34) |
@@ -263,14 +263,14 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | ID | Regra |
 |---|---|
 | RN-30 | **Categorias vendidas:** **Pessoa** (uma pessoa), **Pet** (um animal de estimação; a maioria dos pets é aceita, como na Pockella), **Casal** (duas pessoas) e **Pessoa + Pet** (uma pessoa e um pet). |
-| RN-31 | **Fotos recusadas:** 3 ou mais pessoas, 2 ou mais pets, grupo com pets, sem pessoa nem pet, desenho ou ilustração (não é foto real), e personagem ou marca. |
+| RN-31 | **Fotos recusadas:** 3 ou mais pessoas, 2 ou mais pets, grupo com pets, sem pessoa nem pet, e personagem ou marca. **Desenhos, pinturas e avatares são aceitos** quando mostram uma pessoa ou um pet: o classificador não pergunta se a imagem é foto. |
 | RN-32 | **Quem decide a categoria é o classificador**, a partir da foto. A página de entrada é só uma sugestão: se a foto for de outra categoria, a criação segue nela, com aviso. |
 | RN-33 | A classificação acontece antes de qualquer geração. **Uma foto recusada não gera imagem nem consome a cota de geração.** A classificação tem limite próprio por sessão e por IP [Proposta: 30 por dia]. |
 | RN-34 | **Toda versão gerada ou editada também é classificada.** A categoria e o preço da versão vêm dessa classificação. Se ela cair numa categoria recusada, a versão não pode ser comprada. Isso fecha a brecha de pedir, por edição, uma figura que custaria mais. |
 | RN-35 | **Casal e Pessoa + Pet são uma peça única**, com as figuras encostadas: abraçadas, de mãos dadas, ou o pet no colo ou junto à pessoa. É assim nos concorrentes, mantém a altura como a maior dimensão (RN-12) e permite imprimir numa peça só. |
 | RN-36 | **Toda classificação fica registrada:** quem pediu (sessão ou conta, e hash do IP), a foto ou a versão, a categoria pedida, a detectada, a confiança, a decisão, o modelo, o custo e a data. |
 | RN-37 | **Lista de espera:** o e-mail só entra com consentimento explícito, registrado com a versão do texto e a data, e só é usado para avisar sobre a categoria pedida. |
-| RN-38 | O modelo do classificador sai de um teste comparativo entre o **Jev 1.14** (TypeSafe), um modelo de visão da OpenAI e um do Google, usando os casos difíceis do estudo da Pockella. Os critérios são acerto, tempo abaixo de 4 s e custo [Proposta]. |
+| RN-38 | O classificador é o **Jev 1.14** (TypeSafe) [Proposta]. No [teste de 19/11](classificador/README.md), ele acertou 47 de 48 casos, inclusive os que a Pockella errou, em 0,22 s e por cerca de US$ 0,0001 por imagem. A comparação com a OpenAI e o Google, feita quando houver chaves, define o modelo de reserva. |
 
 ### Preço, frete e pagamento
 
@@ -313,7 +313,7 @@ A Pockella cobra pelo Pet mais que o dobro da Pessoa e mais que Pessoa + Pet. A 
 | ID | Regra |
 |---|---|
 | RN-26 | Recusas do provedor viram mensagens amigáveis. Passar pelo filtro do provedor não significa que o conteúdo é permitido. |
-| RN-27 | Personagens e marcas são barrados antes da compra pelo classificador (RN-31). Se algum passar, o pedido com conteúdo que viole direitos de terceiros pode ser recusado e reembolsado. A ferramenta para isso fica no app de parceiros. |
+| RN-27 | Personagens e marcas são barrados antes da compra pelo classificador (RN-31). Se algum passar, o pedido com conteúdo que viole direitos de terceiros pode ser recusado e reembolsado. Vale também para ilustração de outro autor, que o classificador não barra. A ferramenta para isso fica no app de parceiros. |
 | RN-28 | **Arquivos ligados a pedidos nunca são apagados automaticamente.** |
 | RN-29 | O arquivo de produção não é enviado ao navegador do cliente. |
 
@@ -387,7 +387,7 @@ Estas notas são pontos de leitura, não aconselhamento jurídico.
 - **Direito de arrependimento em peça personalizada:** vale conferir a redação da política de trocas à luz do Código de Defesa do Consumidor.
 - **Nota fiscal e tributação da venda:** a emissão fica fora do sistema no MVP, mas precisa estar resolvida antes da primeira venda.
 - **Propriedade intelectual:** personagens e marcas, com fluxo de remoção.
-- **Provedor do classificador:** também recebe fotos de pessoas. Ler a política de retenção de dados antes de escolher (a AIMLAPI, que dá acesso ao Jev, é um agregador).
+- **Provedor do classificador:** a TypeSafe também recebe fotos de pessoas. Ler a política de retenção de dados dela.
 - **Lista de espera:** texto do consentimento e finalidade única do e-mail.
 - **Retenção das fotos recusadas:** 30 dias [Proposta].
 
