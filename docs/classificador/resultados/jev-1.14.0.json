@@ -2,13 +2,13 @@
  "resumo": {
   "modelo": "jev-1.14.0",
   "repeticoes": 3,
-  "chamadas": 144,
+  "chamadas": 141,
   "erros": 0,
   "por_tipo": {
    "foto": {
-    "casos": 30,
-    "certos": 29,
-    "venda_certa": 29,
+    "casos": 29,
+    "certos": 28,
+    "venda_certa": 28,
     "instaveis": 0
    },
    "versao": {
@@ -19,8 +19,8 @@
    }
   },
   "segundos_p50": 0.234,
-  "segundos_p95": 0.422,
-  "tokens_entrada_medio": 2754,
+  "segundos_p95": 0.438,
+  "tokens_entrada_medio": 2755,
   "custo_medio_usd": 0.000116
  },
  "resultados": [
@@ -41,7 +41,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.468,
+     "segundos": 0.391,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -65,13 +65,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 2686,
+      "input_tokens": 2690,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.235,
+     "segundos": 0.25,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -101,7 +101,7 @@
      "decisao": "person"
     },
     {
-     "segundos": 0.203,
+     "segundos": 0.234,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -121,11 +121,11 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.02
+       "noul": 0.01
       }
      },
      "tokens": {
-      "input_tokens": 2688,
+      "input_tokens": 2687,
       "output_tokens": 101
      },
      "decisao": "person"
@@ -172,13 +172,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 2615,
+      "input_tokens": 2617,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.204,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -208,7 +208,7 @@
      "decisao": "person"
     },
     {
-     "segundos": 0.25,
+     "segundos": 0.406,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -232,7 +232,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 2616,
+      "input_tokens": 2614,
       "output_tokens": 101
      },
      "decisao": "person"
@@ -256,7 +256,67 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.234,
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 2170,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.235,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 2168,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.218,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -284,66 +344,6 @@
       "output_tokens": 101
      },
      "decisao": "person"
-    },
-    {
-     "segundos": 0.25,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 1.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.05
-      }
-     },
-     "tokens": {
-      "input_tokens": 2174,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    },
-    {
-     "segundos": 0.203,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 1.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.05
-      }
-     },
-     "tokens": {
-      "input_tokens": 2172,
-      "output_tokens": 101
-     },
-     "decisao": "person"
     }
    ]
   },
@@ -364,37 +364,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.203,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 1.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.01
-      }
-     },
-     "tokens": {
-      "input_tokens": 2319,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    },
-    {
-     "segundos": 0.406,
+     "segundos": 0.204,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -424,7 +394,7 @@
      "decisao": "person"
     },
     {
-     "segundos": 0.282,
+     "segundos": 0.218,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -448,61 +418,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 2319,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    }
-   ]
-  },
-  {
-   "id": "f-pessoa-sullivan",
-   "tipo": "foto",
-   "arquivo": "imagens/f-pessoa-sullivan.jpg",
-   "esperado": [
-    "person"
-   ],
-   "credito": "H.J. Whitlock, Photograph of Arthur Sullivan, Wikimedia Commons, domínio público",
-   "decisoes": [
-    "person",
-    "person",
-    "person"
-   ],
-   "maioria": "person",
-   "certo": true,
-   "rodadas": [
-    {
-     "segundos": 0.219,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 1.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.01
-      }
-     },
-     "tokens": {
-      "input_tokens": 2243,
+      "input_tokens": 2320,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.188,
+     "segundos": 0.266,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -526,13 +448,91 @@
       }
      },
      "tokens": {
-      "input_tokens": 2245,
+      "input_tokens": 2318,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "f-pessoa-sullivan",
+   "tipo": "foto",
+   "arquivo": "imagens/f-pessoa-sullivan.jpg",
+   "esperado": [
+    "person"
+   ],
+   "credito": "H.J. Whitlock, Photograph of Arthur Sullivan, Wikimedia Commons, domínio público",
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2249,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.203,
+     "segundos": 0.437,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2244,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -580,7 +580,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.297,
+     "segundos": 0.266,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -600,17 +600,17 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.17
+       "noul": 0.21
       }
      },
      "tokens": {
-      "input_tokens": 2687,
+      "input_tokens": 2690,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.281,
+     "segundos": 0.531,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -630,17 +630,17 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.22
+       "noul": 0.16
       }
      },
      "tokens": {
-      "input_tokens": 2689,
+      "input_tokens": 2685,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.422,
+     "segundos": 0.265,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -664,7 +664,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 2691,
+      "input_tokens": 2687,
       "output_tokens": 101
      },
      "decisao": "person"
@@ -687,7 +687,37 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.203,
+     "segundos": 0.235,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 0.99,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.99,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.01,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1906,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    },
+    {
+     "segundos": 0.187,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -717,7 +747,7 @@
      "decisao": "couple"
     },
     {
-     "segundos": 0.234,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -741,37 +771,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 1905,
-      "output_tokens": 102
-     },
-     "decisao": "couple"
-    },
-    {
-     "segundos": 0.344,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "couple",
-       "confidence": 0.99,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 0.99,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.01,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
-      "input_tokens": 1904,
+      "input_tokens": 1906,
       "output_tokens": 102
      },
      "decisao": "couple"
@@ -793,36 +793,6 @@
    "maioria": "pet",
    "certo": true,
    "rodadas": [
-    {
-     "segundos": 0.235,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
-      "input_tokens": 1530,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    },
     {
      "segundos": 0.219,
      "modelo": "jev-1.14.0",
@@ -854,7 +824,7 @@
      "decisao": "pet"
     },
     {
-     "segundos": 0.39,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -878,7 +848,37 @@
       }
      },
      "tokens": {
-      "input_tokens": 1528,
+      "input_tokens": 1526,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1533,
       "output_tokens": 101
      },
      "decisao": "pet"
@@ -901,36 +901,6 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.547,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
-      "input_tokens": 2690,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    },
-    {
      "segundos": 0.484,
      "modelo": "jev-1.14.0",
      "respostas": {
@@ -951,7 +921,7 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.03
+       "noul": 0.02
       }
      },
      "tokens": {
@@ -985,61 +955,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 2688,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    }
-   ]
-  },
-  {
-   "id": "f-pet-gato-casa",
-   "tipo": "foto",
-   "arquivo": "imagens/f-pet-gato-casa.jpg",
-   "esperado": [
-    "pet"
-   ],
-   "nota": "Foto enviada no app em desenvolvimento",
-   "decisoes": [
-    "pet",
-    "pet",
-    "pet"
-   ],
-   "maioria": "pet",
-   "certo": true,
-   "rodadas": [
-    {
-     "segundos": 0.218,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
-      "input_tokens": 2687,
+      "input_tokens": 2686,
       "output_tokens": 101
      },
      "decisao": "pet"
     },
     {
-     "segundos": 0.25,
+     "segundos": 0.234,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -1063,37 +985,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 2685,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    },
-    {
-     "segundos": 0.219,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
-      "input_tokens": 2693,
+      "input_tokens": 2690,
       "output_tokens": 101
      },
      "decisao": "pet"
@@ -1141,13 +1033,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 2689,
+      "input_tokens": 2688,
       "output_tokens": 101
      },
      "decisao": "pet"
     },
     {
-     "segundos": 0.25,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -1171,13 +1063,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 2686,
+      "input_tokens": 2689,
       "output_tokens": 101
      },
      "decisao": "pet"
     },
     {
-     "segundos": 0.296,
+     "segundos": 0.359,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -1226,18 +1118,18 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.204,
+     "segundos": 0.234,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "person_pet",
-       "confidence": 0.82,
+       "confidence": 0.84,
        "probabilities": {
         "person": 0.01,
-        "pet": 0.15,
+        "pet": 0.13,
         "couple": 0.0,
-        "person_pet": 0.84,
+        "person_pet": 0.86,
         "three_or_more_people": 0.0,
         "multiple_pets": 0.0,
         "group_with_pets": 0.0,
@@ -1250,24 +1142,24 @@
       }
      },
      "tokens": {
-      "input_tokens": 2465,
+      "input_tokens": 2471,
       "output_tokens": 102
      },
      "decisao": "person_pet"
     },
     {
-     "segundos": 0.218,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "person_pet",
-       "confidence": 0.83,
+       "confidence": 0.79,
        "probabilities": {
         "person": 0.01,
-        "pet": 0.14,
+        "pet": 0.17,
         "couple": 0.0,
-        "person_pet": 0.85,
+        "person_pet": 0.82,
         "three_or_more_people": 0.0,
         "multiple_pets": 0.0,
         "group_with_pets": 0.0,
@@ -1280,24 +1172,24 @@
       }
      },
      "tokens": {
-      "input_tokens": 2470,
+      "input_tokens": 2469,
       "output_tokens": 102
      },
      "decisao": "person_pet"
     },
     {
-     "segundos": 0.203,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "person_pet",
-       "confidence": 0.83,
+       "confidence": 0.85,
        "probabilities": {
         "person": 0.01,
-        "pet": 0.14,
+        "pet": 0.12,
         "couple": 0.0,
-        "person_pet": 0.85,
+        "person_pet": 0.87,
         "three_or_more_people": 0.0,
         "multiple_pets": 0.0,
         "group_with_pets": 0.0,
@@ -1310,7 +1202,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 2468,
+      "input_tokens": 2467,
       "output_tokens": 102
      },
      "decisao": "person_pet"
@@ -1334,37 +1226,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.188,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person_pet",
-       "confidence": 0.97,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.01,
-        "couple": 0.0,
-        "person_pet": 0.97,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.02
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
-      "input_tokens": 1025,
-      "output_tokens": 102
-     },
-     "decisao": "person_pet"
-    },
-    {
-     "segundos": 0.171,
+     "segundos": 0.187,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -1388,13 +1250,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 1025,
+      "input_tokens": 1026,
       "output_tokens": 102
      },
      "decisao": "person_pet"
     },
     {
-     "segundos": 0.188,
+     "segundos": 0.172,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -1418,7 +1280,37 @@
       }
      },
      "tokens": {
-      "input_tokens": 1025,
+      "input_tokens": 1024,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 0.95,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.01,
+        "couple": 0.0,
+        "person_pet": 0.96,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.03
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 1022,
       "output_tokens": 102
      },
      "decisao": "person_pet"
@@ -1442,19 +1334,79 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.281,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "three_or_more_people",
-       "confidence": 0.69,
+       "confidence": 0.71,
        "probabilities": {
         "person": 0.01,
         "pet": 0.0,
-        "couple": 0.25,
+        "couple": 0.24,
         "person_pet": 0.0,
-        "three_or_more_people": 0.73,
+        "three_or_more_people": 0.75,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.09
+      }
+     },
+     "tokens": {
+      "input_tokens": 2613,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    },
+    {
+     "segundos": 0.218,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 0.77,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.2,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.8,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.06
+      }
+     },
+     "tokens": {
+      "input_tokens": 2616,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    },
+    {
+     "segundos": 0.438,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 0.7,
+       "probabilities": {
+        "person": 0.01,
+        "pet": 0.0,
+        "couple": 0.24,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.74,
         "multiple_pets": 0.0,
         "group_with_pets": 0.0,
         "no_subject": 0.01
@@ -1462,71 +1414,11 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.07
+       "noul": 0.08
       }
      },
      "tokens": {
-      "input_tokens": 2615,
-      "output_tokens": 104
-     },
-     "decisao": "three_or_more_people"
-    },
-    {
-     "segundos": 0.203,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "three_or_more_people",
-       "confidence": 0.78,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 0.19,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.81,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.06
-      }
-     },
-     "tokens": {
-      "input_tokens": 2614,
-      "output_tokens": 104
-     },
-     "decisao": "three_or_more_people"
-    },
-    {
-     "segundos": 0.219,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "three_or_more_people",
-       "confidence": 0.78,
-       "probabilities": {
-        "person": 0.01,
-        "pet": 0.0,
-        "couple": 0.18,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.81,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.06
-      }
-     },
-     "tokens": {
-      "input_tokens": 2619,
+      "input_tokens": 2617,
       "output_tokens": 104
      },
      "decisao": "three_or_more_people"
@@ -1550,7 +1442,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.25,
+     "segundos": 0.359,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -1570,17 +1462,47 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.05
+       "noul": 0.06
       }
      },
      "tokens": {
-      "input_tokens": 2511,
+      "input_tokens": 2506,
       "output_tokens": 104
      },
      "decisao": "three_or_more_people"
     },
     {
-     "segundos": 0.219,
+     "segundos": 0.36,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 1.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.06
+      }
+     },
+     "tokens": {
+      "input_tokens": 2503,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    },
+    {
+     "segundos": 0.5,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -1608,36 +1530,6 @@
       "output_tokens": 104
      },
      "decisao": "three_or_more_people"
-    },
-    {
-     "segundos": 0.359,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "three_or_more_people",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 1.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.05
-      }
-     },
-     "tokens": {
-      "input_tokens": 2507,
-      "output_tokens": 104
-     },
-     "decisao": "three_or_more_people"
     }
    ]
   },
@@ -1658,67 +1550,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.235,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "multiple_pets",
-       "confidence": 0.98,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.02,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.98,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
-      "input_tokens": 2014,
-      "output_tokens": 103
-     },
-     "decisao": "multiple_pets"
-    },
-    {
-     "segundos": 0.312,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "multiple_pets",
-       "confidence": 0.97,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.02,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.97,
-        "group_with_pets": 0.0,
-        "no_subject": 0.01
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
-      "input_tokens": 2018,
-      "output_tokens": 103
-     },
-     "decisao": "multiple_pets"
-    },
-    {
-     "segundos": 0.344,
+     "segundos": 0.234,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -1742,7 +1574,67 @@
       }
      },
      "tokens": {
-      "input_tokens": 2016,
+      "input_tokens": 2019,
+      "output_tokens": 103
+     },
+     "decisao": "multiple_pets"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "multiple_pets",
+       "confidence": 0.99,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.01,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.99,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2018,
+      "output_tokens": 103
+     },
+     "decisao": "multiple_pets"
+    },
+    {
+     "segundos": 0.531,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "multiple_pets",
+       "confidence": 0.99,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.01,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.99,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2017,
       "output_tokens": 103
      },
      "decisao": "multiple_pets"
@@ -1766,27 +1658,57 @@
    "certo": false,
    "rodadas": [
     {
+     "segundos": 0.313,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 0.65,
+       "probabilities": {
+        "person": 0.01,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.69,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.01,
+        "group_with_pets": 0.29,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2294,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    },
+    {
      "segundos": 0.25,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "person_pet",
-       "confidence": 0.68,
+       "confidence": 0.63,
        "probabilities": {
-        "person": 0.0,
+        "person": 0.01,
         "pet": 0.0,
         "couple": 0.0,
-        "person_pet": 0.72,
+        "person_pet": 0.68,
         "three_or_more_people": 0.0,
         "multiple_pets": 0.01,
-        "group_with_pets": 0.27,
+        "group_with_pets": 0.3,
         "no_subject": 0.0
        }
       },
       "character": {
        "type": "noul",
-       "noul": 0.03
+       "noul": 0.02
       }
      },
      "tokens": {
@@ -1796,7 +1718,7 @@
      "decisao": "person_pet"
     },
     {
-     "segundos": 0.234,
+     "segundos": 0.25,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -1824,36 +1746,6 @@
       "output_tokens": 102
      },
      "decisao": "person_pet"
-    },
-    {
-     "segundos": 0.5,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person_pet",
-       "confidence": 0.78,
-       "probabilities": {
-        "person": 0.01,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.81,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.01,
-        "group_with_pets": 0.17,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
-      "input_tokens": 2298,
-      "output_tokens": 102
-     },
-     "decisao": "person_pet"
     }
    ]
   },
@@ -1874,21 +1766,21 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.625,
+     "segundos": 0.25,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "group_with_pets",
-       "confidence": 0.97,
+       "confidence": 0.99,
        "probabilities": {
         "person": 0.0,
         "pet": 0.0,
         "couple": 0.0,
-        "person_pet": 0.02,
+        "person_pet": 0.01,
         "three_or_more_people": 0.0,
-        "multiple_pets": 0.01,
-        "group_with_pets": 0.97,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.99,
         "no_subject": 0.0
        }
       },
@@ -1898,13 +1790,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 2764,
+      "input_tokens": 2763,
       "output_tokens": 104
      },
      "decisao": "group_with_pets"
     },
     {
-     "segundos": 0.625,
+     "segundos": 0.265,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -1928,7 +1820,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 2764,
+      "input_tokens": 2760,
       "output_tokens": 104
      },
      "decisao": "group_with_pets"
@@ -1940,15 +1832,15 @@
       "subject": {
        "type": "choice",
        "choice": "group_with_pets",
-       "confidence": 0.98,
+       "confidence": 0.99,
        "probabilities": {
         "person": 0.0,
         "pet": 0.0,
         "couple": 0.0,
         "person_pet": 0.01,
         "three_or_more_people": 0.0,
-        "multiple_pets": 0.01,
-        "group_with_pets": 0.98,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.99,
         "no_subject": 0.0
        }
       },
@@ -1958,7 +1850,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 2764,
+      "input_tokens": 2761,
       "output_tokens": 104
      },
      "decisao": "group_with_pets"
@@ -1981,22 +1873,22 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.36,
+     "segundos": 0.375,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "no_subject",
-       "confidence": 0.62,
+       "confidence": 0.6,
        "probabilities": {
-        "person": 0.2,
+        "person": 0.23,
         "pet": 0.0,
         "couple": 0.08,
         "person_pet": 0.0,
-        "three_or_more_people": 0.05,
+        "three_or_more_people": 0.04,
         "multiple_pets": 0.0,
         "group_with_pets": 0.0,
-        "no_subject": 0.67
+        "no_subject": 0.65
        }
       },
       "character": {
@@ -2011,22 +1903,22 @@
      "decisao": "no_subject"
     },
     {
-     "segundos": 0.359,
+     "segundos": 0.719,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "no_subject",
-       "confidence": 0.59,
+       "confidence": 0.62,
        "probabilities": {
-        "person": 0.23,
+        "person": 0.21,
         "pet": 0.0,
-        "couple": 0.08,
+        "couple": 0.07,
         "person_pet": 0.0,
         "three_or_more_people": 0.05,
         "multiple_pets": 0.0,
         "group_with_pets": 0.0,
-        "no_subject": 0.64
+        "no_subject": 0.67
        }
       },
       "character": {
@@ -2035,33 +1927,33 @@
       }
      },
      "tokens": {
-      "input_tokens": 3134,
+      "input_tokens": 3132,
       "output_tokens": 102
      },
      "decisao": "no_subject"
     },
     {
-     "segundos": 0.375,
+     "segundos": 0.203,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "no_subject",
-       "confidence": 0.68,
+       "confidence": 0.62,
        "probabilities": {
-        "person": 0.17,
+        "person": 0.22,
         "pet": 0.0,
         "couple": 0.07,
         "person_pet": 0.0,
         "three_or_more_people": 0.04,
         "multiple_pets": 0.0,
         "group_with_pets": 0.0,
-        "no_subject": 0.72
+        "no_subject": 0.67
        }
       },
       "character": {
        "type": "noul",
-       "noul": 0.04
+       "noul": 0.03
       }
      },
      "tokens": {
@@ -2112,13 +2004,43 @@
       }
      },
      "tokens": {
+      "input_tokens": 2983,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
       "input_tokens": 2987,
       "output_tokens": 102
      },
      "decisao": "no_subject"
     },
     {
-     "segundos": 0.235,
+     "segundos": 0.218,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -2142,37 +2064,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 2986,
-      "output_tokens": 102
-     },
-     "decisao": "no_subject"
-    },
-    {
-     "segundos": 0.234,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "no_subject",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 1.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
-      "input_tokens": 2981,
+      "input_tokens": 2987,
       "output_tokens": 102
      },
      "decisao": "no_subject"
@@ -2195,67 +2087,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.187,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "no_subject",
-       "confidence": 0.92,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 0.01,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.06,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.93
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
-      "input_tokens": 2097,
-      "output_tokens": 102
-     },
-     "decisao": "no_subject"
-    },
-    {
-     "segundos": 0.219,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "no_subject",
-       "confidence": 0.94,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.05,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.95
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.01
-      }
-     },
-     "tokens": {
-      "input_tokens": 2097,
-      "output_tokens": 102
-     },
-     "decisao": "no_subject"
-    },
-    {
-     "segundos": 0.188,
+     "segundos": 0.203,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -2271,6 +2103,66 @@
         "multiple_pets": 0.0,
         "group_with_pets": 0.0,
         "no_subject": 0.96
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2097,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.95,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.04,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.96
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
+      "input_tokens": 2092,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.94,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.05,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.95
        }
       },
       "character": {
@@ -2304,67 +2196,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.25,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "no_subject",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 1.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.06
-      }
-     },
-     "tokens": {
-      "input_tokens": 2225,
-      "output_tokens": 102
-     },
-     "decisao": "no_subject"
-    },
-    {
      "segundos": 0.235,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "no_subject",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 1.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.08
-      }
-     },
-     "tokens": {
-      "input_tokens": 2226,
-      "output_tokens": 102
-     },
-     "decisao": "no_subject"
-    },
-    {
-     "segundos": 0.281,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -2388,7 +2220,67 @@
       }
      },
      "tokens": {
+      "input_tokens": 2227,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.11
+      }
+     },
+     "tokens": {
       "input_tokens": 2224,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.218,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 1.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.09
+      }
+     },
+     "tokens": {
+      "input_tokens": 2226,
       "output_tokens": 102
      },
      "decisao": "no_subject"
@@ -2412,7 +2304,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.234,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -2432,11 +2324,11 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.36
+       "noul": 0.33
       }
      },
      "tokens": {
-      "input_tokens": 2316,
+      "input_tokens": 2321,
       "output_tokens": 102
      },
      "decisao": "no_subject"
@@ -2462,17 +2354,17 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.35
+       "noul": 0.34
       }
      },
      "tokens": {
-      "input_tokens": 2316,
+      "input_tokens": 2318,
       "output_tokens": 102
      },
      "decisao": "no_subject"
     },
     {
-     "segundos": 0.203,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -2492,11 +2384,11 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.39
+       "noul": 0.41
       }
      },
      "tokens": {
-      "input_tokens": 2320,
+      "input_tokens": 2315,
       "output_tokens": 102
      },
      "decisao": "no_subject"
@@ -2521,7 +2413,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.172,
+     "segundos": 0.203,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -2551,7 +2443,7 @@
      "decisao": "protected_character"
     },
     {
-     "segundos": 0.188,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -2575,13 +2467,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 876,
+      "input_tokens": 875,
       "output_tokens": 102
      },
      "decisao": "protected_character"
     },
     {
-     "segundos": 0.187,
+     "segundos": 0.203,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -2605,7 +2497,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 879,
+      "input_tokens": 877,
       "output_tokens": 102
      },
      "decisao": "protected_character"
@@ -2630,22 +2522,22 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.203,
+     "segundos": 0.297,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "no_subject",
-       "confidence": 0.6,
+       "confidence": 0.55,
        "probabilities": {
-        "person": 0.35,
+        "person": 0.39,
         "pet": 0.0,
         "couple": 0.0,
         "person_pet": 0.0,
         "three_or_more_people": 0.0,
         "multiple_pets": 0.0,
         "group_with_pets": 0.0,
-        "no_subject": 0.65
+        "no_subject": 0.61
        }
       },
       "character": {
@@ -2654,43 +2546,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 2024,
+      "input_tokens": 2023,
       "output_tokens": 102
      },
      "decisao": "no_subject"
     },
     {
-     "segundos": 0.187,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "no_subject",
-       "confidence": 0.67,
-       "probabilities": {
-        "person": 0.29,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.71
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.03
-      }
-     },
-     "tokens": {
-      "input_tokens": 2025,
-      "output_tokens": 102
-     },
-     "decisao": "no_subject"
-    },
-    {
-     "segundos": 0.235,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -2714,7 +2576,37 @@
       }
      },
      "tokens": {
-      "input_tokens": 2028,
+      "input_tokens": 2025,
+      "output_tokens": 102
+     },
+     "decisao": "no_subject"
+    },
+    {
+     "segundos": 0.281,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.58,
+       "probabilities": {
+        "person": 0.37,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.63
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.03
+      }
+     },
+     "tokens": {
+      "input_tokens": 2024,
       "output_tokens": 102
      },
      "decisao": "no_subject"
@@ -2739,7 +2631,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.266,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -2748,43 +2640,13 @@
        "confidence": 0.85,
        "probabilities": {
         "person": 0.06,
-        "pet": 0.07,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.87
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.99
-      }
-     },
-     "tokens": {
-      "input_tokens": 2716,
-      "output_tokens": 102
-     },
-     "decisao": "protected_character"
-    },
-    {
-     "segundos": 0.203,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "no_subject",
-       "confidence": 0.87,
-       "probabilities": {
-        "person": 0.05,
         "pet": 0.06,
         "couple": 0.0,
         "person_pet": 0.0,
         "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
+        "multiple_pets": 0.01,
         "group_with_pets": 0.0,
-        "no_subject": 0.89
+        "no_subject": 0.87
        }
       },
       "character": {
@@ -2799,22 +2661,22 @@
      "decisao": "protected_character"
     },
     {
-     "segundos": 0.203,
+     "segundos": 0.218,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "no_subject",
-       "confidence": 0.89,
+       "confidence": 0.87,
        "probabilities": {
-        "person": 0.05,
-        "pet": 0.05,
+        "person": 0.06,
+        "pet": 0.04,
         "couple": 0.0,
         "person_pet": 0.0,
         "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
+        "multiple_pets": 0.01,
         "group_with_pets": 0.0,
-        "no_subject": 0.9
+        "no_subject": 0.89
        }
       },
       "character": {
@@ -2823,7 +2685,37 @@
       }
      },
      "tokens": {
-      "input_tokens": 2714,
+      "input_tokens": 2718,
+      "output_tokens": 102
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "no_subject",
+       "confidence": 0.86,
+       "probabilities": {
+        "person": 0.05,
+        "pet": 0.07,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.88
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 2719,
       "output_tokens": 102
      },
      "decisao": "protected_character"
@@ -2848,67 +2740,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.203,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 0.97,
-       "probabilities": {
-        "person": 0.97,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.03
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.01
-      }
-     },
-     "tokens": {
-      "input_tokens": 2982,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    },
-    {
-     "segundos": 0.563,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 0.97,
-       "probabilities": {
-        "person": 0.97,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.03
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.01
-      }
-     },
-     "tokens": {
-      "input_tokens": 2984,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    },
-    {
-     "segundos": 0.203,
+     "segundos": 0.266,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -2932,7 +2764,67 @@
       }
      },
      "tokens": {
-      "input_tokens": 2985,
+      "input_tokens": 2987,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.218,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.95,
+       "probabilities": {
+        "person": 0.96,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.04
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2984,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.313,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.97,
+       "probabilities": {
+        "person": 0.97,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.03
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2986,
       "output_tokens": 101
      },
      "decisao": "person"
@@ -2957,37 +2849,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.375,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 0.97,
-       "probabilities": {
-        "person": 0.97,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.03
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.01
-      }
-     },
-     "tokens": {
-      "input_tokens": 2761,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    },
-    {
-     "segundos": 0.203,
+     "segundos": 0.875,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3011,13 +2873,43 @@
       }
      },
      "tokens": {
-      "input_tokens": 2760,
+      "input_tokens": 2764,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.391,
+     "segundos": 0.437,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.94,
+       "probabilities": {
+        "person": 0.95,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.05
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2764,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.266,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3041,7 +2933,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 2760,
+      "input_tokens": 2763,
       "output_tokens": 101
      },
      "decisao": "person"
@@ -3066,7 +2958,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.25,
+     "segundos": 0.469,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3090,43 +2982,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 2763,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    },
-    {
-     "segundos": 0.328,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 1.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.02
-      }
-     },
-     "tokens": {
       "input_tokens": 2764,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.344,
+     "segundos": 0.359,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3154,6 +3016,36 @@
       "output_tokens": 101
      },
      "decisao": "person"
+    },
+    {
+     "segundos": 0.313,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.01
+      }
+     },
+     "tokens": {
+      "input_tokens": 2765,
+      "output_tokens": 101
+     },
+     "decisao": "person"
     }
    ]
   },
@@ -3175,37 +3067,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.25,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "three_or_more_people",
-       "confidence": 0.94,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.95,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.05
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.01
-      }
-     },
-     "tokens": {
-      "input_tokens": 3133,
-      "output_tokens": 104
-     },
-     "decisao": "three_or_more_people"
-    },
-    {
-     "segundos": 0.25,
+     "segundos": 0.281,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3229,28 +3091,58 @@
       }
      },
      "tokens": {
+      "input_tokens": 3134,
+      "output_tokens": 104
+     },
+     "decisao": "three_or_more_people"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "three_or_more_people",
+       "confidence": 0.95,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.96,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.04
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.02
+      }
+     },
+     "tokens": {
       "input_tokens": 3136,
       "output_tokens": 104
      },
      "decisao": "three_or_more_people"
     },
     {
-     "segundos": 0.25,
+     "segundos": 0.281,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
        "type": "choice",
        "choice": "three_or_more_people",
-       "confidence": 0.94,
+       "confidence": 0.97,
        "probabilities": {
         "person": 0.0,
         "pet": 0.0,
         "couple": 0.0,
         "person_pet": 0.0,
-        "three_or_more_people": 0.95,
+        "three_or_more_people": 0.97,
         "multiple_pets": 0.0,
         "group_with_pets": 0.0,
-        "no_subject": 0.05
+        "no_subject": 0.03
        }
       },
       "character": {
@@ -3259,7 +3151,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 3135,
+      "input_tokens": 3137,
       "output_tokens": 104
      },
      "decisao": "three_or_more_people"
@@ -3282,7 +3174,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.203,
+     "segundos": 0.235,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3302,17 +3194,17 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.08
+       "noul": 0.1
       }
      },
      "tokens": {
-      "input_tokens": 3346,
+      "input_tokens": 3348,
       "output_tokens": 101
      },
      "decisao": "pet"
     },
     {
-     "segundos": 0.203,
+     "segundos": 0.25,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3336,7 +3228,114 @@
       }
      },
      "tokens": {
-      "input_tokens": 3344,
+      "input_tokens": 3345,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.1
+      }
+     },
+     "tokens": {
+      "input_tokens": 3346,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    }
+   ]
+  },
+  {
+   "id": "v-pet-gatinha-laco",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pet-gatinha-laco.jpg",
+   "esperado": [
+    "pet"
+   ],
+   "decisoes": [
+    "pet",
+    "pet",
+    "pet"
+   ],
+   "maioria": "pet",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.58
+      }
+     },
+     "tokens": {
+      "input_tokens": 3346,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.266,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.59
+      }
+     },
+     "tokens": {
+      "input_tokens": 3341,
       "output_tokens": 101
      },
      "decisao": "pet"
@@ -3362,118 +3361,11 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.09
-      }
-     },
-     "tokens": {
-      "input_tokens": 3348,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    }
-   ]
-  },
-  {
-   "id": "v-pet-gatinha-laco",
-   "tipo": "versao",
-   "arquivo": "imagens/v-pet-gatinha-laco.jpg",
-   "esperado": [
-    "pet"
-   ],
-   "decisoes": [
-    "pet",
-    "pet",
-    "pet"
-   ],
-   "maioria": "pet",
-   "certo": true,
-   "rodadas": [
-    {
-     "segundos": 0.344,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
        "noul": 0.59
       }
      },
      "tokens": {
-      "input_tokens": 3347,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    },
-    {
-     "segundos": 0.203,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.65
-      }
-     },
-     "tokens": {
-      "input_tokens": 3347,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    },
-    {
-     "segundos": 0.218,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.67
-      }
-     },
-     "tokens": {
-      "input_tokens": 3347,
+      "input_tokens": 3346,
       "output_tokens": 101
      },
      "decisao": "pet"
@@ -3496,7 +3388,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.219,
+     "segundos": 0.281,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3520,43 +3412,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 3346,
+      "input_tokens": 3345,
       "output_tokens": 101
      },
      "decisao": "pet"
     },
     {
-     "segundos": 0.235,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 0.99,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.99,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.01,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.05
-      }
-     },
-     "tokens": {
-      "input_tokens": 3346,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    },
-    {
-     "segundos": 0.218,
+     "segundos": 0.25,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3580,7 +3442,37 @@
       }
      },
      "tokens": {
-      "input_tokens": 3348,
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.281,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.04
+      }
+     },
+     "tokens": {
+      "input_tokens": 3349,
       "output_tokens": 101
      },
      "decisao": "pet"
@@ -3604,7 +3496,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.203,
+     "segundos": 0.266,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3624,11 +3516,41 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.11
+       "noul": 0.14
       }
      },
      "tokens": {
-      "input_tokens": 3347,
+      "input_tokens": 3346,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.14
+      }
+     },
+     "tokens": {
+      "input_tokens": 3345,
       "output_tokens": 101
      },
      "decisao": "pet"
@@ -3654,37 +3576,7 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.16
-      }
-     },
-     "tokens": {
-      "input_tokens": 3344,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    },
-    {
-     "segundos": 0.203,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.12
+       "noul": 0.13
       }
      },
      "tokens": {
@@ -3711,67 +3603,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.265,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.08
-      }
-     },
-     "tokens": {
-      "input_tokens": 3349,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    },
-    {
-     "segundos": 0.219,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.08
-      }
-     },
-     "tokens": {
-      "input_tokens": 3347,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    },
-    {
-     "segundos": 0.219,
+     "segundos": 0.297,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3795,7 +3627,67 @@
       }
      },
      "tokens": {
-      "input_tokens": 3347,
+      "input_tokens": 3345,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 3345,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.187,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3343,
       "output_tokens": 101
      },
      "decisao": "pet"
@@ -3819,67 +3711,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.328,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.07
-      }
-     },
-     "tokens": {
-      "input_tokens": 3348,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    },
-    {
-     "segundos": 0.344,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.08
-      }
-     },
-     "tokens": {
-      "input_tokens": 3348,
-      "output_tokens": 101
-     },
-     "decisao": "pet"
-    },
-    {
-     "segundos": 0.187,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -3904,6 +3736,66 @@
      },
      "tokens": {
       "input_tokens": 3345,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "pet"
+    },
+    {
+     "segundos": 0.203,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3343,
       "output_tokens": 101
      },
      "decisao": "pet"
@@ -3926,67 +3818,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.187,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 1.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.09
-      }
-     },
-     "tokens": {
-      "input_tokens": 3348,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    },
-    {
-     "segundos": 0.281,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 1.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.09
-      }
-     },
-     "tokens": {
-      "input_tokens": 3346,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    },
-    {
-     "segundos": 0.266,
+     "segundos": 0.204,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4010,7 +3842,67 @@
       }
      },
      "tokens": {
-      "input_tokens": 3345,
+      "input_tokens": 3346,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3349,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.08
+      }
+     },
+     "tokens": {
+      "input_tokens": 3346,
       "output_tokens": 101
      },
      "decisao": "person"
@@ -4033,7 +3925,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.188,
+     "segundos": 0.203,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4057,13 +3949,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 3349,
+      "input_tokens": 3344,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.312,
+     "segundos": 0.203,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4087,13 +3979,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 3343,
+      "input_tokens": 3344,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.188,
+     "segundos": 0.344,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4113,7 +4005,7 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.06
+       "noul": 0.05
       }
      },
      "tokens": {
@@ -4140,114 +4032,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.203,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 1.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.06
-      }
-     },
-     "tokens": {
-      "input_tokens": 3344,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    },
-    {
-     "segundos": 0.234,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 1.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.07
-      }
-     },
-     "tokens": {
-      "input_tokens": 3349,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    },
-    {
-     "segundos": 0.297,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 1.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.07
-      }
-     },
-     "tokens": {
-      "input_tokens": 3348,
-      "output_tokens": 101
-     },
-     "decisao": "person"
-    }
-   ]
-  },
-  {
-   "id": "v-pessoa-chibi-avo",
-   "tipo": "versao",
-   "arquivo": "imagens/v-pessoa-chibi-avo.jpg",
-   "esperado": [
-    "person"
-   ],
-   "decisoes": [
-    "person",
-    "person",
-    "person"
-   ],
-   "maioria": "person",
-   "certo": true,
-   "rodadas": [
-    {
-     "segundos": 0.203,
+     "segundos": 0.218,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4277,6 +4062,36 @@
      "decisao": "person"
     },
     {
+     "segundos": 0.329,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 3349,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
      "segundos": 0.234,
      "modelo": "jev-1.14.0",
      "respostas": {
@@ -4301,7 +4116,84 @@
       }
      },
      "tokens": {
-      "input_tokens": 3348,
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    }
+   ]
+  },
+  {
+   "id": "v-pessoa-chibi-avo",
+   "tipo": "versao",
+   "arquivo": "imagens/v-pessoa-chibi-avo.jpg",
+   "esperado": [
+    "person"
+   ],
+   "decisoes": [
+    "person",
+    "person",
+    "person"
+   ],
+   "maioria": "person",
+   "certo": true,
+   "rodadas": [
+    {
+     "segundos": 0.234,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 3345,
+      "output_tokens": 101
+     },
+     "decisao": "person"
+    },
+    {
+     "segundos": 0.672,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 1.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.07
+      }
+     },
+     "tokens": {
+      "input_tokens": 3342,
       "output_tokens": 101
      },
      "decisao": "person"
@@ -4327,11 +4219,11 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.07
+       "noul": 0.06
       }
      },
      "tokens": {
-      "input_tokens": 3344,
+      "input_tokens": 3346,
       "output_tokens": 101
      },
      "decisao": "person"
@@ -4354,7 +4246,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.203,
+     "segundos": 0.235,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4378,13 +4270,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 3347,
+      "input_tokens": 3346,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.391,
+     "segundos": 0.234,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4408,13 +4300,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 3350,
+      "input_tokens": 3346,
       "output_tokens": 101
      },
      "decisao": "person"
     },
     {
-     "segundos": 0.297,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4434,11 +4326,11 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.08
+       "noul": 0.1
       }
      },
      "tokens": {
-      "input_tokens": 3344,
+      "input_tokens": 3348,
       "output_tokens": 101
      },
      "decisao": "person"
@@ -4460,36 +4352,6 @@
    "maioria": "couple",
    "certo": true,
    "rodadas": [
-    {
-     "segundos": 0.234,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "couple",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 1.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.05
-      }
-     },
-     "tokens": {
-      "input_tokens": 3344,
-      "output_tokens": 102
-     },
-     "decisao": "couple"
-    },
     {
      "segundos": 0.219,
      "modelo": "jev-1.14.0",
@@ -4521,7 +4383,37 @@
      "decisao": "couple"
     },
     {
-     "segundos": 0.203,
+     "segundos": 0.218,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 1.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.05
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    },
+    {
+     "segundos": 0.328,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4568,7 +4460,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.219,
+     "segundos": 0.297,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4592,7 +4484,37 @@
       }
      },
      "tokens": {
-      "input_tokens": 3348,
+      "input_tokens": 3343,
+      "output_tokens": 102
+     },
+     "decisao": "couple"
+    },
+    {
+     "segundos": 0.266,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "couple",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 1.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.04
+      }
+     },
+     "tokens": {
+      "input_tokens": 3340,
       "output_tokens": 102
      },
      "decisao": "couple"
@@ -4622,37 +4544,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 3344,
-      "output_tokens": 102
-     },
-     "decisao": "couple"
-    },
-    {
-     "segundos": 0.235,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "couple",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 1.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.04
-      }
-     },
-     "tokens": {
-      "input_tokens": 3347,
+      "input_tokens": 3343,
       "output_tokens": 102
      },
      "decisao": "couple"
@@ -4675,7 +4567,37 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.266,
+     "segundos": 0.297,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person_pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 1.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.04
+      }
+     },
+     "tokens": {
+      "input_tokens": 3346,
+      "output_tokens": 102
+     },
+     "decisao": "person_pet"
+    },
+    {
+     "segundos": 0.234,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4699,13 +4621,13 @@
       }
      },
      "tokens": {
-      "input_tokens": 3349,
+      "input_tokens": 3346,
       "output_tokens": 102
      },
      "decisao": "person_pet"
     },
     {
-     "segundos": 0.359,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4733,36 +4655,6 @@
       "output_tokens": 102
      },
      "decisao": "person_pet"
-    },
-    {
-     "segundos": 0.282,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person_pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 1.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.03
-      }
-     },
-     "tokens": {
-      "input_tokens": 3350,
-      "output_tokens": 102
-     },
-     "decisao": "person_pet"
     }
    ]
   },
@@ -4782,7 +4674,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.218,
+     "segundos": 0.235,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4802,17 +4694,17 @@
       },
       "character": {
        "type": "noul",
-       "noul": 0.02
+       "noul": 0.03
       }
      },
      "tokens": {
-      "input_tokens": 3345,
+      "input_tokens": 3343,
       "output_tokens": 104
      },
      "decisao": "group_with_pets"
     },
     {
-     "segundos": 0.297,
+     "segundos": 0.281,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4866,7 +4758,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 3345,
+      "input_tokens": 3348,
       "output_tokens": 104
      },
      "decisao": "group_with_pets"
@@ -4889,7 +4781,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.203,
+     "segundos": 0.25,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -4913,37 +4805,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 3344,
-      "output_tokens": 101
-     },
-     "decisao": "protected_character"
-    },
-    {
-     "segundos": 0.422,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 0.98,
-       "probabilities": {
-        "person": 0.98,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.02
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.99
-      }
-     },
-     "tokens": {
-      "input_tokens": 3343,
+      "input_tokens": 3345,
       "output_tokens": 101
      },
      "decisao": "protected_character"
@@ -4973,7 +4835,37 @@
       }
      },
      "tokens": {
-      "input_tokens": 3345,
+      "input_tokens": 3344,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.219,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.99,
+       "probabilities": {
+        "person": 0.99,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.01
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.99
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
       "output_tokens": 101
      },
      "decisao": "protected_character"
@@ -4996,7 +4888,7 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.219,
+     "segundos": 0.234,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -5020,7 +4912,37 @@
       }
      },
      "tokens": {
-      "input_tokens": 3348,
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.25,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "person",
+       "confidence": 0.98,
+       "probabilities": {
+        "person": 0.98,
+        "pet": 0.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.02
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.98
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
       "output_tokens": 101
      },
      "decisao": "protected_character"
@@ -5032,55 +4954,25 @@
       "subject": {
        "type": "choice",
        "choice": "person",
-       "confidence": 0.98,
+       "confidence": 0.99,
        "probabilities": {
-        "person": 0.98,
+        "person": 0.99,
         "pet": 0.0,
         "couple": 0.0,
         "person_pet": 0.0,
         "three_or_more_people": 0.0,
         "multiple_pets": 0.0,
         "group_with_pets": 0.0,
-        "no_subject": 0.02
+        "no_subject": 0.01
        }
       },
       "character": {
        "type": "noul",
-       "noul": 0.99
+       "noul": 0.98
       }
      },
      "tokens": {
-      "input_tokens": 3348,
-      "output_tokens": 101
-     },
-     "decisao": "protected_character"
-    },
-    {
-     "segundos": 0.203,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "person",
-       "confidence": 0.98,
-       "probabilities": {
-        "person": 0.98,
-        "pet": 0.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.02
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.99
-      }
-     },
-     "tokens": {
-      "input_tokens": 3347,
+      "input_tokens": 3343,
       "output_tokens": 101
      },
      "decisao": "protected_character"
@@ -5104,7 +4996,37 @@
    "certo": true,
    "rodadas": [
     {
-     "segundos": 0.203,
+     "segundos": 0.235,
+     "modelo": "jev-1.14.0",
+     "respostas": {
+      "subject": {
+       "type": "choice",
+       "choice": "pet",
+       "confidence": 1.0,
+       "probabilities": {
+        "person": 0.0,
+        "pet": 1.0,
+        "couple": 0.0,
+        "person_pet": 0.0,
+        "three_or_more_people": 0.0,
+        "multiple_pets": 0.0,
+        "group_with_pets": 0.0,
+        "no_subject": 0.0
+       }
+      },
+      "character": {
+       "type": "noul",
+       "noul": 0.97
+      }
+     },
+     "tokens": {
+      "input_tokens": 3347,
+      "output_tokens": 101
+     },
+     "decisao": "protected_character"
+    },
+    {
+     "segundos": 0.25,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -5134,7 +5056,7 @@
      "decisao": "protected_character"
     },
     {
-     "segundos": 0.218,
+     "segundos": 0.219,
      "modelo": "jev-1.14.0",
      "respostas": {
       "subject": {
@@ -5158,37 +5080,7 @@
       }
      },
      "tokens": {
-      "input_tokens": 3344,
-      "output_tokens": 101
-     },
-     "decisao": "protected_character"
-    },
-    {
-     "segundos": 0.641,
-     "modelo": "jev-1.14.0",
-     "respostas": {
-      "subject": {
-       "type": "choice",
-       "choice": "pet",
-       "confidence": 1.0,
-       "probabilities": {
-        "person": 0.0,
-        "pet": 1.0,
-        "couple": 0.0,
-        "person_pet": 0.0,
-        "three_or_more_people": 0.0,
-        "multiple_pets": 0.0,
-        "group_with_pets": 0.0,
-        "no_subject": 0.0
-       }
-      },
-      "character": {
-       "type": "noul",
-       "noul": 0.98
-      }
-     },
-     "tokens": {
-      "input_tokens": 3348,
+      "input_tokens": 3343,
       "output_tokens": 101
      },
      "decisao": "protected_character"

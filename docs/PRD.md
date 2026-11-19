@@ -268,7 +268,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RN-35 | **Casal e Pessoa + Pet são uma peça única**, com as figuras encostadas: abraçadas, de mãos dadas, ou o pet no colo ou junto à pessoa. É assim nos concorrentes, mantém a altura como a maior dimensão (RN-12) e permite imprimir numa peça só. |
 | RN-36 | **Toda classificação fica registrada:** quem pediu (sessão ou conta, e hash do IP), a foto ou a versão, a categoria pedida, a detectada, a confiança, a decisão, o modelo, a versão do conjunto de perguntas, o custo e a data. Mudar o texto de uma pergunta cria uma nova versão do conjunto, e só entra em uso depois de passar pelo [teste do classificador](classificador/README.md). |
 | RN-37 | **Lista de espera:** o e-mail só entra com consentimento explícito, registrado com a versão do texto e a data, e só é usado para avisar sobre a categoria pedida. |
-| RN-38 | O classificador é o **Jev 1.14** (TypeSafe) [Proposta]. No [teste de 19/11](classificador/README.md), ele acertou 47 de 48 casos, inclusive os que a Pockella errou, em 0,22 s e por cerca de US$ 0,0001 por imagem. A comparação com a OpenAI e o Google, feita quando houver chaves, define o modelo de reserva. |
+| RN-38 | O classificador é o **Jev 1.14** (TypeSafe) [Proposta]. No [teste de 19/11](classificador/README.md), ele acertou 46 de 47 casos, inclusive os que a Pockella errou, em 0,22 s e por cerca de US$ 0,0001 por imagem. A comparação com a OpenAI e o Google, feita quando houver chaves, define o modelo de reserva. |
 
 ### Preço, frete e pagamento
 

@@ -4,13 +4,13 @@
 |---|---|
 | **Data** | 19/11/2026 |
 | **Objetivo** | Saber se o Jev serve como classificador da Kubo (RN-30 a RN-38 do [PRD](../PRD.md)): decidir a categoria da foto antes de gerar e a categoria de cada versão gerada |
-| **Resultado** | **Aprovado no teste.** Na versão final das perguntas, acertou 47 de 48 casos, sempre com a mesma resposta nas 3 repetições, em 0,23 s (mediana) e por cerca de US$ 0,0001 por chamada |
+| **Resultado** | **Aprovado no teste.** Na versão final das perguntas, acertou 46 de 47 casos, sempre com a mesma resposta nas 3 repetições, em 0,23 s (mediana) e por cerca de US$ 0,0001 por chamada |
 
 ## Como foi feito
 
 - **Modelo:** `jev-1.14.0`, pela API da TypeSafe (`POST https://api.typesafe.ai/v1/systemone`), com a imagem ligada pelo cabeçalho `TypeSafe-Danger-Zone-Images: true`. A TypeSafe diz que a entrada de imagem ainda não está pronta para produção.
-- **Casos:** 48 imagens em [`casos.json`](casos.json), cada uma com a resposta esperada.
-  - **30 fotos:** os casos difíceis do estudo da Pockella, mais fotos do Wikimedia Commons e fotos enviadas no app em desenvolvimento.
+- **Casos:** 47 imagens em [`casos.json`](casos.json), cada uma com a resposta esperada.
+  - **29 fotos:** os casos difíceis do estudo da Pockella, mais fotos do Wikimedia Commons e fotos enviadas no app em desenvolvimento.
   - **18 versões:** imagens geradas pela Kubo em desenvolvimento e resultados do estudo de estilos da Jujubit.
   - **Excluídas:** fotos de crianças e fotos de uma pessoa real que não é pública.
 - **Uma chamada por imagem**, com várias perguntas, todas no [`teste_jev.py`](teste_jev.py):
@@ -30,7 +30,9 @@ Para rodar de novo: `apps/backend/.venv/Scripts/python.exe -I docs/classificador
 | v1: pergunta "é foto real?", limite de personagem 0,5 | 26 de 30 | 17 de 18 | Todas | 0,24 s / 0,36 s | US$ 0,00012 |
 | v2: pergunta "é desenho ou pintura?", limite de personagem 0,8 | 29 de 30 | 18 de 18 | Todas | 0,22 s / 0,27 s | US$ 0,00012 |
 | v2 no `jev-1.13.0` (1 repetição) | 29 de 30 | 18 de 18 | - | 0,25 s / 0,38 s | US$ 0,00012 |
-| **v3: sem a pergunta de desenho, desenhos e pinturas aceitos** | **29 de 30** | **18 de 18** | **Todas** | **0,23 s / 0,42 s** | **US$ 0,00012** |
+| **v3: sem a pergunta de desenho, desenhos e pinturas aceitos** | **28 de 29** | **18 de 18** | **Todas** | **0,23 s / 0,44 s** | **US$ 0,00012** |
+
+As rodadas v1 e v2 contaram 30 fotos porque uma delas estava duplicada (`f-pet-gato-casa` era o mesmo arquivo de `f-pet-gato`, e as duas deram certo). A cópia saiu, e a v3 foi rodada de novo com 29 fotos.
 
 A v3 é a versão que vai para produção (`resultados/jev-1.14.0.json`). As rodadas anteriores ficam em `resultados/*-v1.json` e `*-v2.json`.
 
@@ -65,8 +67,8 @@ Na foto antiga da mulher com dois cães, o segundo cão está quase escondido. O
 
 ## Limitações
 
-- **Os limites foram ajustados nos mesmos 48 casos em que foram medidos.** O acerto real tende a ser menor. Antes de produção, vale rodar um segundo conjunto, que não tenha sido usado no ajuste.
-- **48 casos é pouco** para medir taxas de erro pequenas. As fotos de clientes reais (selfies, iluminação ruim, várias pessoas ao fundo) só serão conhecidas no uso.
+- **Os limites foram ajustados nos mesmos casos em que foram medidos.** O acerto real tende a ser menor. Antes de produção, vale rodar um segundo conjunto, que não tenha sido usado no ajuste.
+- **47 casos é pouco** para medir taxas de erro pequenas. As fotos de clientes reais (selfies, iluminação ruim, várias pessoas ao fundo) só serão conhecidas no uso.
 - **A confiança da escolha não aponta o erro.** O único erro veio com 0,81, acima de vários acertos (0,60 a 0,70). Ela não serve, sozinha, como gatilho para o "Quem está na foto?".
 - **A entrada de imagem é experimental** segundo a própria TypeSafe. O comportamento pode mudar entre versões, e a integração precisa de um modelo de reserva.
 - **Não foi comparado com a OpenAI nem com o Google**, por falta de chaves.

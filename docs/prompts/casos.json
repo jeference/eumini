@@ -1,0 +1,20 @@
+[
+  {"id": "f-pessoa-einstein", "categoria": "person", "arquivo": "../classificador/imagens/f-pessoa-einstein.jpg"},
+  {"id": "f-pessoa-mulher", "categoria": "person", "arquivo": "../classificador/imagens/f-pessoa-mulher.jpg"},
+  {"id": "f-pessoa-homem-moderno", "categoria": "person", "arquivo": "../classificador/imagens/f-pessoa-homem-moderno.jpg"},
+  {"id": "f-pessoa-homem-antigo", "categoria": "person", "arquivo": "../classificador/imagens/f-pessoa-homem-antigo.jpg"},
+  {"id": "f-pessoa-sullivan", "categoria": "person", "arquivo": "../classificador/imagens/f-pessoa-sullivan.jpg"},
+  {"id": "f-pessoa-telefone-pb", "categoria": "person", "arquivo": "../classificador/imagens/f-pessoa-telefone-pb.jpg"},
+  {"id": "f-pet-cachorro", "categoria": "pet", "arquivo": "../classificador/imagens/f-pet-cachorro.jpg"},
+  {"id": "f-pet-gato", "categoria": "pet", "arquivo": "../classificador/imagens/f-pet-gato.jpg"},
+  {"id": "f-pet-papagaio", "categoria": "pet", "arquivo": "../classificador/imagens/f-pet-papagaio.jpg"},
+  {"id": "f-casal", "categoria": "couple", "arquivo": "../classificador/imagens/f-casal.jpg"},
+  {"id": "f-casal-meia-idade", "categoria": "couple", "arquivo": "imagens/f-casal-meia-idade.jpg", "nota": "Meio corpo, sentados", "credito": "Half-length portrait of a middle-aged couple (AM 74915-1), Wikimedia Commons, CC BY 4.0"},
+  {"id": "f-casal-parque", "categoria": "couple", "arquivo": "imagens/f-casal-parque.jpg", "credito": "Smile (166406755), Wikimedia Commons, CC BY 3.0"},
+  {"id": "f-casal-noivos-antigo", "categoria": "couple", "arquivo": "imagens/f-casal-noivos-antigo.jpg", "credito": "The Happy Couple (6874578353), Wikimedia Commons, sem restrições"},
+  {"id": "f-pessoa-pet-abraco", "categoria": "person_pet", "arquivo": "../classificador/imagens/f-pessoa-pet-abraco.jpg"},
+  {"id": "f-pessoa-pet-cavalo", "categoria": "person_pet", "arquivo": "../classificador/imagens/f-pessoa-pet-cavalo.jpg"},
+  {"id": "f-pessoa-pet-cadeira", "categoria": "person_pet", "arquivo": "imagens/f-pessoa-pet-cadeira.jpg", "credito": "Portrait of a woman and her dog (28180911880), Wikimedia Commons, sem restrições"},
+  {"id": "f-pessoa-pet-poodle", "categoria": "person_pet", "arquivo": "imagens/f-pessoa-pet-poodle.jpg", "credito": "Pascal Sébah, Portrait of a Man and His Dog, Cleveland Museum of Art, Wikimedia Commons, CC0"},
+  {"id": "f-pessoa-pet-campo", "categoria": "person_pet", "arquivo": "imagens/f-pessoa-pet-campo.jpg", "credito": "Portrait of old man with dog (AM 81011-1), Wikimedia Commons, CC BY 4.0"}
+]

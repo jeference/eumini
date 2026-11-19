@@ -8,7 +8,6 @@
   {"id": "f-casal", "tipo": "foto", "arquivo": "imagens/f-casal.jpg", "esperado": ["couple"]},
   {"id": "f-pet-cachorro", "tipo": "foto", "arquivo": "imagens/f-pet-cachorro.jpg", "esperado": ["pet"]},
   {"id": "f-pet-gato", "tipo": "foto", "arquivo": "imagens/f-pet-gato.jpg", "esperado": ["pet"]},
-  {"id": "f-pet-gato-casa", "tipo": "foto", "arquivo": "imagens/f-pet-gato-casa.jpg", "esperado": ["pet"], "nota": "Foto enviada no app em desenvolvimento"},
   {"id": "f-pet-papagaio", "tipo": "foto", "arquivo": "imagens/f-pet-papagaio.jpg", "esperado": ["pet"], "credito": "Portrait of Yellow-headed Amazon Parrot, Wikimedia Commons, CC BY-SA 3.0"},
   {"id": "f-pessoa-pet-cavalo", "tipo": "foto", "arquivo": "imagens/f-pessoa-pet-cavalo.jpg", "esperado": ["person_pet"], "nota": "A Pockella vendeu como Pessoa + Pet", "credito": "Horse portrait near Quebec City, Canada, Wikimedia Commons, CC BY-SA 4.0"},
   {"id": "f-pessoa-pet-abraco", "tipo": "foto", "arquivo": "imagens/f-pessoa-pet-abraco.jpg", "esperado": ["person_pet"], "nota": "Foto enviada no app em desenvolvimento"},

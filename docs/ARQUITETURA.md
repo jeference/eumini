@@ -766,7 +766,7 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 | 5 | Prazos de retenção e redação de termos | Revisão jurídica |
 | 6 | Hospedagem e domínios definitivos. Os arquivos Docker existem, mas não foram executados | Decidir e testar antes de homologação |
 | 7 | Limites de cota e teto de gasto | Ajustar com dados reais |
-| 8 | Modelo e provedor do classificador, e modelo de reserva | Jev 1.14, direto na TypeSafe, aprovado no [teste de 19/11](classificador/README.md): 47 de 48 casos certos. Faltam o modelo de reserva, a comparação com OpenAI e Google, e um segundo conjunto de casos |
+| 8 | Modelo e provedor do classificador, e modelo de reserva | Jev 1.14, direto na TypeSafe, aprovado no [teste de 19/11](classificador/README.md): 46 de 47 casos certos. Faltam o modelo de reserva, a comparação com OpenAI e Google, e um segundo conjunto de casos |
 | 9 | Valores da tabela de preços por categoria | Provisórios no PRD; definitivos antes de produção |
 | 10 | Embalagem de Casal e Pessoa + Pet, mais largos que uma figura do mesmo tamanho | Medir nas amostras impressas |
 
