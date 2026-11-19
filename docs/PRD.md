@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | Rascunho para validação |
-| **Data** | 04/11/2026, revisado em 05/11/2026 (compra direto do 2D) |
+| **Data** | 04/11/2026, revisado em 05/11/2026 (compra direto do 2D) e em 19/11/2026 (categorias da Pockella e estilo único) |
 | **Documento irmão** | [Arquitetura do MVP](ARQUITETURA.md) |
 
 > **Como ler as marcações.** **P0** é obrigatório para lançar. **P1** é importante, mas pode entrar logo depois do lançamento. **[Proposta]** é um valor ou escolha inicial que ainda precisa de validação. O restante é decisão tomada.
@@ -15,6 +15,8 @@
 A Kubo transforma uma foto em um objeto físico, impresso em 3D. O cliente envia uma imagem, pede uma mudança se quiser, vê o resultado em 2D, ajusta conversando com a IA e compra a peça a partir da imagem. A peça é impressa e enviada para a casa dele.
 
 **O cliente não vê um modelo 3D antes de comprar.** Como na Pockella, a compra abre assim que a imagem fica pronta. O modelo 3D é feito depois do pagamento, na preparação de impressão, que está fora do MVP.
+
+**O catálogo segue o da Pockella:** quatro figuras, **Pessoa, Pet, Casal e Pessoa + Pet**, num único estilo. O cliente entra pela categoria que quer, mas quem decide a categoria é um classificador, que lê a foto antes de gerar. A categoria define os tamanhos e o preço. Fotos fora das quatro categorias são recusadas com orientação, e o interesse fica registrado para decidir quais categorias abrir depois.
 
 A plataforma terá dois lados: o **app do cliente** e, no futuro, o **app dos parceiros**, que imprimem e enviam os pedidos. O cliente compra da Kubo e não vê quem imprimiu.
 
@@ -54,8 +56,11 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 - App de parceiros e repasse financeiro a parceiros.
 - **Qualquer funcionalidade de operação neste app:** ela fica toda no app de parceiros.
 - Troca de cor pelo cliente.
+- **Escolha de estilo:** a figura sai num estilo único.
+- **Categorias além das quatro:** grupos de 3 ou mais pessoas, mais de um pet, objetos, personagens e desenhos.
+- Chaveiros.
 - Assinaturas, créditos pagos, cupons e programas de desconto.
-- Galeria pública, Remix, compartilhamento e páginas de template.
+- Galeria pública, Remix, compartilhamento e templates (ver [seção 11](#templates)).
 - Venda internacional e aplicativo nativo.
 
 ---
@@ -75,7 +80,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 
 | Área | Dentro do MVP | Fora do MVP |
 |---|---|---|
-| **Criação** | Foto com pedido de alteração opcional, 4 estilos, imagem 2D, edição por chat com versões | Criar só a partir de texto, modelo e visualizador 3D, 4 opções por geração, desenho livre, modo Duo |
+| **Criação** | Entrada por categoria, foto com pedido de alteração opcional, classificação da foto, estilo único, imagem 2D, edição por chat com versões | Criar só a partir de texto, escolha de estilo, categorias além das quatro, modelo e visualizador 3D, 4 opções por geração, desenho livre |
 | **Continuidade** | Retomar criação ao recarregar, "Minhas criações", excluir | Galeria pública, Remix, templates |
 | **Compra** | Tamanho, quantidade, carrinho, Comprar agora, cotação de frete, PIX, acompanhamento do pedido | Cartão, cupons, assinatura, venda de arquivo, realidade aumentada |
 | **Conta** | Opcional, com transferência de criações e pedidos ao entrar | Login social |
@@ -88,8 +93,11 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | Gerar e comprar sem login | Jujubit e Meshy Shop | Igual: sessão de visitante e checkout de convidado |
 | Pedido ligado ao e-mail do checkout | Meshy Shop | Igual, com link de acompanhamento por e-mail |
 | Comprar direto do 2D | Pockella | Igual: a compra abre assim que a imagem fica pronta, sem esperar nem pagar por um 3D |
-| Edição por chat com versões | Jujubit | Igual, com cota própria (a Jujubit não limita) |
-| Estilos | Jujubit | 4 estilos ajustados contra as referências |
+| Edição por chat com versões | Jujubit | Igual, com cota própria (a Jujubit não limita). Cada versão é reclassificada |
+| Catálogo de quatro figuras | Pockella | Igual: Pessoa, Pet, Casal e Pessoa + Pet, com os tamanhos de cada uma. Sem chaveiro |
+| Categoria decidida pela foto | Pockella | Igual: o classificador roda antes de gerar, e a página de entrada é só uma sugestão |
+| Recusa com caminho | Pockella | Igual: "Escolher outra foto" e, para grupos, "Recorte e nós fazemos", com lista de espera |
+| Estilo único | Pockella | Um estilo de figura, ajustado contra os designs da Pockella |
 | Cota reservada e debitada só no sucesso | Jujubit | Igual, valendo também para edição |
 | Retomar tarefas em andamento | Meshy Shop | Igual |
 | Botões de compra fixos no celular | Jujubit | Igual, sempre com o preço ao lado |
@@ -100,7 +108,10 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | Problema observado | Decisão na Kubo |
 |---|---|
 | Barra de progresso falsa, parada em 90% | Mensagens de etapa e tempo decorrido, sem porcentagem inventada |
-| Preço que muda depois do 3D (Meshy Shop) | Preço fixo por tamanho, visível junto com a imagem |
+| Preço que muda depois do 3D (Meshy Shop) | Preço fixo por categoria e tamanho, visível junto com a imagem |
+| Categoria trocada em silêncio, com outro preço (Pockella) | Aviso com a categoria detectada e o novo preço |
+| Pessoa + Pet mais barato que Pet sozinho (Pockella) | Peças com duas figuras sempre custam mais que as de uma, no mesmo tamanho |
+| Desenho infantil e personagem aceitos como pessoa, pelúcia aceita como pet (Pockella) | O classificador também recusa desenhos, personagens e marcas |
 | Aviso de que a peça pode variar em um só produto (Pockella) | O aviso aparece em toda tela de compra |
 | Mensagem genérica em recusa de conteúdo | Explicar o motivo e o que fazer |
 | Links de produção expostos ao navegador antes do pagamento | Arquivos de produção só no servidor |
@@ -114,20 +125,27 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 
 | # | Tela | O cliente faz | O sistema faz |
 |---|---|---|---|
-| 1 | **Início** | Escolhe o estilo. Escreve o que quer, envia uma foto, ou os dois | Cria a sessão de visitante, se ainda não existir |
-| 2 | **Gerando imagem** | Aguarda | Mostra etapas e tempo decorrido. Pode recarregar sem perder a criação |
-| 3 | **Comprar** | Vê a imagem e, ao lado, escolhe tamanho e quantidade. Pode **Editar** a imagem antes | Mostra o preço e informa que a peça pode diferir da imagem. Mantém a criação salva |
-| 4 | **Editar** (opcional) | Pede ajustes pelo chat, compara versões, cancela ou conclui | Gera uma nova versão a partir da escolhida. A versão concluída passa a ser a imagem da compra |
-| 5 | **Carrinho** | Revê itens ou segue direto com **Comprar agora** | Mantém o carrinho entre visitas |
-| 6 | **Checkout** | Informa e-mail, nome, CPF, telefone e endereço. Escolhe o frete | Preenche o endereço pelo CEP (P1), cota o frete e mostra o total |
-| 7 | **Pagamento** | Paga o PIX por QR Code ou copia e cola | Mostra o prazo de 30 minutos e aguarda a confirmação |
-| 8 | **Pedido confirmado** | Vê o número e o prazo | Envia e-mail com link de acompanhamento |
-| 9 | **Acompanhar** | Consulta o status e o rastreio | Mostra Confirmado → Em produção → Enviado → Entregue |
+| 1 | **Início** | Escolhe a categoria: Pessoa, Pet, Casal ou Pessoa + Pet | Cria a sessão de visitante, se ainda não existir |
+| 2 | **Página da categoria** | Envia a foto e, se quiser, escreve um pedido de alteração | Mostra exemplos, tamanhos e o preço "a partir de" da categoria |
+| 3 | **Lendo a foto** | Aguarda alguns segundos | Classifica a foto. Se a categoria detectada for outra, avisa qual é e o novo preço "a partir de". Se a foto estiver fora das categorias, explica o motivo e o que fazer |
+| 4 | **Gerando imagem** | Aguarda | Mostra etapas e tempo decorrido. Pode recarregar sem perder a criação |
+| 5 | **Comprar** | Vê a imagem e, ao lado, escolhe tamanho e quantidade. Pode **Editar** a imagem antes | Mostra os tamanhos e preços da categoria e informa que a peça pode diferir da imagem. Mantém a criação salva |
+| 6 | **Editar** (opcional) | Pede ajustes pelo chat, compara versões, cancela ou conclui | Gera uma nova versão a partir da escolhida e a reclassifica. A versão concluída passa a ser a imagem da compra |
+| 7 | **Carrinho** | Revê itens ou segue direto com **Comprar agora** | Mantém o carrinho entre visitas |
+| 8 | **Checkout** | Informa e-mail, nome, CPF, telefone e endereço. Escolhe o frete | Preenche o endereço pelo CEP (P1), cota o frete e mostra o total |
+| 9 | **Pagamento** | Paga o PIX por QR Code ou copia e cola | Mostra o prazo de 30 minutos e aguarda a confirmação |
+| 10 | **Pedido confirmado** | Vê o número e o prazo | Envia e-mail com link de acompanhamento |
+| 11 | **Acompanhar** | Consulta o status e o rastreio | Mostra Confirmado → Em produção → Enviado → Entregue |
 
 ### 5.2 Estados de exceção
 
 | Situação | O que o cliente vê | O que acontece |
 |---|---|---|
+| Foto sem pessoa nem pet, desenho, personagem ou marca | "Precisamos de uma pessoa ou um pet na foto", com **Escolher outra foto** | Nada é gerado, a cota de geração não é tocada, a recusa é registrada |
+| Foto com 3 ou mais pessoas, 2 ou mais pets, ou grupo com pets | "Recorte e nós fazemos": explica as combinações aceitas, com **Enviar foto recortada** e **Me avise quando estiver pronto** | Igual à linha acima. O e-mail entra na lista de espera, com consentimento |
+| Categoria detectada diferente da página | Aviso com a categoria detectada e o novo preço "a partir de" | A geração segue na categoria detectada. O cliente pode cancelar e trocar a foto |
+| Classificador em dúvida [Proposta] | "Quem está na foto?", com as quatro opções e **Escolher outra foto** | A geração segue na categoria escolhida. A versão gerada é classificada de novo (RN-34) |
+| Edição muda quem aparece na imagem | A versão mostra a nova categoria e o novo preço. Se a nova categoria não for vendida, a versão não pode ser comprada, e o cliente vê o motivo | As outras versões continuam disponíveis |
 | Falha na geração | Mensagem clara e **Tentar de novo** | Cota devolvida |
 | Conteúdo recusado | O motivo em linguagem simples, junto da criação, e sugestão de ajuste | Cota devolvida, recusa registrada |
 | Cota do dia esgotada | Quanto falta para renovar e, se fizer sentido, convite para criar conta | Nada é enviado ao provedor |
@@ -154,12 +172,18 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 |---|---|---|
 | RF-CRI-01 | Criar a partir de uma foto, que é obrigatória, com pedido de alteração opcional (até 1.000 caracteres) | P0 |
 | RF-CRI-02 | Aceitar PNG, JPG e WEBP de até 10 MB [Proposta], corrigindo a orientação da foto | P0 |
-| RF-CRI-03 | Oferecer os estilos Livre, Pixar, Mini Pop e Chibi, com miniatura | P0 |
+| RF-CRI-03 | Gerar todas as figuras num estilo único, sem seletor de estilo | P0 |
 | RF-CRI-04 | Gerar uma imagem por solicitação | P0 |
-| RF-CRI-05 | Abrir a compra assim que a imagem fica pronta, sem etapa de 3D | P0 |
+| RF-CRI-05 | Abrir a compra assim que a imagem fica pronta e classificada, sem etapa de 3D | P0 |
 | RF-CRI-06 | Editar por chat (até 200 caracteres por instrução), a partir de qualquer versão | P0 |
 | RF-CRI-07 | Mostrar o histórico de versões, cancelar a edição ou concluir com a versão escolhida | P0 |
 | RF-CRI-08 | Manter nos itens do carrinho a imagem com que foram adicionados, mesmo depois de uma edição | P0 |
+| RF-CRI-09 | Ter uma página de entrada por categoria, todas com o mesmo envio de foto | P0 |
+| RF-CRI-10 | Classificar a foto antes de gerar e seguir na categoria detectada, avisando quando ela for diferente da página | P0 |
+| RF-CRI-11 | Recusar fotos fora das categorias com o motivo e o caminho: outra foto, ou recortar o grupo | P0 |
+| RF-CRI-14 | Classificar cada versão gerada ou editada e mostrar a categoria e o preço dela | P0 |
+| RF-CRI-15 | Perguntar "Quem está na foto?" quando o classificador estiver em dúvida [Proposta] | P1 |
+| RF-CRI-16 | Lista de espera: quem foi recusado deixa o e-mail para ser avisado quando a categoria existir | P1 |
 | RF-CRI-12 | Mostrar etapas e tempo decorrido durante cada espera | P0 |
 | RF-CRI-13 | Retomar qualquer criação e tarefa em andamento após recarregar | P0 |
 
@@ -175,8 +199,8 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 
 | ID | Requisito | Prioridade |
 |---|---|---|
-| RF-COM-01 | Escolher entre os tamanhos ativos e quantidade de 1 a 10 | P0 |
-| RF-COM-02 | Mostrar o preço por tamanho e o total em reais | P0 |
+| RF-COM-01 | Escolher entre os tamanhos ativos da categoria e quantidade de 1 a 10 | P0 |
+| RF-COM-02 | Mostrar o preço por categoria e tamanho e o total em reais | P0 |
 | RF-COM-04 | Adicionar ao carrinho ou seguir direto com Comprar agora | P0 |
 | RF-COM-05 | Manter o carrinho da sessão ou da conta | P0 |
 | RF-COM-06 | Finalizar sem conta, informando e-mail, nome, CPF, telefone e endereço | P0 |
@@ -234,21 +258,46 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RN-08 | Cancelar uma edição oculta o resultado. Se o provedor já tiver processado a tarefa, o custo é registrado e a cota é consumida. |
 | RN-09 | Concluir uma edição troca a imagem atual da criação. Itens já no carrinho continuam com a imagem com que foram adicionados. |
 
+### Categorias e classificação
+
+| ID | Regra |
+|---|---|
+| RN-30 | **Categorias vendidas:** **Pessoa** (uma pessoa), **Pet** (um animal de estimação; a maioria dos pets é aceita, como na Pockella), **Casal** (duas pessoas) e **Pessoa + Pet** (uma pessoa e um pet). |
+| RN-31 | **Fotos recusadas:** 3 ou mais pessoas, 2 ou mais pets, grupo com pets, sem pessoa nem pet, desenho ou ilustração (não é foto real), e personagem ou marca. |
+| RN-32 | **Quem decide a categoria é o classificador**, a partir da foto. A página de entrada é só uma sugestão: se a foto for de outra categoria, a criação segue nela, com aviso. |
+| RN-33 | A classificação acontece antes de qualquer geração. **Uma foto recusada não gera imagem nem consome a cota de geração.** A classificação tem limite próprio por sessão e por IP [Proposta: 30 por dia]. |
+| RN-34 | **Toda versão gerada ou editada também é classificada.** A categoria e o preço da versão vêm dessa classificação. Se ela cair numa categoria recusada, a versão não pode ser comprada. Isso fecha a brecha de pedir, por edição, uma figura que custaria mais. |
+| RN-35 | **Casal e Pessoa + Pet são uma peça única**, com as figuras encostadas: abraçadas, de mãos dadas, ou o pet no colo ou junto à pessoa. É assim nos concorrentes, mantém a altura como a maior dimensão (RN-12) e permite imprimir numa peça só. |
+| RN-36 | **Toda classificação fica registrada:** quem pediu (sessão ou conta, e hash do IP), a foto ou a versão, a categoria pedida, a detectada, a confiança, a decisão, o modelo, o custo e a data. |
+| RN-37 | **Lista de espera:** o e-mail só entra com consentimento explícito, registrado com a versão do texto e a data, e só é usado para avisar sobre a categoria pedida. |
+| RN-38 | O modelo do classificador sai de um teste comparativo entre o **Jev 1.14** (TypeSafe), um modelo de visão da OpenAI e um do Google, usando os casos difíceis do estudo da Pockella. Os critérios são acerto, tempo abaixo de 4 s e custo [Proposta]. |
+
 ### Preço, frete e pagamento
 
 | ID | Regra |
 |---|---|
-| RN-10 | O preço depende só do tamanho e aparece junto com a imagem. |
-| RN-11 | Tabela de preços: 4 cm R$ 59,90 · 6 cm R$ 99,90 · 8 cm R$ 144,90 · 10 cm R$ 189,90 · 12 cm R$ 229,90. |
-| RN-12 | **Tamanho é a maior dimensão da peça** [Proposta]. |
+| RN-10 | O preço depende da **categoria da versão e do tamanho**, é calculado no servidor e aparece junto com a imagem. |
+| RN-11 | Tabela de preços [Proposta, valores provisórios a ajustar antes de produção]: ver abaixo. No mesmo tamanho, a ordem é Pessoa < Pet < Pessoa + Pet < Casal, e peças com duas figuras sempre custam mais que as de uma. |
+| RN-12 | **Tamanho é a maior dimensão da peça**, em todas as categorias [Proposta]. |
 | RN-13 | **Compra só com a imagem:** o cliente compra sem ver um modelo 3D. O 3D é feito depois do pagamento, na preparação de impressão. |
-| RN-14 | Sem malha antes da compra, não há como medir o custo de cada peça. **O preço de cada tamanho precisa cobrir as peças mais pesadas** [Proposta, a calibrar com impressões reais]. |
+| RN-14 | Sem malha antes da compra, não há como medir o custo de cada peça. **O preço de cada categoria e tamanho precisa cobrir as peças mais pesadas** [Proposta, a calibrar com impressões reais]. |
 | RN-15 | O frete é cotado por CEP e recalculado no servidor ao fechar o pedido. Se mudar, o cliente confirma o novo valor. |
 | RN-16 | O prazo mostrado é a soma do prazo de produção com o do frete. Prazo de produção inicial de 7 dias úteis [Proposta]. |
-| RN-17 | Preço, frete, imagem, prompt e endereço ficam congelados no pedido. Mudanças posteriores não os alteram. |
+| RN-17 | Categoria, preço, frete, imagem, prompt e endereço ficam congelados no pedido. Mudanças posteriores não os alteram. |
 | RN-18 | O PIX expira em 30 minutos. Sem pagamento, o pedido expira e o carrinho permanece. |
 | RN-19 | No lançamento, o único meio de pagamento é o PIX. |
 | RN-20 | O pedido só é confirmado por notificação do gateway, conferida junto a ele. Nada informado pelo navegador confirma pagamento. |
+
+**Tabela de preços sugerida (RN-11).** A base é a tabela de Pessoa, multiplicada por um fator por categoria e arredondada para ",90". Os tamanhos de cada categoria são os da Pockella.
+
+| Categoria | Fator | 4 cm | 6 cm | 8 cm | 10 cm | 12 cm |
+|---|---|---|---|---|---|---|
+| Pessoa | 1,0 | - | R$ 99,90 | R$ 144,90 | R$ 189,90 | R$ 229,90 |
+| Pet | 1,1 | R$ 65,90 | R$ 109,90 | R$ 159,90 | - | - |
+| Pessoa + Pet | 1,3 | - | R$ 129,90 | R$ 189,90 | R$ 249,90 | R$ 299,90 |
+| Casal | 1,5 | - | R$ 149,90 | R$ 219,90 | - | - |
+
+A Pockella cobra pelo Pet mais que o dobro da Pessoa e mais que Pessoa + Pet. A Kubo não segue isso, porque um pet do mesmo tamanho não gasta o dobro de material e porque a combinação mais barata que a figura isolada vira brecha de preço.
 
 ### Pedido e pós-venda
 
@@ -264,7 +313,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | ID | Regra |
 |---|---|
 | RN-26 | Recusas do provedor viram mensagens amigáveis. Passar pelo filtro do provedor não significa que o conteúdo é permitido. |
-| RN-27 | Um pedido com conteúdo que viole direitos de terceiros pode ser recusado e reembolsado. A ferramenta para isso fica no app de parceiros. |
+| RN-27 | Personagens e marcas são barrados antes da compra pelo classificador (RN-31). Se algum passar, o pedido com conteúdo que viole direitos de terceiros pode ser recusado e reembolsado. A ferramenta para isso fica no app de parceiros. |
 | RN-28 | **Arquivos ligados a pedidos nunca são apagados automaticamente.** |
 | RN-29 | O arquivo de produção não é enviado ao navegador do cliente. |
 
@@ -276,8 +325,10 @@ Mesmo sem o app de parceiros, o MVP guarda desde o primeiro dia:
 
 | Dado | Por que importa |
 |---|---|
-| Texto do cliente, estilo, foto enviada e prompt final enviado ao modelo | Reproduzir, ajustar prompts e investigar problemas |
-| Todas as versões de imagem, com origem e instrução de edição | Histórico e base para gerar o 3D na produção |
+| Texto do cliente, categoria, foto enviada e prompt final enviado ao modelo | Reproduzir, ajustar prompts e investigar problemas |
+| Todas as versões de imagem, com origem, instrução de edição e categoria | Histórico e base para gerar o 3D na produção |
+| Cada classificação, com categoria pedida, detectada, confiança e decisão (RN-36) | Medir o classificador, achar erros e brechas de preço |
+| Lista de espera, com consentimento | Decidir quais categorias abrir depois |
 | Modelo de IA, versão do prompt, custo, tempo e erro de cada tarefa | Custo por venda e confiabilidade |
 | Pedidos com tudo congelado no momento da compra | Produção, atendimento e contabilidade |
 | Evento imutável a cada mudança de status | Auditoria e métricas de funil |
@@ -294,7 +345,8 @@ A retenção de arquivos tem prazos próprios, porque fotos e rostos são dados 
 
 | Grupo | Métrica |
 |---|---|
-| **Funil** | Prompt enviado → 2D gerado → tamanho escolhido → item no carrinho → checkout iniciado → PIX gerado → pago |
+| **Funil** | Foto enviada → foto aceita → 2D gerado → tamanho escolhido → item no carrinho → checkout iniciado → PIX gerado → pago, por categoria |
+| **Classificação** | Recusas por motivo; categoria pedida × detectada; respostas ao "Quem está na foto?"; versões que mudaram de categoria na edição; inscrições na lista de espera por categoria |
 | **Custo** | Custo de IA por criação e por venda; custo total por dia |
 | **Confiabilidade** | Taxa de falha e de recusa por etapa; tarefas presas |
 | **Tempo** | Tempo por etapa (p50 e p95) |
@@ -312,13 +364,15 @@ Não há metas numéricas ainda: as primeiras semanas servem para formar a linha
 | Risco | Impacto | Como tratamos |
 |---|---|---|
 | **Vender sem saber se dá para imprimir.** O cliente compra uma imagem, e o 3D só é feito depois do pagamento. Nada foi impresso, e a preparação de impressão ficou fora do MVP | **Crítico:** pedidos parados ou reembolsados | Teste real, da imagem à peça impressa, como condição de lançamento |
-| **A peça difere da imagem.** O cliente não vê o 3D antes de pagar, o modelo pode mudar a forma, a impressão FDM tem até 4 cores, e o limite de cores nas imagens não é garantido (15 de 18 imagens no Mini Pop e 14 de 18 no Chibi, contadas a olho) | Alto: frustração e pedidos de reembolso | Aviso claro no produto e nos termos, e revisão antes de produzir |
+| **A peça difere da imagem.** O cliente não vê o 3D antes de pagar, o modelo pode mudar a forma, a impressão FDM tem até 4 cores, e o limite de cores nas imagens não é garantido (14 de 18 imagens no estilo Chibi, contadas a olho) | Alto: frustração e pedidos de reembolso | Aviso claro no produto e nos termos, e revisão antes de produzir |
+| **O classificador erra.** A Pockella aceitou um personagem e um desenho infantil como pessoa, e uma pelúcia como pet. Erro para mais vende o que não devia; erro para menos perde venda | Médio: peça fora das regras, preço errado ou cliente recusado sem motivo | Teste comparativo antes de escolher o modelo, nova classificação de cada versão (RN-34) e acompanhamento das recusas por motivo |
+| **Entrada de imagem do Jev ainda experimental.** A TypeSafe diz que ela não está pronta para produção | Médio, se o Jev for o escolhido | Modelo de reserva de outro provedor, como na geração |
 | **Abuso da geração aberta** | Alto: gasto sem venda | Cotas, limite por IP e teto global |
-| **Margem incorreta.** O preço é fixo por tamanho, e nenhuma peça é medida antes da compra. Uma peça maciça, ou a purga das 4 cores, pode custar mais que o previsto | Alto: venda com prejuízo, sem ninguém perceber | Calibrar a tabela com impressões reais e acompanhar o custo de cada pedido |
+| **Margem incorreta.** O preço é fixo por categoria e tamanho, e nenhuma peça é medida antes da compra. Uma peça maciça, ou a purga das 4 cores, pode custar mais que o previsto | Alto: venda com prejuízo, sem ninguém perceber | Calibrar a tabela com impressões reais e acompanhar o custo de cada pedido |
 | **Peça muito pequena.** 4 cm em FDM com várias cores pode não ser viável | Médio | Testar antes de lançar. Tamanhos inviáveis ficam inativos |
 | **Pedido pago sem tratamento.** Este app não tem operação: sem o app de parceiros, nenhuma tela do sistema mostra pedidos, entrega os arquivos ou registra o rastreio, e o cliente fica parado em "Confirmado" | **Crítico** | O app de parceiros é o próximo passo depois do app do cliente, e vendas reais só começam com a operação pronta |
 | **Só PIX reduz a conversão** em compras de maior valor | Médio | Medir o abandono no pagamento. O gateway também oferece cartão |
-| **Provedor único de IA** | Médio | Toda integração fica isolada, permitindo trocar de provedor |
+| **Provedor único de IA** na geração e na classificação | Médio | Toda integração fica isolada, permitindo trocar de provedor, e cada uma tem um modelo de reserva |
 
 ### Pontos jurídicos (validar com advogado)
 
@@ -333,14 +387,18 @@ Estas notas são pontos de leitura, não aconselhamento jurídico.
 - **Direito de arrependimento em peça personalizada:** vale conferir a redação da política de trocas à luz do Código de Defesa do Consumidor.
 - **Nota fiscal e tributação da venda:** a emissão fica fora do sistema no MVP, mas precisa estar resolvida antes da primeira venda.
 - **Propriedade intelectual:** personagens e marcas, com fluxo de remoção.
-- **Nomes e imagens dos estilos:** "Mini Pop" é o nome usado pela Jujubit, e a origem das miniaturas atuais não foi confirmada.
+- **Provedor do classificador:** também recebe fotos de pessoas. Ler a política de retenção de dados antes de escolher (a AIMLAPI, que dá acesso ao Jev, é um agregador).
+- **Lista de espera:** texto do consentimento e finalidade única do e-mail.
+- **Retenção das fotos recusadas:** 30 dias [Proposta].
 
 ### Condições para lançar
 
-- [ ] Amostras reais impressas a partir de imagens geradas, em cada tamanho oferecido, com tamanhos inviáveis desativados.
+- [ ] Amostras reais impressas a partir de imagens geradas, em cada categoria e tamanho oferecidos, com tamanhos inviáveis desativados. Casal e Pessoa + Pet impressos numa peça única.
+- [ ] Classificador escolhido no teste comparativo, acertando os casos difíceis do estudo da Pockella.
+- [ ] Prompt de cada categoria aprovado contra os designs da Pockella.
 - [ ] **Operação do app de parceiros pronta**, construída depois de concluído o app do cliente.
 - [ ] Definido como a imagem vira peça: geração 3D, reparo, cores e fatiamento.
-- [ ] Tabela de preços conferida com o custo das impressões.
+- [ ] Tabela de preços por categoria conferida com o custo das impressões e com os valores definitivos.
 - [ ] Prazo de produção confirmado.
 - [ ] Revisão jurídica concluída, com termos, privacidade e trocas publicados.
 - [ ] Emissão de nota fiscal definida.
@@ -362,14 +420,37 @@ Os demais itens têm ordem sugerida, a confirmar com os dados do MVP:
 3. **Cartão de crédito:** o gateway já oferece, com parcelamento.
 4. **Troca de cor pelo cliente:** depende de inspecionar um 3MF real.
 5. **Atribuição automática de pedidos e repasse a parceiros.**
-6. **Crescimento:** galeria, Remix, templates, cupons e 4 opções por geração.
+6. **Crescimento:** templates (abaixo), novas categorias na ordem que a lista de espera indicar, galeria, Remix, cupons e 4 opções por geração.
+
+### Templates
+
+Um template é um tema que o cliente aplica à figura, como Natal: gorro de Papai Noel e cachecol no cachorro, no casal ou na pessoa. Ele é uma terceira camada, separada das outras duas:
+
+| Camada | Pergunta | Quem define | O que controla |
+|---|---|---|---|
+| Categoria | Quem está na foto? | O classificador | Tamanhos e preço |
+| Estilo | Com que cara fica? | Fixo: o estilo único | O visual base |
+| Template | Qual o tema? | O cliente, opcional | Acessórios, roupa e pose |
+
+O prompt final é a soma: estilo, mais o bloco da categoria, mais o bloco do template, mais o pedido do cliente. Cada template tem uma versão por categoria, porque o gorro no cachorro é diferente do gorro no casal.
+
+**Regras:**
+
+1. **O template não é um produto.** O preço continua vindo de categoria e tamanho. Um custo extra, se existir, entra como adicional.
+2. **Cada template declara as categorias que aceita.** Natal serve para todas; "noivos" só para Casal. Se a foto cair numa categoria que o template não aceita, o cliente é avisado antes de gerar.
+3. **O template nunca acrescenta pessoas nem animais.** Senão a nova classificação da versão (RN-34) muda a categoria e o preço. Acessórios e roupas podem; uma rena, não.
+4. **O template não pode sair do imprimível.** Gorro e cachecol cabem; árvore, trenó e cenário, não. Templates são curados e testados, e o cliente não cria template.
+5. **Templates sazonais têm data de início, de fim e de último pedido**, calculada pelo prazo de produção mais o frete, para chegar antes da data.
+
+Cada template ganha uma página de entrada própria ("Seu pet no Natal"), com o mesmo envio de foto e o tema já escolhido, como a Jujubit faz com cerca de 30 templates. Depois, o tema pode ser aplicado também a uma criação existente, como uma edição pronta.
 
 ### O que o app de parceiros precisa cobrir
 
 **Para a operação da Kubo:**
 
 - Listar e filtrar pedidos por status, data e e-mail.
-- Ver no pedido a imagem comprada, o prompt, o estilo, o tamanho e o endereço.
+- Ver no pedido a imagem comprada, o prompt, a categoria, o tamanho e o endereço.
+- Consultar as classificações e a lista de espera.
 - Baixar a imagem de cada item e, quando existir, o modelo, com registro de acesso.
 - Avançar o status do pedido e registrar transportadora e rastreio.
 - Cancelar e reembolsar o pedido inteiro, com motivo.
@@ -393,6 +474,10 @@ Os demais itens têm ordem sugerida, a confirmar com os dados do MVP:
 | Termo | Significado |
 |---|---|
 | **Criação** | O projeto do cliente: entrada e versões de imagem |
+| **Categoria** | Quem está na figura: Pessoa, Pet, Casal ou Pessoa + Pet. Define tamanhos e preço |
+| **Classificação** | Leitura da foto ou da versão que decide a categoria, ou a recusa |
+| **Lista de espera** | E-mails de quem foi recusado e quer ser avisado quando a categoria existir |
+| **Template** | Tema opcional aplicado à figura, como Natal (futuro) |
 | **Versão** | Cada imagem 2D de uma criação |
 | **Prévia** | A imagem 2D que o cliente compra |
 | **Modelo 3D** | Modelo feito a partir da imagem do pedido, depois do pagamento (fora do MVP) |

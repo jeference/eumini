@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | Rascunho para validação |
-| **Data** | 04/11/2026, revisado em 05/11/2026 (compra direto do 2D, sem 3D) |
+| **Data** | 04/11/2026, revisado em 05/11/2026 (compra direto do 2D, sem 3D) e em 19/11/2026 (categorias, classificador e estilo único) |
 | **Documento irmão** | [PRD do MVP](PRD.md) (o quê e por quê). Este documento trata do como |
 
 > **[Proposta]** marca uma escolha inicial que ainda precisa de validação. **[Verificar]** marca algo que a documentação do fornecedor não esclarece e precisa de teste ou contato.
@@ -23,6 +23,7 @@ flowchart LR
     K[Worker de geração] --> DB
     S[Tarefas agendadas] --> DB
     K --> R[Runware<br/>GPT Image 2, reserva Nano Banana Pro]
+    K --> CL[Classificador<br/>a definir no teste comparativo]
     K --> ST[(Storage S3)]
     A --> ST
     A --> P[Gateway PIX]
@@ -70,7 +71,7 @@ Cada app web tem domínio próprio, portanto cookies e sessões são independent
 | **Frontend** | Next.js 15 (App Router), React 19, TypeScript estrito, Tailwind 3, componentes Radix no padrão shadcn, TanStack Query 5, Zustand 5, React Hook Form + Zod, sonner, lucide |
 | **Contrato** | drf-spectacular → openapi-typescript → openapi-fetch |
 | **Ferramentas** | pnpm (workspace, via `npx`), uv, Makefile, ruff, pytest + factory_boy + freezegun + responses, ESLint, Vitest + Testing Library, GitHub Actions |
-| **Serviços externos** | Runware (IA), AbacatePay (PIX), Melhor Envio (frete) [Proposta], storage compatível com S3, SMTP transacional |
+| **Serviços externos** | Runware (IA), classificador de imagem [a definir: Jev 1.14 via AIMLAPI, OpenAI ou Google], AbacatePay (PIX), Melhor Envio (frete) [Proposta], storage compatível com S3, SMTP transacional |
 
 As versões exatas ficam nos arquivos de lock. PostGIS não é necessário, porque nenhuma regra do MVP depende de geolocalização.
 
@@ -112,8 +113,8 @@ Cada módulo segue o formato `models.py`, `services.py`, `serializers.py`, `view
 |---|---|
 | `common` | `BaseModel`, `AppendOnlyModel`, engine da máquina de estados, erros, permissões, identificação do ator, paginação, request id |
 | `accounts` | Usuário, papéis, autenticação, códigos por e-mail, visitante, transferência para conta, perfil, exclusão |
-| `catalog` | Tamanhos, preços, filamentos, prompts e estilos versionados |
-| `creations` | Criações, versões de imagem, tarefas de IA, cotas, teto de gasto, worker |
+| `catalog` | Categorias, tamanhos, preços por categoria e tamanho, filamentos, prompts versionados |
+| `creations` | Criações, classificações, versões de imagem, tarefas de IA, cotas, teto de gasto, lista de espera, worker |
 | `media` | `Asset`, upload, URLs assinadas e retenção |
 | `orders` | Carrinho, pedido, itens, endereço, link de acompanhamento |
 | `payments` | Cobrança, webhook, lançamentos, reembolso. Único a escrever dinheiro |
@@ -209,10 +210,12 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 
 | Entidade | Campos principais | Uso |
 |---|---|---|
-| `Creation` | user **ou** visitor, status, estilo, versão atual, excluída em | ● |
+| `Creation` | user **ou** visitor, status, categoria pedida (da página), categoria da foto, motivo da recusa, versão atual, excluída em | ● |
 | `CreationInput` | creation, pedido de alteração do cliente, foto (`Asset`, obrigatória), versão dos termos | ● |
-| `ImageVersion` | creation, parent (árvore de versões), origem (`text`, `photo`, `edit`), instrução, asset, tarefa | ● |
-| `ProviderTask` | creation, tipo, provedor, modelo, status, tentativas, próxima tentativa, prompt renderizado, versão do prompt, parâmetros, custo em USD, início e fim, erro, trava (`locked_until`) | ● |
+| `ImageVersion` | creation, parent (árvore de versões), origem (`text`, `photo`, `edit`), instrução, asset, tarefa, categoria (nula até ser classificada) | ● |
+| `Classification` | creation, versão (nula quando é a foto), tarefa, categoria pedida, resultado (categoria vendida ou motivo de recusa), contagem de pessoas e pets, confiança, probabilidades por classe, decisão (`accepted`, `rejected`, `asked`), resposta do cliente | ● |
+| `WaitlistEntry` | e-mail, classificação que recusou, motivo, ator, consentimento (versão do texto e data), avisado em | ● |
+| `ProviderTask` | creation, tipo (`classify`, `generate`, `edit`), provedor, modelo, status, tentativas, próxima tentativa, prompt renderizado, versão do prompt, parâmetros, custo em USD, início e fim, erro, trava (`locked_until`) | ● |
 | `QuotaReservation` | ator, hash do IP, tipo, dia, estado (`reserved`, `consumed`, `released`), tarefa | ● |
 | `Asset` | bucket, chave, tipo, MIME, tamanho, sha256, visibilidade, classe de retenção, expurgado em | ● |
 
@@ -220,19 +223,22 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 
 | Entidade | Campos principais | Uso |
 |---|---|---|
-| `ProductSize` | código, rótulo, maior dimensão em mm, preço em centavos, peso e dimensões da embalagem, ativo, ordem | ● |
+| `ProductSize` | código, rótulo, maior dimensão em mm, peso e dimensões da embalagem, ativo, ordem | ● |
+| `ProductPrice` | categoria, tamanho, preço em centavos, ativo; único por par. Só existem as combinações vendidas (RN-11) | ● |
 | `Filament` | nome, hex, marca, ativo | ○ Hoje só orienta prompts |
 
-**Estilos e prompts ficam em código** (`catalog/prompts.py`), migrados dos ajustes já feitos no protótipo e com uma versão explícita. Mudar um prompt exige novo deploy e reteste contra as referências, e cada `ProviderTask` guarda o texto final enviado.
+**Categorias são um enum em código:** `person`, `pet`, `couple`, `person_pet`. Os motivos de recusa também: `three_or_more_people`, `multiple_pets`, `group_with_pets`, `no_subject`, `not_a_photo`, `protected_character`. Os quatro primeiros seguem a taxonomia da Pockella.
+
+**O estilo e os prompts ficam em código** (`catalog/prompts.py`), com uma versão explícita, montados em camadas: o estilo único, mais o bloco da categoria, mais o pedido do cliente. Os templates futuros entram como mais uma camada, entre a categoria e o pedido ([PRD](PRD.md#templates)). Mudar um prompt exige novo deploy e reteste contra as referências, e cada `ProviderTask` guarda o texto final enviado. Os estilos Livre, Pixar e Mini Pop saem do código, sem camada de compatibilidade.
 
 ### Pedido (`orders`, `shipping`)
 
 | Entidade | Campos principais | Uso |
 |---|---|---|
-| `Cart`, `CartItem` | ator; creation, versão da imagem, tamanho, quantidade | ● |
+| `Cart`, `CartItem` | ator; creation, versão da imagem, tamanho, quantidade. A categoria vem da versão, e só versões de categoria vendida entram | ● |
 | `Address` | user, CEP, rua, número, complemento, bairro, cidade, UF | ● Só para contas |
 | `Order` | número, user (nulo), `customer_email`, nome, CPF criptografado, telefone, endereço congelado, status, subtotal, frete, total, serviço de frete, prazo prometido, aceite dos termos (versão e data), hash do token de acompanhamento, chave de idempotência | ● |
-| `OrderItem` | order, creation, versão comprada, tamanho, quantidade, preço unitário, prompt e estilo congelados | ● |
+| `OrderItem` | order, creation, versão comprada, categoria, tamanho, quantidade, preço unitário e prompt congelados | ● |
 | `ShippingQuote` | ator, CEP de origem e destino, itens, serviço, preço, prazo, resposta bruta, válido até | ● |
 
 ### Dinheiro (`payments`)
@@ -275,13 +281,19 @@ O evento usa `aggregate_type` + `aggregate_id`, então qualquer modelo pode usar
 
 ```mermaid
 stateDiagram-v2
-    [*] --> generating_image
-    generating_image --> ready: imagem pronta
-    generating_image --> image_failed: falha ou recusa
-    image_failed --> generating_image: tentar de novo
+    [*] --> classifying
+    classifying --> generating_image: foto aceita
+    classifying --> rejected: fora das categorias
+    classifying --> needs_subject: classificador em dúvida
+    needs_subject --> generating_image: cliente escolheu
+    classifying --> failed: erro do classificador
+    generating_image --> ready: imagem pronta e classificada
+    generating_image --> failed: falha ou recusa
+    failed --> classifying: tentar de novo, se falhou a classificação
+    failed --> generating_image: tentar de novo, se falhou a geração
 ```
 
-Em `ready`, a compra já está aberta. Editar não muda o status da criação: a tarefa de edição produz uma nova `ImageVersion`, e só **concluir** altera a versão atual. Itens do carrinho guardam a própria versão, então uma edição posterior não os altera nem invalida. A exclusão é um campo à parte, não um estado.
+`rejected` é final: outra foto é uma nova criação. `needs_subject` é [Proposta] e depende do limite de confiança definido no teste comparativo. Em `ready`, a compra já está aberta. Editar não muda o status da criação: a tarefa de edição produz uma nova `ImageVersion`, e só **concluir** altera a versão atual. Itens do carrinho guardam a própria versão, então uma edição posterior não os altera nem invalida. A exclusão é um campo à parte, não um estado.
 
 ### `ProviderTask`
 
@@ -337,20 +349,34 @@ sequenceDiagram
     participant A as API
     participant B as Postgres
     participant W as Worker
+    participant C as Classificador
     participant R as Runware
     participant S as Storage
-    F->>A: POST /api/creations/
-    A->>B: valida cota e teto; reserva cota; cria tarefa
+    F->>A: POST /api/creations/ (foto e categoria pedida)
+    A->>B: valida limite de classificação e teto; cria tarefa classify
     A-->>F: 202 com a criação
     loop a cada 2 s
         F->>A: GET /api/creations/{id}/
     end
-    W->>B: pega tarefa (SKIP LOCKED)
+    W->>B: pega tarefa classify (SKIP LOCKED)
+    W->>C: classifica a foto
+    C-->>W: categoria ou motivo de recusa
+    W->>B: grava Classification; se aceita, reserva cota e cria tarefa generate
+    W->>B: pega tarefa generate
     W->>R: envia
     R-->>W: imagem
     W->>S: grava
-    W->>B: cria versão, debita cota, muda status
+    W->>C: classifica a versão
+    W->>B: cria versão com categoria, debita cota, muda status
 ```
+
+### Classificação
+
+- **A foto** é classificada com a taxonomia completa: as quatro categorias vendidas e os seis motivos de recusa. Se aceita, a categoria da foto define o prompt.
+- **Cada versão** gerada ou editada é classificada só quanto a quem aparece e a personagem ou marca, já que a imagem gerada nunca é foto real. A categoria da versão define o preço (RN-34). Se a imagem já está no storage e o classificador falhar, a tarefa repete só a classificação, sem gerar a imagem de novo.
+- **Recusa na foto:** a criação vai para `rejected`, sem reservar cota de geração. A classificação conta só no próprio limite (RN-33).
+- **Custo:** o custo de cada classificação fica na `ProviderTask` e entra no teto global.
+- **Tempo:** a classificação roda no worker, como a geração, para não prender a API. O frontend já faz polling, então a resposta aparece em segundos.
 
 ### Worker
 
@@ -366,7 +392,8 @@ sequenceDiagram
 ### Fluxo de cada resultado
 
 1. Gravar a imagem no storage imediatamente. A Runware não guarda resultados a longo prazo.
-2. Em uma transação, gravar a `ImageVersion`, o custo informado pelo provedor, debitar a cota e avançar a criação para `ready`.
+2. Classificar a imagem gerada.
+3. Em uma transação, gravar a `ImageVersion` com a categoria, a `Classification`, os custos informados pelos provedores, debitar a cota e avançar a criação para `ready`.
 
 ### Falhas
 
@@ -393,6 +420,7 @@ Os ports ficam em `integrations/ports/`, e cada adapter é escolhido por um cami
 | Port | Operações | Adapter do MVP | Stub |
 |---|---|---|---|
 | `ImageGenerationPort` | gerar de foto, editar; recebe o modelo de cada chamada | Runware (`openai:gpt-image@2`, reserva `google:4@2`) | Sim |
+| `ImageClassificationPort` | classificar foto, classificar versão; devolve resultado, contagens, confiança e probabilidades | A definir no teste comparativo, com reserva de outro provedor | Sim |
 | `PaymentGatewayPort` | criar cobrança, consultar; reembolsar com o app de parceiros | AbacatePay | Sim |
 | `ShippingPort` | cotar | Melhor Envio | Sim |
 | `MediaStoragePort` | URL de upload, URL de download, gravar, apagar | S3 | Disco local |
@@ -472,7 +500,7 @@ Quando o app de parceiros existir, ele chamará `POST /v2/transparents/refund`, 
 
 ## 14. Preço sem medir a peça
 
-O cliente compra a partir da imagem, sem malha, então **não há estimativa de custo por peça antes da compra** e nenhum tamanho é bloqueado por criação. O preço depende só do tamanho (`ProductSize.price_cents`) e precisa cobrir as peças mais pesadas de cada tamanho.
+O cliente compra a partir da imagem, sem malha, então **não há estimativa de custo por peça antes da compra** e nenhum tamanho é bloqueado por criação. O preço vem de `ProductPrice`, pela categoria da versão e pelo tamanho, e precisa cobrir as peças mais pesadas de cada combinação. O servidor calcula o preço no carrinho e o congela no `OrderItem`. O navegador nunca envia preço nem categoria.
 
 A tabela é conferida com impressões reais antes do lançamento ([PRD](PRD.md#condições-para-lançar)). Uma medida de volume e custo volta a fazer sentido na preparação de impressão, depois do pagamento, quando a malha existir: ali ela pode alertar a operação sobre pedidos com margem baixa, sem mudar o que o cliente pagou.
 
@@ -480,7 +508,7 @@ A tabela é conferida com impressões reais antes do lançamento ([PRD](PRD.md#c
 
 ## 15. Storage e acesso
 
-**Um bucket privado por ambiente** (`kubo-media-dev` e `kubo-media-prod`, em `sa-east-1`): fotos, imagens e arquivos de produção, sempre por URL assinada. Miniaturas de estilo são arquivos estáticos do próprio app. O adapter local, com arquivos servidos por `/api/media/<token>/` e token assinado, continua disponível para os testes.
+**Um bucket privado por ambiente** (`kubo-media-dev` e `kubo-media-prod`, em `sa-east-1`): fotos, imagens e arquivos de produção, sempre por URL assinada. Imagens de exemplo das categorias são arquivos estáticos do próprio app. O adapter local, com arquivos servidos por `/api/media/<token>/` e token assinado, continua disponível para os testes.
 
 O script `apps/backend/scripts/provision_s3.py` cria e mantém essa configuração:
 
@@ -500,6 +528,9 @@ Como as URLs assinadas mudam a cada resposta, o frontend reaproveita a URL de ca
 | Dado | Sem pedido | Com pedido |
 |---|---|---|
 | Foto enviada (original e normalizada) | 90 dias, ou até 30 dias após exclusão | Até o fim do prazo legal e de garantia |
+| Foto recusada na classificação | 30 dias | - |
+| Classificações | Mantidas, sem a foto depois do expurgo | Mantidas |
+| Lista de espera | Até o aviso da categoria, ou até o pedido de remoção | - |
 | Imagens geradas | Mantidas, ou até 30 dias após exclusão | Mantidas (RN-28) |
 | Prompts, custos e metadados de tarefas | Mantidos. Texto e dados pessoais são removidos a pedido | Mantidos |
 | Dados do pedido | - | Conforme obrigações fiscais |
@@ -536,7 +567,8 @@ apps/web/consumer/src/
 
 | Rota | Função |
 |---|---|
-| `/` | Início, com a etapa de prompt do protótipo logo na primeira dobra |
+| `/` | Início, com as quatro categorias logo na primeira dobra |
+| `/criar/[categoria]` | Página da categoria (`pessoa`, `pet`, `casal`, `pessoa-e-pet`), com exemplos, preço "a partir de" e o envio de foto. Templates futuros ganham rotas próprias sobre o mesmo componente |
 | `/criacoes` | Minhas criações |
 | `/criacoes/[id]` | **Hub:** mostra a geração ou, com a imagem pronta, a compra ao lado dela |
 | `/carrinho`, `/checkout` | Carrinho e checkout. `?item=` limita o checkout a um item (Comprar agora) |
@@ -612,8 +644,10 @@ Valores vêm do protótipo: `accent #7C3AED`, `accent-soft #F0E9FF`, `highlight 
 | `POST /api/me/claim/` | Conta | Transferência do visitante |
 | `GET /api/me/addresses/` | Conta | Endereços salvos, para o checkout |
 | `GET /api/quota/` | Ator | Cota restante |
-| `GET /api/catalog/styles/`, `GET /api/catalog/sizes/` | Público | Estilos e tamanhos |
-| `GET, POST /api/creations/` | Ator | Listar e criar (foto obrigatória, pedido de alteração opcional) |
+| `GET /api/catalog/products/` | Público | Categorias, com tamanhos ativos e preços |
+| `GET, POST /api/creations/` | Ator | Listar e criar (foto e categoria pedida obrigatórias, pedido de alteração opcional) |
+| `POST /api/creations/{id}/subject/` | Dono | Responder "Quem está na foto?" [Proposta] |
+| `POST /api/waitlist/` | Ator | Entrar na lista de espera a partir de uma criação recusada, com consentimento |
 | `GET, DELETE /api/creations/{id}/` | Dono | Detalhe (status, versões, edições) e exclusão |
 | `POST /api/creations/{id}/retry/` | Dono | Tentar de novo |
 | `POST /api/creations/{id}/edits/` | Dono | Pedir edição a partir de uma versão |
@@ -673,7 +707,8 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 - Logs sem dados pessoais: IPs e e-mails só com hash.
 - Exclusão de conta: anonimiza o usuário, aplica a retenção a criações sem pedido e preserva o que a obrigação fiscal exige.
 - Aceites de termos ficam registrados com versão e data.
-- Fotos seguem para provedores no exterior, o que deve constar da política de privacidade.
+- Fotos seguem para provedores no exterior, inclusive o classificador, o que deve constar da política de privacidade.
+- O e-mail da lista de espera só é gravado com consentimento explícito e só serve para o aviso da categoria.
 - **Parceiros futuros:** veem apenas nome e endereço para envio, por meio de serializers próprios.
 
 ### Observabilidade
@@ -715,7 +750,7 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 | `Partner`, `PartnerMember`, `ProductionJob`, `ProductionFile`, `Shipment` | Telas e endpoints `/api/partner/...` com `IsPartnerMember` e escopo |
 | `ProductionJob.partner` nulo e atribuível, com cada atribuição em `DomainEvent` | Regra de atribuição: manual e depois automática |
 | Máquina de estados e eventos genéricos | Status do pedido derivado dos jobs |
-| Imagem, modelo, prompt e estilo congelados por item | `PrintPreparationPort` e pipeline que preenche `ProductionFile` |
+| Imagem, modelo, prompt e categoria congelados por item | `PrintPreparationPort` e pipeline que preenche `ProductionFile` |
 | Ledger com tipo `partner_payable` reservado | Repasse a parceiros |
 | Serializers explícitos e regras de PII | Serializer do parceiro: sem e-mail nem CPF do cliente |
 
@@ -734,6 +769,9 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 | 5 | Prazos de retenção e redação de termos | Revisão jurídica |
 | 6 | Hospedagem e domínios definitivos. Os arquivos Docker existem, mas não foram executados | Decidir e testar antes de homologação |
 | 7 | Limites de cota e teto de gasto | Ajustar com dados reais |
+| 8 | Modelo e provedor do classificador, limite de confiança para o "Quem está na foto?" e modelo de reserva | Teste comparativo: Jev 1.14 (via AIMLAPI), OpenAI e Google |
+| 9 | Valores da tabela de preços por categoria | Provisórios no PRD; definitivos antes de produção |
+| 10 | Embalagem de Casal e Pessoa + Pet, mais largos que uma figura do mesmo tamanho | Medir nas amostras impressas |
 
 ---
 
@@ -746,7 +784,11 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 | Tarefa de IA | `ProviderTask` |
 | Visitante | `Visitor` |
 | Cota | `QuotaReservation` |
+| Categoria | `Category` (enum) |
+| Classificação | `Classification` |
+| Lista de espera | `WaitlistEntry` |
 | Tamanho | `ProductSize` |
+| Preço | `ProductPrice` |
 | Pedido, item | `Order`, `OrderItem` |
 | Cobrança | `Charge` |
 | Lançamento | `LedgerEntry` |
