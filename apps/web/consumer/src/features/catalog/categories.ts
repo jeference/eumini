@@ -11,8 +11,6 @@ type CategoryInfo = {
   /** Título da página de entrada. */
   title: string;
   hint: string;
-  /** Como aparece no aviso "Encontramos ... na foto". */
-  inPhoto: string;
 };
 
 /** Na ordem da vitrine. Casal e Pessoa + Pet são uma peça só (RN-35). */
@@ -23,7 +21,6 @@ export const CATEGORIES: CategoryInfo[] = [
     label: "Pessoa",
     title: "Envie a foto da pessoa",
     hint: "Uma pessoa, de corpo inteiro.",
-    inPhoto: "uma pessoa",
   },
   {
     id: "pet",
@@ -31,7 +28,6 @@ export const CATEGORIES: CategoryInfo[] = [
     label: "Pet",
     title: "Envie a foto do seu pet",
     hint: "Seu cachorro, gato ou outro bichinho.",
-    inPhoto: "um pet",
   },
   {
     id: "couple",
@@ -39,7 +35,6 @@ export const CATEGORIES: CategoryInfo[] = [
     label: "Casal",
     title: "Envie a foto do casal",
     hint: "Duas pessoas, juntas numa peça só.",
-    inPhoto: "um casal",
   },
   {
     id: "person_pet",
@@ -47,7 +42,6 @@ export const CATEGORIES: CategoryInfo[] = [
     label: "Pessoa + Pet",
     title: "Envie a foto de você com seu pet",
     hint: "Uma pessoa e o pet, juntos numa peça só.",
-    inPhoto: "uma pessoa com um pet",
   },
 ];
 

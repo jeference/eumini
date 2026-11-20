@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@kubo/ui/button";
-import { Callout } from "@kubo/ui/callout";
 import { Card } from "@kubo/ui/card";
 import { EmptyState } from "@kubo/ui/empty-state";
 import { Skeleton } from "@kubo/ui/skeleton";
@@ -11,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { categoryInfo } from "@/features/catalog/categories";
 import { EditModal } from "@/features/creations/components/edit-modal";
 import {
   IMAGE_PROGRESS,
@@ -142,38 +140,16 @@ function StudioContent({ creation }: { creation: Creation }) {
         {/* O painel começa abaixo do topo da imagem. */}
         <aside className="lg:pt-[60px]">
           {isClassifying && <ProgressNotice progress={PHOTO_PROGRESS} elapsed={elapsed} />}
-          {isGeneratingImage && (
-            <div className="space-y-5">
-              <CategoryNotice creation={creation} />
-              <ProgressNotice progress={IMAGE_PROGRESS} elapsed={elapsed} />
-            </div>
-          )}
+          {isGeneratingImage && <ProgressNotice progress={IMAGE_PROGRESS} elapsed={elapsed} />}
           {status === "rejected" && isGroupRejection(creation) && (
             <WaitlistForm creation={creation} />
           )}
-          {isReady && (
-            <div className="space-y-6">
-              <CategoryNotice creation={creation} />
-              <PurchasePanel creation={creation} />
-            </div>
-          )}
+          {isReady && <PurchasePanel creation={creation} />}
         </aside>
       </div>
 
       <EditModal creation={creation} open={isEditing} onClose={() => setIsEditing(false)} />
     </div>
-  );
-}
-
-/** A página era de uma categoria, mas a foto é de outra: a criação segue na da foto (RN-32). */
-function CategoryNotice({ creation }: { creation: Creation }) {
-  if (!creation.category || creation.category === creation.requested_category) return null;
-  const detected = categoryInfo(creation.category);
-  return (
-    <Callout tone="accent" role="status">
-      Encontramos {detected.inPhoto} na foto, então sua miniatura é da categoria{" "}
-      <strong>{detected.label}</strong>. O preço segue essa categoria.
-    </Callout>
   );
 }
 

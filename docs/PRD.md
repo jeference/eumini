@@ -127,7 +127,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 |---|---|---|---|
 | 1 | **Início** | Escolhe a categoria: Pessoa, Pet, Casal ou Pessoa + Pet | Cria a sessão de visitante, se ainda não existir |
 | 2 | **Página da categoria** | Envia a foto e, se quiser, escreve um pedido de alteração | Mostra exemplos, tamanhos e o preço "a partir de" da categoria |
-| 3 | **Lendo a foto** | Aguarda alguns segundos | Classifica a foto. Se a categoria detectada for outra, avisa qual é e o novo preço "a partir de". Se a foto estiver fora das categorias, explica o motivo e o que fazer |
+| 3 | **Lendo a foto** | Aguarda alguns segundos | Classifica a foto. Se a foto estiver fora das categorias, explica o motivo e o que fazer |
 | 4 | **Gerando imagem** | Aguarda | Mostra etapas e tempo decorrido. Pode recarregar sem perder a criação |
 | 5 | **Comprar** | Vê a imagem e, ao lado, escolhe tamanho e quantidade. Pode **Editar** a imagem antes | Mostra os tamanhos e preços da categoria e informa que a peça pode diferir da imagem. Mantém a criação salva |
 | 6 | **Editar** (opcional) | Pede ajustes pelo chat, compara versões, cancela ou conclui | Gera uma nova versão a partir da escolhida e a reclassifica. A versão concluída passa a ser a imagem da compra |
@@ -178,7 +178,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RF-CRI-07 | Mostrar o histórico de versões, cancelar a edição ou concluir com a versão escolhida | P0 |
 | RF-CRI-08 | Manter nos itens do carrinho a imagem com que foram adicionados, mesmo depois de uma edição | P0 |
 | RF-CRI-09 | Ter uma página de entrada por categoria, todas com o mesmo envio de foto | P0 |
-| RF-CRI-10 | Classificar a foto antes de gerar e seguir na categoria detectada, avisando quando ela for diferente da página | P0 |
+| RF-CRI-10 | Classificar a foto antes de gerar e seguir na categoria detectada, mesmo que seja outra que a da página | P0 |
 | RF-CRI-11 | Recusar fotos fora das categorias com o motivo e o caminho: outra foto, ou recortar o grupo | P0 |
 | RF-CRI-14 | Classificar cada versão gerada ou editada e mostrar a categoria e o preço dela | P0 |
 | RF-CRI-16 | Lista de espera: quem foi recusado deixa o e-mail para ser avisado quando a categoria existir | P1 |
@@ -262,7 +262,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 |---|---|
 | RN-30 | **Categorias vendidas:** **Pessoa** (uma pessoa), **Pet** (um animal de estimação; a maioria dos pets é aceita, como na Pockella), **Casal** (duas pessoas) e **Pessoa + Pet** (uma pessoa e um pet). |
 | RN-31 | **Fotos recusadas:** 3 ou mais pessoas, 2 ou mais pets, grupo com pets, sem pessoa nem pet, e personagem ou marca. **Desenhos, pinturas e avatares são aceitos** quando mostram uma pessoa ou um pet: o classificador não pergunta se a imagem é foto. |
-| RN-32 | **Quem decide a categoria é o classificador**, a partir da foto. A página de entrada é só uma sugestão: se a foto for de outra categoria, a criação segue nela, com aviso. |
+| RN-32 | **Quem decide a categoria é o classificador**, a partir da foto. A página de entrada é só uma sugestão: se a foto for de outra categoria, a criação segue nela. Não há aviso à parte, porque a imagem gerada e o rótulo "Miniatura <categoria>" no preço já mostram a categoria. |
 | RN-33 | A classificação acontece antes de qualquer geração. **Uma foto recusada não gera imagem nem consome a cota de geração.** A classificação tem limite próprio por sessão e por IP [Proposta: 30 por dia]. |
 | RN-34 | **Toda versão gerada ou editada também é classificada.** A categoria e o preço da versão vêm dessa classificação. Se ela cair numa categoria recusada, a versão não pode ser comprada. Isso fecha a brecha de pedir, por edição, uma figura que custaria mais. |
 | RN-35 | **Casal e Pessoa + Pet são uma peça única**, com as figuras encostadas: abraçadas, de mãos dadas, ou o pet no colo ou junto à pessoa. É assim nos concorrentes, mantém a altura como a maior dimensão (RN-12) e permite imprimir numa peça só. Toda peça tem uma **base redonda na cor escura da figura**, que a mantém em pé e não acrescenta cor ([teste de prompts](prompts/README.md)). |
