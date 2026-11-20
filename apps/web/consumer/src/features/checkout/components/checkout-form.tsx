@@ -49,12 +49,18 @@ import { messageOf } from "@/lib/errors";
 
 type Quote = Schemas["ShippingQuote"];
 
-const STEP_LABELS: Record<Step, string> = {
+/** Título do cartão de cada etapa. O Pagar tem o próprio ("Forma de pagamento"). */
+const STEP_LABELS: Record<Exclude<Step, "pagar">, string> = {
   dados: "Seus dados",
   entrega: "Entrega",
-  pagar: "Pagar",
 };
-const STEP_ITEMS = STEPS.map((id) => ({ id, label: STEP_LABELS[id] }));
+/** Rótulos curtos da trilha. */
+const TRAIL_LABELS: Record<Step, string> = {
+  dados: "Dados",
+  entrega: "Endereço",
+  pagar: "Pagamento",
+};
+const STEP_ITEMS = STEPS.map((id) => ({ id, label: TRAIL_LABELS[id] }));
 const ADDRESS_FIELDS = ["street", "neighborhood", "city", "state"] as const;
 
 const indexOf = (step: Step) => STEPS.indexOf(step);

@@ -3,7 +3,8 @@ import { Check } from "lucide-react";
 import { cn } from "../lib/utils";
 
 /**
- * Progresso de um fluxo em etapas: bolinha amarela na atual, check nas feitas.
+ * Progresso de um fluxo em etapas, com o rótulo abaixo de cada bolinha. Sem amarelo, para
+ * não competir com o botão principal: atual em roxo, feitas com check, próximas contornadas.
  * Etapas feitas são clicáveis para voltar; as próximas só aparecem.
  */
 export function Steps<T extends string>({
@@ -19,7 +20,7 @@ export function Steps<T extends string>({
 }) {
   const currentIndex = steps.findIndex((step) => step.id === current);
   return (
-    <ol className={cn("flex items-center gap-2", className)}>
+    <ol className={cn("flex items-start", className)}>
       {steps.map((step, index) => {
         const done = index < currentIndex;
         const active = index === currentIndex;
@@ -27,9 +28,9 @@ export function Steps<T extends string>({
           <>
             <span
               className={cn(
-                "flex size-7 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold transition-colors",
-                active && "bg-highlight text-ink",
-                done && "bg-accent text-white",
+                "relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold transition-colors",
+                active && "bg-accent text-white",
+                done && "bg-accent-soft text-accent",
                 !active && !done && "border-2 border-stroke bg-surface text-muted",
               )}
             >
@@ -37,9 +38,8 @@ export function Steps<T extends string>({
             </span>
             <span
               className={cn(
-                "text-sm font-semibold",
-                active ? "text-ink" : "text-muted",
-                !active && "max-sm:sr-only",
+                "text-xs font-semibold",
+                active ? "text-ink" : done ? "text-accent" : "text-muted",
               )}
             >
               {step.label}
@@ -49,25 +49,29 @@ export function Steps<T extends string>({
         return (
           <li
             key={step.id}
-            className={cn("flex items-center gap-2", index < steps.length - 1 && "flex-1")}
+            className="relative flex flex-1 flex-col items-center"
             aria-current={active ? "step" : undefined}
           >
+            {/* Linha até a próxima bolinha, passando por trás delas. */}
+            {index < steps.length - 1 && (
+              <span
+                aria-hidden
+                className={cn(
+                  "absolute left-1/2 top-3.5 h-0.5 w-full -translate-y-1/2",
+                  done ? "bg-accent" : "bg-line",
+                )}
+              />
+            )}
             {done && onSelect ? (
               <button
                 type="button"
                 onClick={() => onSelect(step.id)}
-                className="flex items-center gap-2 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                className="flex flex-col items-center gap-1.5 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 {content}
               </button>
             ) : (
-              <span className="flex items-center gap-2">{content}</span>
-            )}
-            {index < steps.length - 1 && (
-              <span
-                aria-hidden
-                className={cn("h-0.5 min-w-4 flex-1 rounded-full", done ? "bg-accent" : "bg-line")}
-              />
+              <span className="flex flex-col items-center gap-1.5">{content}</span>
             )}
           </li>
         );
