@@ -3,8 +3,9 @@
 import { track } from "@kubo/analytics";
 import { Button } from "@kubo/ui/button";
 import { Callout } from "@kubo/ui/callout";
-import { Chip, ChipGroup } from "@kubo/ui/chip";
+import { Chip } from "@kubo/ui/chip";
 import { formatBRL } from "@kubo/ui/lib/format";
+import { cn } from "@kubo/ui/lib/utils";
 import { QuantityStepper } from "@kubo/ui/quantity-stepper";
 import { ShoppingBag, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -18,6 +19,13 @@ import type { Creation } from "@/features/creations/types";
 import { messageOf } from "@/lib/errors";
 
 const MAX_QUANTITY = 10;
+
+/** "6 cm Ideal" vira a medida ("6 cm") e o nome ("Ideal"). */
+function sizeParts(option: { label: string; longest_side_mm: number }) {
+  const measure = `${option.longest_side_mm / 10} cm`;
+  if (!option.label.startsWith(measure)) return { measure: option.label, name: "" };
+  return { measure, name: option.label.slice(measure.length).trim() };
+}
 
 export function PurchasePanel({ creation }: { creation: Creation }) {
   const router = useRouter();
@@ -80,20 +88,42 @@ export function PurchasePanel({ creation }: { creation: Creation }) {
         <p className="mt-2 text-sm text-muted lg:text-[13px]">Frete calculado na finalização</p>
       </div>
 
-      <ChipGroup label="Tamanho">
-        {sizes.map((option) => (
-          <Chip
-            key={option.id}
-            selected={option.id === size?.id}
-            onClick={() => {
-              setChosenId(option.id);
-              track("size_selected", { size: option.code });
-            }}
-          >
-            {option.label}
-          </Chip>
-        ))}
-      </ChipGroup>
+      <fieldset>
+        <legend className="text-sm font-semibold">Tamanho</legend>
+        {/* No celular, todos numa linha: na pílula, o nome em cima e a medida embaixo. */}
+        <div
+          className="mt-2.5 grid gap-2 lg:flex lg:flex-wrap"
+          style={{ gridTemplateColumns: `repeat(${sizes.length}, minmax(0, 1fr))` }}
+        >
+          {sizes.map((option) => {
+            const selected = option.id === size?.id;
+            const { measure, name } = sizeParts(option);
+            return (
+              <Chip
+                key={option.id}
+                selected={selected}
+                className="min-w-0 flex-col px-1 py-1.5 leading-tight lg:flex-row lg:px-5 lg:py-0"
+                onClick={() => {
+                  setChosenId(option.id);
+                  track("size_selected", { size: option.code });
+                }}
+              >
+                {name && <span className="max-w-full truncate lg:hidden">{name}</span>}
+                <span
+                  className={cn(
+                    "whitespace-nowrap lg:hidden",
+                    name && "text-xs",
+                    name && !selected && "text-muted",
+                  )}
+                >
+                  {measure}
+                </span>
+                <span className="hidden lg:inline">{option.label}</span>
+              </Chip>
+            );
+          })}
+        </div>
+      </fieldset>
 
       <div>
         <p className="text-sm font-semibold">Quantidade</p>
