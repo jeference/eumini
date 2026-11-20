@@ -16,8 +16,17 @@ import { messageOf } from "@/lib/errors";
  * Pagamento de um pedido aguardando PIX: mostra o PIX válido, gera um se faltar
  * (uma tentativa automática) e oferece um novo quando o prazo termina.
  * Fora de `pending_payment` e `expired`, não mostra nada.
+ *
+ * `autoGenerate={false}`: quem usa decide quando gerar (o checkout tem o botão
+ * "Gerar QR Code"); sem PIX válido, não mostra nada.
  */
-export function OrderPayment({ order }: { order: Schemas["OrderDetail"] }) {
+export function OrderPayment({
+  order,
+  autoGenerate = true,
+}: {
+  order: Schemas["OrderDetail"];
+  autoGenerate?: boolean;
+}) {
   const pay = usePayOrder(order.id);
   const triedPay = useRef(false);
   const payMutate = pay.mutate;
@@ -25,17 +34,18 @@ export function OrderPayment({ order }: { order: Schemas["OrderDetail"] }) {
   const needsCharge =
     order.status === "pending_payment" && (!order.charge || order.charge.status !== "pending");
   useEffect(() => {
-    if (needsCharge && !triedPay.current) {
+    if (autoGenerate && needsCharge && !triedPay.current) {
       triedPay.current = true;
       payMutate(undefined, { onError: (error) => toast.error(messageOf(error)) });
     }
-  }, [needsCharge, payMutate]);
+  }, [autoGenerate, needsCharge, payMutate]);
 
   if (order.status === "pending_payment" && order.charge?.status === "pending") {
     return <PixPayment charge={order.charge} />;
   }
 
   if (needsCharge) {
+    if (!autoGenerate) return null;
     if (!pay.isError) return <Skeleton className="h-72 w-full" />;
     return (
       <Card className="space-y-3 p-5 text-center" role="alert">

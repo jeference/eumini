@@ -374,7 +374,6 @@ export function CheckoutForm() {
     return (
       <div className="mx-auto max-w-5xl">
         <h1 className="font-display text-3xl font-semibold tracking-tight">Finalizar compra</h1>
-        <Steps steps={STEP_ITEMS} current="pagar" className="mt-6 max-w-2xl" />
         <div className="mt-6">
           <PayStep orderId={orderId} />
         </div>

@@ -9,6 +9,7 @@ export function RadioCard({
   onSelect,
   aside,
   disabled = false,
+  size = "default",
   children,
 }: {
   name: string;
@@ -17,12 +18,15 @@ export function RadioCard({
   aside?: ReactNode;
   /** Opção visível mas indisponível (ex.: "Em breve"). */
   disabled?: boolean;
+  /** `sm`: opção de uma linha só, mais baixa. */
+  size?: "default" | "sm";
   children: ReactNode;
 }) {
   return (
     <label
       className={cn(
-        "flex items-center justify-between gap-3 rounded-2xl border-2 p-4 transition-[background-color,border-color]",
+        "flex items-center justify-between gap-3 rounded-2xl border-2 transition-[background-color,border-color]",
+        size === "sm" ? "px-4 py-2.5" : "p-4",
         disabled
           ? "cursor-not-allowed border-stroke bg-surface opacity-60"
           : checked
