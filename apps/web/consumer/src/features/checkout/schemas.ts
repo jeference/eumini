@@ -36,26 +36,31 @@ export const checkoutSchema = z.object({
 
 export type CheckoutValues = z.infer<typeof checkoutSchema>;
 
-export const STEPS = ["dados", "entrega", "pagamento"] as const;
+export const STEPS = ["dados", "entrega", "revisar", "pagar"] as const;
 export type Step = (typeof STEPS)[number];
+/** Etapas com campos do formulário. */
+export type FormStep = "dados" | "entrega";
 
-/** Campos validados ao sair de cada etapa. O pagamento só tem o aceite dos termos. */
+/** Campos validados ao sair de cada etapa. Revisar só tem o aceite; Pagar só existe com pedido. */
 export const STEP_FIELDS = {
   dados: ["email", "name", "cpf", "phone"],
   entrega: ["postal_code", "street", "number", "complement", "neighborhood", "city", "state"],
-} as const satisfies Record<Exclude<Step, "pagamento">, readonly (keyof CheckoutValues)[]>;
+} as const satisfies Record<FormStep, readonly (keyof CheckoutValues)[]>;
 
 /** Etapa onde o campo é preenchido, para levar o cliente até um erro do backend. */
-export function stepOfField(field: string): Exclude<Step, "pagamento"> | null {
+export function stepOfField(field: string): FormStep | null {
   if ((STEP_FIELDS.dados as readonly string[]).includes(field)) return "dados";
   if ((STEP_FIELDS.entrega as readonly string[]).includes(field)) return "entrega";
   return null;
 }
 
-/** Primeira etapa que ainda tem campo inválido; `pagamento` quando dados e entrega estão ok. */
-export function firstIncompleteStep(values: Partial<CheckoutValues>): Step {
+/**
+ * Primeira etapa que ainda tem campo inválido; `revisar` quando dados e entrega estão ok.
+ * Nunca devolve `pagar`: essa etapa só abre depois que o pedido existe.
+ */
+export function firstIncompleteStep(values: Partial<CheckoutValues>): Exclude<Step, "pagar"> {
   const result = checkoutSchema.safeParse(values);
-  if (result.success) return "pagamento";
+  if (result.success) return "revisar";
   const fields = result.error.issues.map((issue) => String(issue.path[0]));
   return fields.some((field) => stepOfField(field) === "dados") ? "dados" : "entrega";
 }

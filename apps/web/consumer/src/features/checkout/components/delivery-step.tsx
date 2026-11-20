@@ -9,6 +9,7 @@ import { Skeleton } from "@kubo/ui/skeleton";
 import { MapPin } from "lucide-react";
 import { useFormContext, useWatch } from "react-hook-form";
 
+import { ContinueButton } from "@/features/checkout/components/checkout-step";
 import type { CheckoutValues } from "@/features/checkout/schemas";
 
 type Quote = Schemas["ShippingQuote"];
@@ -170,9 +171,7 @@ export function DeliveryStep({
         </fieldset>
       )}
 
-      <Button type="submit" variant="primary" size="lg" className="w-full sm:w-auto">
-        Continuar para o pagamento
-      </Button>
+      <ContinueButton />
     </div>
   );
 }

@@ -3,19 +3,51 @@
 import { Button } from "@kubo/ui/button";
 import { Callout } from "@kubo/ui/callout";
 import { Checkbox } from "@kubo/ui/checkbox";
-import { formatBRL } from "@kubo/ui/lib/format";
-import { Lock, QrCode } from "lucide-react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 
-export function PaymentStep({
-  totalCents,
+import { ContinueButton } from "@/features/checkout/components/checkout-step";
+
+/** Bloco consolidado de uma etapa já feita, com o atalho para voltar e alterar. */
+function ReviewBlock({
+  title,
+  onEdit,
+  children,
+}: {
+  title: string;
+  onEdit?: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <div className="rounded-2xl border-2 border-stroke p-4">
+      <div className="flex items-center gap-3">
+        <h3 className="flex-1 text-sm font-semibold">{title}</h3>
+        {onEdit && (
+          <Button type="button" variant="secondary" size="sm" onClick={onEdit}>
+            Alterar
+          </Button>
+        )}
+      </div>
+      <div className="mt-1.5 text-sm text-muted">{children}</div>
+    </div>
+  );
+}
+
+export function ReviewStep({
+  contact,
+  delivery,
+  onEditContact,
+  onEditDelivery,
   acceptTerms,
   onAcceptTerms,
   termsError,
   shippingNotice,
   pending,
 }: {
-  totalCents: number;
+  contact: ReactNode;
+  delivery: ReactNode;
+  onEditContact: () => void;
+  onEditDelivery: () => void;
   acceptTerms: boolean;
   onAcceptTerms: (value: boolean) => void;
   termsError: boolean;
@@ -24,16 +56,13 @@ export function PaymentStep({
 }) {
   return (
     <div className="space-y-5">
-      <div className="flex items-center gap-3 rounded-2xl border-2 border-accent bg-accent-soft p-4">
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface">
-          <QrCode aria-hidden className="size-5 text-accent" />
-        </span>
-        <p className="min-w-0 flex-1 text-sm">
-          <span className="block font-semibold">Pix</span>
-          <span className="block text-muted">
-            Aprovação na hora. Na próxima tela aparecem o QR Code e o código copia e cola.
-          </span>
-        </p>
+      <div className="space-y-3">
+        <ReviewBlock title="Seus dados" onEdit={onEditContact}>
+          {contact}
+        </ReviewBlock>
+        <ReviewBlock title="Entrega" onEdit={onEditDelivery}>
+          {delivery}
+        </ReviewBlock>
       </div>
 
       {shippingNotice && (
@@ -66,20 +95,7 @@ export function PaymentStep({
         )}
       </div>
 
-      <div className="space-y-2">
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          className="w-full"
-          pending={pending}
-          data-testid="pay"
-        >
-          <Lock aria-hidden />
-          Gerar Pix de {formatBRL(totalCents)}
-        </Button>
-        <p className="text-center text-xs text-muted">Nada é cobrado até você pagar o Pix.</p>
-      </div>
+      <ContinueButton pending={pending} />
     </div>
   );
 }

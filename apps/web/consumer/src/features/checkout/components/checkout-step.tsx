@@ -1,81 +1,42 @@
-"use client";
-
 import { Button } from "@kubo/ui/button";
 import { Card } from "@kubo/ui/card";
-import { cn } from "@kubo/ui/lib/utils";
-import { Check } from "lucide-react";
-import { type ReactNode, useEffect, useRef } from "react";
+import { ArrowRight } from "lucide-react";
+import type { ReactNode } from "react";
 
-export type StepState = "open" | "done" | "todo";
-
-/**
- * Uma etapa do checkout em acordeão: aberta mostra o conteúdo, feita vira um
- * resumo com "Alterar", e as próximas aparecem só com o título.
- */
-export function CheckoutStep({
-  number,
-  title,
-  state,
-  summary,
-  onEdit,
-  children,
-}: {
-  number: number;
-  title: string;
-  state: StepState;
-  summary?: ReactNode;
-  onEdit?: () => void;
-  children: ReactNode;
-}) {
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const wasOpen = useRef(state === "open");
-
-  // Ao abrir (não no primeiro render), leva a etapa para a tela e o foco para o título.
-  useEffect(() => {
-    if (state === "open" && !wasOpen.current) {
-      const heading = headingRef.current;
-      heading?.focus({ preventScroll: true });
-      heading?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-    wasOpen.current = state === "open";
-  }, [state]);
-
+/** Avança para a próxima etapa: à direita, como o sentido do fluxo. */
+export function ContinueButton({ pending = false }: { pending?: boolean }) {
   return (
-    <Card asChild className={cn("p-5 sm:p-6", state === "todo" && "shadow-none")}>
-      <section aria-labelledby={`etapa-${number}`}>
-        <div className="flex items-center gap-3">
-          <span
-            aria-hidden
-            className={cn(
-              "flex size-7 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold",
-              state === "open" && "bg-highlight text-ink",
-              state === "done" && "bg-accent text-white",
-              state === "todo" && "border-2 border-stroke text-muted",
-            )}
-          >
-            {state === "done" ? <Check className="size-4" strokeWidth={3} /> : number}
-          </span>
-          <h2
-            ref={headingRef}
-            id={`etapa-${number}`}
-            tabIndex={-1}
-            className={cn(
-              "flex-1 scroll-mt-6 font-display text-lg font-semibold outline-none",
-              state === "todo" && "text-muted",
-            )}
-          >
-            {title}
-          </h2>
-          {state === "done" && onEdit && (
-            <Button type="button" variant="secondary" size="sm" onClick={onEdit}>
-              Alterar
-            </Button>
-          )}
-        </div>
-        {state === "done" && summary && (
-          <div className="mt-2 pl-10 text-sm text-muted">{summary}</div>
-        )}
-        {state === "open" && <div className="mt-5">{children}</div>}
+    <div className="flex justify-end">
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        className="w-full sm:w-auto"
+        pending={pending}
+      >
+        Continuar
+        <ArrowRight aria-hidden />
+      </Button>
+    </div>
+  );
+}
+
+/** Id do título da etapa aberta: recebe o foco quando o cliente troca de etapa. */
+export const STEP_HEADING_ID = "etapa-titulo";
+
+/** A etapa aberta do checkout. Só uma aparece por vez; as outras ficam no indicador. */
+export function CheckoutStep({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <Card asChild className="p-5 sm:p-6">
+      <section aria-labelledby={STEP_HEADING_ID}>
+        <h2
+          id={STEP_HEADING_ID}
+          tabIndex={-1}
+          className="font-display text-lg font-semibold outline-none"
+        >
+          {title}
+        </h2>
+        <div className="mt-5">{children}</div>
       </section>
     </Card>
   );

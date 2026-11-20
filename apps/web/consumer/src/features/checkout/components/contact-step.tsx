@@ -1,10 +1,10 @@
 "use client";
 
-import { Button } from "@kubo/ui/button";
 import { TextField } from "@kubo/ui/form";
 import { formatCpf, formatPhone } from "@kubo/ui/lib/format";
 import { useFormContext } from "react-hook-form";
 
+import { ContinueButton } from "@/features/checkout/components/checkout-step";
 import type { CheckoutValues } from "@/features/checkout/schemas";
 
 export function ContactStep() {
@@ -39,9 +39,7 @@ export function ContactStep() {
           hint="Só se a transportadora precisar."
         />
       </div>
-      <Button type="submit" variant="primary" size="lg" className="w-full sm:w-auto">
-        Continuar para a entrega
-      </Button>
+      <ContinueButton />
     </div>
   );
 }

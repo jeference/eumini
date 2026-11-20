@@ -19,18 +19,20 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { useCart } from "@/features/cart/hooks";
-import { CheckoutStep, type StepState } from "@/features/checkout/components/checkout-step";
+import { CheckoutStep, STEP_HEADING_ID } from "@/features/checkout/components/checkout-step";
 import {
   CheckoutSummaryBar,
   CheckoutSummaryPanel,
 } from "@/features/checkout/components/checkout-summary";
 import { ContactStep, ContactSummary } from "@/features/checkout/components/contact-step";
 import { DeliveryStep, DeliverySummary } from "@/features/checkout/components/delivery-step";
-import { PaymentStep } from "@/features/checkout/components/payment-step";
+import { PayStep } from "@/features/checkout/components/pay-step";
+import { ReviewStep } from "@/features/checkout/components/review-step";
 import {
   type CheckoutValues,
   checkoutSchema,
   firstIncompleteStep,
+  type FormStep,
   STEP_FIELDS,
   type Step,
   STEPS,
@@ -43,7 +45,8 @@ type Quote = Schemas["ShippingQuote"];
 const STEP_LABELS: Record<Step, string> = {
   dados: "Seus dados",
   entrega: "Entrega",
-  pagamento: "Pagamento",
+  revisar: "Revisar",
+  pagar: "Pagar",
 };
 const STEP_ITEMS = STEPS.map((id) => ({ id, label: STEP_LABELS[id] }));
 const ADDRESS_FIELDS = ["street", "neighborhood", "city", "state"] as const;
@@ -91,13 +94,25 @@ export function CheckoutForm() {
   const addressCep = useRef<string | null>(null);
   // A mesma chave em toda tentativa: um clique duplo nunca cria dois pedidos.
   const idempotencyKey = useRef(crypto.randomUUID());
+  const orderCreated = useRef(false);
 
   // A etapa mora na URL para o voltar do navegador voltar uma etapa. Nunca passa da
-  // mais avançada já liberada (recarregar a página recomeça do início).
+  // mais avançada já liberada (recarregar a página recomeça do início). Com `pedido`
+  // na URL, é sempre Pagar: o pedido já existe e a tela vem dele.
   const [reached, setReached] = useState<Step>("dados");
+  const orderId = params.get("pedido");
   const requested = params.get("etapa");
   const wanted: Step = isStep(requested) ? requested : "dados";
-  const step: Step = indexOf(wanted) <= indexOf(reached) ? wanted : reached;
+  const step: Step = orderId ? "pagar" : indexOf(wanted) <= indexOf(reached) ? wanted : reached;
+
+  // Voltou do Pagar (voltar do navegador): o próximo "Gerar Pix" precisa de chave nova,
+  // senão o backend devolveria o pedido anterior, com os dados de antes.
+  useEffect(() => {
+    if (!orderId && orderCreated.current) {
+      orderCreated.current = false;
+      idempotencyKey.current = crypto.randomUUID();
+    }
+  }, [orderId]);
 
   const items = (cart?.items ?? []).filter(
     (item) => !item.unavailable_reason && (!onlyItem || item.id === onlyItem),
@@ -107,10 +122,12 @@ export function CheckoutForm() {
   const subtotal = items.reduce((total, item) => total + item.line_total_cents, 0);
   const selectedQuote = quotes.find((quote) => quote.id === selectedQuoteId) ?? null;
 
-  function stepUrl(next: Step) {
+  function stepUrl(next: Step, newOrderId?: string) {
     const search = new URLSearchParams(params.toString());
     if (next === "dados") search.delete("etapa");
     else search.set("etapa", next);
+    if (newOrderId) search.set("pedido", newOrderId);
+    else if (next !== "pagar") search.delete("pedido");
     const query = search.toString();
     return query ? `/checkout?${query}` : "/checkout";
   }
@@ -118,6 +135,19 @@ export function CheckoutForm() {
   function goTo(next: Step) {
     router.push(stepUrl(next), { scroll: false });
   }
+
+  // Trocou de etapa (botão, indicador ou voltar do navegador): foco no título da nova
+  // etapa e, se ele ficou acima da tela, volta ao topo. No primeiro render não mexe.
+  const shownStep = useRef(step);
+  useEffect(() => {
+    if (shownStep.current === step) return;
+    shownStep.current = step;
+    const heading = document.getElementById(STEP_HEADING_ID);
+    heading?.focus({ preventScroll: true });
+    if (heading && heading.getBoundingClientRect().top < 0) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [step]);
 
   // URL pedindo uma etapa ainda não liberada: corrige sem criar entrada no histórico.
   useEffect(() => {
@@ -158,7 +188,7 @@ export function CheckoutForm() {
   }, [addresses, form]);
 
   useEffect(() => {
-    if (itemKey) track("checkout_started", { items: itemIds.length });
+    if (itemKey && !orderId) track("checkout_started", { items: itemIds.length });
     // Só uma vez por conjunto de itens.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemKey]);
@@ -229,8 +259,8 @@ export function CheckoutForm() {
   }, [cepDigits, itemKey, api, form, quoteMutate]);
 
   const placeOrder = useMutation({
-    mutationFn: async (values: CheckoutValues) => {
-      const order = unwrap(
+    mutationFn: async (values: CheckoutValues) =>
+      unwrap(
         await api.POST("/api/orders/", {
           params: { header: { "Idempotency-Key": idempotencyKey.current } },
           body: {
@@ -241,17 +271,11 @@ export function CheckoutForm() {
             accept_terms: acceptTerms,
           },
         }),
-      );
-      // Se o PIX falhar aqui, a página do pedido tenta de novo.
-      await api.POST("/api/orders/{order_id}/pay/", {
-        params: { path: { order_id: order.id } },
-      });
-      return order;
-    },
+      ),
     onSuccess: (order) => {
       void queryClient.invalidateQueries({ queryKey: qk.orders() });
-      track("pix_generated");
-      router.replace(`/pedidos/${order.id}`);
+      orderCreated.current = true;
+      router.push(stepUrl("pagar", order.id), { scroll: false });
     },
     onError: (error) => {
       if (error instanceof ApiError && error.code === "shipping_changed") {
@@ -294,8 +318,17 @@ export function CheckoutForm() {
     },
   });
 
-  function complete(done: Exclude<Step, "pagamento">, next: Step) {
+  // Voltou da revisão para alterar algo: ao salvar, segue direto para a revisão,
+  // a menos que outra etapa tenha ficado pendente.
+  const backFromReview = reached === "revisar";
+
+  function complete(done: FormStep, next: Step) {
     track("checkout_step_completed", { step: done });
+    if (backFromReview) {
+      const pending = firstIncompleteStep(form.getValues());
+      goTo(pending === "revisar" && !selectedQuote ? "entrega" : pending);
+      return;
+    }
     if (indexOf(next) > indexOf(reached)) setReached(next);
     goTo(next);
   }
@@ -318,7 +351,7 @@ export function CheckoutForm() {
       );
       return;
     }
-    complete("entrega", "pagamento");
+    complete("entrega", "revisar");
   }
 
   function pay() {
@@ -334,6 +367,19 @@ export function CheckoutForm() {
       (values) => placeOrder.mutate(values),
       () => goTo(firstIncompleteStep(form.getValues())),
     )();
+  }
+
+  // Pagar não depende do carrinho: depois de pago, os itens saem dele.
+  if (orderId) {
+    return (
+      <div className="mx-auto max-w-5xl">
+        <h1 className="font-display text-3xl font-semibold tracking-tight">Finalizar compra</h1>
+        <Steps steps={STEP_ITEMS} current="pagar" className="mt-6 max-w-2xl" />
+        <div className="mt-6">
+          <PayStep orderId={orderId} />
+        </div>
+      </div>
+    );
   }
 
   if (isLoading || !cart) {
@@ -360,8 +406,6 @@ export function CheckoutForm() {
     );
   }
 
-  const stateOf = (id: Step): StepState =>
-    id === step ? "open" : indexOf(id) < indexOf(step) ? "done" : "todo";
   const values = form.getValues();
   const shippingCents = selectedQuote?.price_cents ?? null;
   const next = onlyItem ? `/checkout?item=${onlyItem}` : "/checkout";
@@ -378,7 +422,7 @@ export function CheckoutForm() {
         </p>
       )}
 
-      <Steps steps={STEP_ITEMS} current={step} onSelect={goTo} className="mt-6 max-w-xl" />
+      <Steps steps={STEP_ITEMS} current={step} onSelect={goTo} className="mt-6 max-w-2xl" />
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
         <div className="space-y-4">
@@ -388,56 +432,47 @@ export function CheckoutForm() {
               noValidate
               onSubmit={(event) => {
                 event.preventDefault();
-                if (step === "pagamento") pay();
+                if (step === "revisar") pay();
                 else void advance();
               }}
               className="space-y-4"
             >
-              <CheckoutStep
-                number={1}
-                title={STEP_LABELS.dados}
-                state={stateOf("dados")}
-                summary={<ContactSummary values={values} />}
-                onEdit={() => goTo("dados")}
-              >
-                <ContactStep />
-              </CheckoutStep>
-              <CheckoutStep
-                number={2}
-                title={STEP_LABELS.entrega}
-                state={stateOf("entrega")}
-                summary={<DeliverySummary values={values} quote={selectedQuote} />}
-                onEdit={() => goTo("entrega")}
-              >
-                <DeliveryStep
-                  cepComplete={cepDigits.length === 8}
-                  lookupPending={lookupPending}
-                  editingAddress={editingAddress}
-                  onEditAddress={() => setEditingAddress(true)}
-                  quotes={quotes}
-                  quotePending={quote.isPending}
-                  quoteError={quoteError}
-                  onRetryQuote={() => quoteMutate({ postalCode: cepDigits, itemIds })}
-                  selectedQuoteId={selectedQuoteId}
-                  onSelectQuote={(id) => {
-                    setSelectedQuoteId(id);
-                    setShippingError(null);
-                  }}
-                  shippingError={shippingError}
-                />
-              </CheckoutStep>
-              <CheckoutStep number={3} title={STEP_LABELS.pagamento} state={stateOf("pagamento")}>
-                <PaymentStep
-                  totalCents={subtotal + (shippingCents ?? 0)}
-                  acceptTerms={acceptTerms}
-                  onAcceptTerms={(checked) => {
-                    setAcceptTerms(checked);
-                    if (checked) setTermsError(false);
-                  }}
-                  termsError={termsError}
-                  shippingNotice={shippingNotice}
-                  pending={placeOrder.isPending}
-                />
+              <CheckoutStep title={STEP_LABELS[step]}>
+                {step === "dados" && <ContactStep />}
+                {step === "entrega" && (
+                  <DeliveryStep
+                    cepComplete={cepDigits.length === 8}
+                    lookupPending={lookupPending}
+                    editingAddress={editingAddress}
+                    onEditAddress={() => setEditingAddress(true)}
+                    quotes={quotes}
+                    quotePending={quote.isPending}
+                    quoteError={quoteError}
+                    onRetryQuote={() => quoteMutate({ postalCode: cepDigits, itemIds })}
+                    selectedQuoteId={selectedQuoteId}
+                    onSelectQuote={(id) => {
+                      setSelectedQuoteId(id);
+                      setShippingError(null);
+                    }}
+                    shippingError={shippingError}
+                  />
+                )}
+                {step === "revisar" && (
+                  <ReviewStep
+                    contact={<ContactSummary values={values} />}
+                    delivery={<DeliverySummary values={values} quote={selectedQuote} />}
+                    onEditContact={() => goTo("dados")}
+                    onEditDelivery={() => goTo("entrega")}
+                    acceptTerms={acceptTerms}
+                    onAcceptTerms={(checked) => {
+                      setAcceptTerms(checked);
+                      if (checked) setTermsError(false);
+                    }}
+                    termsError={termsError}
+                    shippingNotice={shippingNotice}
+                    pending={placeOrder.isPending}
+                  />
+                )}
               </CheckoutStep>
             </form>
           </Form>

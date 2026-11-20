@@ -1,40 +1,23 @@
 "use client";
 
-import { ApiError } from "@kubo/api-client";
+import { Button } from "@kubo/ui/button";
 import { Callout } from "@kubo/ui/callout";
 import { Card } from "@kubo/ui/card";
-import { Button } from "@kubo/ui/button";
 import { EmptyState } from "@kubo/ui/empty-state";
 import { formatDate } from "@kubo/ui/lib/format";
 import { ORDER_STATUS } from "@kubo/ui/lib/status";
 import { Skeleton } from "@kubo/ui/skeleton";
 import { StatusBadge } from "@kubo/ui/status-badge";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
-import { toast } from "sonner";
 
+import { OrderPayment } from "@/features/orders/components/order-payment";
 import { OrderSummary } from "@/features/orders/components/order-summary";
 import { OrderTimeline } from "@/features/orders/components/order-timeline";
-import { PixPayment } from "@/features/orders/components/pix-payment";
-import { useOrder, usePayOrder } from "@/features/orders/hooks";
-import { messageOf } from "@/lib/errors";
+import { useOrder } from "@/features/orders/hooks";
 
 /** Hub do pedido: o status decide o que aparece, inclusive o pagamento PIX. */
 export function OrderDetail({ id }: { id: string }) {
   const { data: order, isLoading, isError } = useOrder(id);
-  const pay = usePayOrder(id);
-  const triedPay = useRef(false);
-  const payMutate = pay.mutate;
-
-  // Sem PIX válido em um pedido aguardando: gera. Só uma tentativa automática.
-  const needsCharge =
-    order?.status === "pending_payment" && (!order.charge || order.charge.status !== "pending");
-  useEffect(() => {
-    if (needsCharge && !triedPay.current) {
-      triedPay.current = true;
-      payMutate(undefined, { onError: (error) => toast.error(messageOf(error)) });
-    }
-  }, [needsCharge, payMutate]);
 
   if (isError) {
     return (
@@ -87,53 +70,7 @@ export function OrderDetail({ id }: { id: string }) {
         </Callout>
       )}
 
-      {order.status === "pending_payment" && order.charge?.status === "pending" && (
-        <PixPayment charge={order.charge} />
-      )}
-      {needsCharge && !pay.isError && <Skeleton className="h-72 w-full" />}
-      {needsCharge && pay.isError && (
-        <Card className="space-y-3 p-5 text-center" role="alert">
-          <p>Não conseguimos gerar o PIX agora.</p>
-          <Button
-            variant="primary"
-            pending={pay.isPending}
-            onClick={() =>
-              pay.mutate(undefined, { onError: (error) => toast.error(messageOf(error)) })
-            }
-          >
-            Tentar de novo
-          </Button>
-        </Card>
-      )}
-
-      {order.status === "expired" && (
-        <Card className="space-y-3 p-5" role="alert">
-          <p className="font-semibold">O prazo do PIX terminou</p>
-          <p className="text-sm text-muted">Nada foi cobrado. Seus itens continuam no carrinho.</p>
-          {order.can_renew_payment ? (
-            <Button
-              variant="primary"
-              pending={pay.isPending}
-              onClick={() =>
-                pay.mutate(undefined, {
-                  onError: (error) => {
-                    toast.error(messageOf(error));
-                    if (error instanceof ApiError && error.code === "order_too_old") {
-                      window.location.assign("/carrinho");
-                    }
-                  },
-                })
-              }
-            >
-              Gerar novo PIX
-            </Button>
-          ) : (
-            <Button asChild variant="primary">
-              <Link href="/carrinho">Voltar ao carrinho</Link>
-            </Button>
-          )}
-        </Card>
-      )}
+      <OrderPayment order={order} />
 
       {order.status === "refunded" && (
         <Callout role="status" className="p-4 text-base text-ink">

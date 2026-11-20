@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@kubo/analytics";
 import { unwrap } from "@kubo/api-client";
 import { qk, useApiClient } from "@kubo/api-client/react";
 import { useActorReady } from "@kubo/web-core/session";
@@ -43,10 +44,9 @@ export function usePayOrder(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () =>
-      unwrap(
-        await api.POST("/api/orders/{order_id}/pay/", { params: { path: { order_id: id } } }),
-      ),
+      unwrap(await api.POST("/api/orders/{order_id}/pay/", { params: { path: { order_id: id } } })),
     onSuccess: (order) => {
+      track("pix_generated");
       queryClient.setQueryData(qk.order(id), order);
       void queryClient.invalidateQueries({ queryKey: qk.orders(), exact: true });
     },
