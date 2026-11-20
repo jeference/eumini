@@ -117,8 +117,6 @@ class Order(BaseModel):
     shipping_company = models.CharField(max_length=64, blank=True)
     delivery_days = models.PositiveSmallIntegerField()
 
-    terms_version = models.CharField(max_length=16)
-    terms_accepted_at = models.DateTimeField()
     tracking_token_hash = models.CharField(max_length=64, unique=True)
     tracking_token_encrypted = models.TextField()
 

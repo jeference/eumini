@@ -7,7 +7,6 @@ import secrets
 
 from django.conf import settings
 from django.db import IntegrityError, transaction
-from django.utils import timezone
 
 from audit.services import record_event
 from catalog import pricing
@@ -239,8 +238,6 @@ def create_order(
     existing = Order.objects.filter(actor_key=actor.key, idempotency_key=idempotency_key).first()
     if existing:
         return existing, False
-    if not data.get("accept_terms"):
-        raise GuardFailed("Aceite os termos para continuar.", code="terms_required")
 
     cpf = _digits(data["cpf"])
     if not _valid_cpf(cpf):
@@ -290,8 +287,6 @@ def create_order(
                 shipping_service_name=quote.service_name,
                 shipping_company=quote.company,
                 delivery_days=quote.delivery_days,
-                terms_version=settings.BUSINESS["TERMS_VERSION"],
-                terms_accepted_at=timezone.now(),
                 tracking_token_hash=sha256_hex(token),
                 tracking_token_encrypted=encrypt(token),
                 **actor.owner_fields(),

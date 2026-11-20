@@ -60,7 +60,6 @@ def test_validations(visitor_client):
     cases = [
         ({"cpf": "11111111111"}, "invalid_cpf"),
         ({"cpf": "52998224724"}, "invalid_cpf"),
-        ({"accept_terms": False}, "terms_required"),
         ({"postal_code": "02000-000"}, "shipping_quote_invalid"),
     ]
     for overrides, code in cases:

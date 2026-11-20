@@ -1458,10 +1458,7 @@ components:
           type: string
           minLength: 1
           maxLength: 2
-        accept_terms:
-          type: boolean
       required:
-      - accept_terms
       - city
       - cpf
       - email

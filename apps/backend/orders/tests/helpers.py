@@ -46,7 +46,6 @@ def order_payload(item_ids, quote_id, **overrides):
         "neighborhood": "Bela Vista",
         "city": "São Paulo",
         "state": "SP",
-        "accept_terms": True,
         **overrides,
     }
 

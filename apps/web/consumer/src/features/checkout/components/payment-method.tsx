@@ -1,10 +1,8 @@
 "use client";
 
 import { Card } from "@kubo/ui/card";
-import { Checkbox } from "@kubo/ui/checkbox";
 import { RadioCard } from "@kubo/ui/radio-card";
 import { CreditCard, type LucideIcon, QrCode } from "lucide-react";
-import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { STEP_HEADING_ID } from "@/features/checkout/components/checkout-step";
@@ -32,7 +30,7 @@ function MethodLabel({
 
 /**
  * Escolha da forma de pagamento: nada vem marcado, e cartão aparece como "Em breve".
- * `error`: tentou concluir sem escolher. `children` aparece abaixo das opções (termos).
+ * `error`: tentou concluir sem escolher. `children` aparece abaixo das opções.
  */
 export function PaymentMethodPicker({
   pixChosen,
@@ -85,42 +83,5 @@ export function PaymentMethodPicker({
         {children && <div className="mt-5 space-y-5">{children}</div>}
       </fieldset>
     </Card>
-  );
-}
-
-/** Aceite exigido para criar o pedido. */
-export function TermsCheckbox({
-  checked,
-  onChange,
-  error,
-}: {
-  checked: boolean;
-  onChange: (value: boolean) => void;
-  error: boolean;
-}) {
-  return (
-    <div className="space-y-1.5">
-      <Checkbox
-        checked={checked}
-        onChange={(event) => onChange(event.target.checked)}
-        aria-invalid={error}
-        aria-describedby={error ? "termos-erro" : undefined}
-      >
-        Li e aceito os{" "}
-        <Link href="/termos" target="_blank" className="underline">
-          Termos de Uso
-        </Link>{" "}
-        e a{" "}
-        <Link href="/trocas" target="_blank" className="underline">
-          Política de Trocas
-        </Link>
-        . Sei que a peça impressa pode ter diferenças de cor e detalhe em relação à prévia.
-      </Checkbox>
-      {error && (
-        <p id="termos-erro" className="pl-7 text-xs font-medium text-danger" role="alert">
-          Para continuar, marque que leu e aceita os termos.
-        </p>
-      )}
-    </div>
   );
 }

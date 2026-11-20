@@ -30,7 +30,7 @@ import { CheckoutSummary } from "@/features/checkout/components/checkout-summary
 import { ContactStep } from "@/features/checkout/components/contact-step";
 import { DeliveryStep } from "@/features/checkout/components/delivery-step";
 
-import { PaymentMethodPicker, TermsCheckbox } from "@/features/checkout/components/payment-method";
+import { PaymentMethodPicker } from "@/features/checkout/components/payment-method";
 import { PixModal } from "@/features/checkout/components/pix-modal";
 import {
   type CheckoutValues,
@@ -94,8 +94,6 @@ export function CheckoutForm() {
   const [selectedQuoteId, setSelectedQuoteId] = useState<string | null>(null);
   const [shippingNotice, setShippingNotice] = useState<string | null>(null);
   const [shippingError, setShippingError] = useState<string | null>(null);
-  const [acceptTerms, setAcceptTerms] = useState(false);
-  const [termsError, setTermsError] = useState(false);
   const [lookupPending, setLookupPending] = useState(false);
   const [editingAddress, setEditingAddress] = useState(false);
   // CEP a que rua, bairro, cidade e UF pertencem: evita buscar de novo o que já veio salvo.
@@ -279,7 +277,6 @@ export function CheckoutForm() {
             complement: values.complement ?? "",
             item_ids: itemIds,
             shipping_quote_id: selectedQuoteId ?? "",
-            accept_terms: acceptTerms,
           },
         }),
       );
@@ -381,10 +378,6 @@ export function CheckoutForm() {
       goTo("entrega");
       return;
     }
-    if (!acceptTerms) {
-      setTermsError(true);
-      return;
-    }
     // Já criou o pedido e voltou do modal: reabre o mesmo PIX.
     if (orderId) {
       setPixOpen(true);
@@ -465,14 +458,6 @@ export function CheckoutForm() {
                       {shippingNotice}
                     </Callout>
                   )}
-                  <TermsCheckbox
-                    checked={acceptTerms}
-                    onChange={(checked) => {
-                      setAcceptTerms(checked);
-                      if (checked) setTermsError(false);
-                    }}
-                    error={termsError}
-                  />
                 </PaymentMethodPicker>
               ) : (
                 <CheckoutStep title={STEP_LABELS[step]}>

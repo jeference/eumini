@@ -810,7 +810,6 @@ export interface components {
             neighborhood: string;
             city: string;
             state: string;
-            accept_terms: boolean;
         };
         /** @description Só para o dono do pedido. CPF sempre mascarado. */
         OrderDetail: {

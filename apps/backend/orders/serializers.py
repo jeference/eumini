@@ -78,7 +78,6 @@ class OrderCreateSerializer(serializers.Serializer):
     neighborhood = serializers.CharField(max_length=80)
     city = serializers.CharField(max_length=80)
     state = serializers.CharField(max_length=2)
-    accept_terms = serializers.BooleanField()
 
 
 class OrderItemSerializer(GlobalIdSerializer):

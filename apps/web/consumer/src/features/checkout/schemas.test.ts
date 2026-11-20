@@ -45,7 +45,7 @@ describe("etapas do checkout", () => {
   it("acha a etapa dona de cada campo", () => {
     expect(stepOfField("cpf")).toBe("dados");
     expect(stepOfField("number")).toBe("entrega");
-    expect(stepOfField("accept_terms")).toBeNull();
+    expect(stepOfField("shipping_quote_id")).toBeNull();
   });
 
   it("começa na primeira etapa incompleta", () => {
