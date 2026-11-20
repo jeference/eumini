@@ -74,10 +74,8 @@ export function PurchasePanel({ creation }: { creation: Creation }) {
             Miniatura {categoryInfo(version.category).label}
           </p>
         )}
-        <p className="text-2xl font-semibold lg:text-xl" data-testid="price">
-          <span className="rounded-full bg-highlight px-3 py-1 text-ink">
-            {size ? formatBRL(size.price_cents * quantity) : "…"}
-          </span>
+        <p className="text-3xl font-semibold" data-testid="price">
+          {size ? formatBRL(size.price_cents * quantity) : "…"}
         </p>
         <p className="mt-2 text-sm text-muted lg:text-[13px]">Frete calculado na finalização</p>
       </div>
