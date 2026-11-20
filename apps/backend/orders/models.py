@@ -147,7 +147,8 @@ class OrderItem(BaseModel):
     longest_side_mm = models.PositiveIntegerField()
     quantity = models.PositiveSmallIntegerField()
     unit_price_cents = models.PositiveIntegerField()
-    style = models.CharField(max_length=24)
+    # Congelada na compra (RN-17): a categoria da versão comprada define o preço.
+    category = models.CharField(max_length=16)
     prompt_text = models.TextField(blank=True)
 
     class Meta(BaseModel.Meta):

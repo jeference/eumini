@@ -140,6 +140,8 @@ SPECTACULAR_SETTINGS = {
         "ProviderTaskKindEnum": "creations.models.ProviderTask.Kind",
         "OrderStatusEnum": "orders.models.Order.Status",
         "ChargeStatusEnum": "payments.models.Charge.Status",
+        "CategoryEnum": "catalog.categories.Category",
+        "RejectionReasonEnum": "catalog.categories.RejectionReason",
     },
 }
 
@@ -157,14 +159,14 @@ SIMPLE_JWT = {
 BUSINESS = {
     "ACCOUNT_CODE_TTL_MINUTES": 15,
     "ACCOUNT_CODE_RESEND_COOLDOWN_SECONDS": 60,
-    # RN-04: limites por dia e por sessão ou conta.
-    "QUOTA_PER_DAY": {"image": 10, "edit": 15},
-    "QUOTA_PER_IP_PER_DAY": {"image": 40, "edit": 60},
+    # RN-04: limites por dia e por sessão ou conta. RN-33: a classificação da foto tem o seu.
+    "QUOTA_PER_DAY": {"image": 10, "edit": 15, "classify": 30},
+    "QUOTA_PER_IP_PER_DAY": {"image": 40, "edit": 60, "classify": 120},
     # RN-05: tarefas simultâneas.
     "MAX_ACTIVE_TASKS": 2,
     # RN-06: teto global de gasto diário com IA. Sem custo informado, vale a estimativa.
     "DAILY_SPEND_CAP_USD": env.float("DAILY_SPEND_CAP_USD", default=30.0),
-    "ESTIMATED_COST_USD": {"image": 0.02, "edit": 0.02},
+    "ESTIMATED_COST_USD": {"image": 0.02, "edit": 0.02, "classify": 0.0002},
     # Worker.
     "TASK_MAX_ATTEMPTS": 3,
     # Cobre duas chamadas de até 90 s: o modelo principal e o reserva.
@@ -183,6 +185,8 @@ BUSINESS = {
     "SHIPPING_QUOTE_TTL_MINUTES": 30,
     "PRODUCTION_DAYS": 7,  # RN-16
     "TERMS_VERSION": "2026-11",
+    # RN-37: versão do texto de consentimento da lista de espera.
+    "WAITLIST_CONSENT_VERSION": "2026-11",
     # URLs e retenção.
     "SIGNED_URL_TTL_SECONDS": 300,
     "PHOTO_RETENTION_DAYS": 90,
@@ -202,6 +206,10 @@ if not FIELD_ENCRYPTION_KEY and not DEBUG:
 IMAGE_GENERATION_ADAPTER = env(
     "IMAGE_GENERATION_ADAPTER",
     default="integrations.adapters.runware.RunwareImageGenerationAdapter",
+)
+IMAGE_CLASSIFICATION_ADAPTER = env(
+    "IMAGE_CLASSIFICATION_ADAPTER",
+    default="integrations.adapters.typesafe.TypeSafeClassificationAdapter",
 )
 PAYMENT_GATEWAY_ADAPTER = env(
     "PAYMENT_GATEWAY_ADAPTER", default="integrations.adapters.abacatepay.AbacatePayAdapter"
@@ -225,6 +233,10 @@ RUNWARE_IMAGE_MODEL = env("RUNWARE_IMAGE_MODEL", default="openai:gpt-image@2")
 # Reserva: assume uma imagem nova quando o principal falha por qualquer motivo, inclusive
 # recusa de conteúdo. Nano Banana Pro aceita personagens que o GPT Image 2 recusa.
 RUNWARE_IMAGE_FALLBACK_MODEL = env("RUNWARE_IMAGE_FALLBACK_MODEL", default="google:4@2")
+
+# TypeSafe: o classificador Jev (docs/classificador/).
+JEV_API_KEY = env("JEV_API_KEY", default="")
+JEV_MODEL = env("JEV_MODEL", default="jev-1.14.0")
 
 # AbacatePay.
 ABACATE_PAY_BASE_URL = env("ABACATE_PAY_BASE_URL", default="https://api.abacatepay.com/v2")

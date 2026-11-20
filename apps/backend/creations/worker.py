@@ -16,17 +16,20 @@ from django.db import close_old_connections, transaction
 from django.db.models import Q
 from django.utils import timezone
 
+from catalog.categories import Category
 from common.alerts import alert
+from common.exceptions import QuotaExceeded, ServiceBusy
 from common.fsm import apply_transition
-from creations import quota
+from creations import quota, services
 from creations.fsm import CREATION_FSM
-from creations.models import Creation, ImageVersion, ProviderTask
+from creations.models import Classification, Creation, ImageVersion, ProviderTask
 from integrations.ports import (
     ContentRefused,
     GeneratedImage,
     ImageGenerationPort,
     ProviderPermanentError,
     ProviderTemporaryError,
+    get_image_classification_port,
     get_image_generation_port,
 )
 from media import services as media
@@ -37,6 +40,7 @@ _REFUSED_MESSAGE = (
     "e marcas conhecidos, nudez e violência costumam ser recusados. Tente descrever de outro jeito."
 )
 _FAILED_MESSAGE = "Não conseguimos gerar agora. Tente de novo."
+_CLASSIFY_FAILED_MESSAGE = "Não conseguimos ler a foto agora. Tente de novo."
 _TIMEOUT_MESSAGE = "A geração demorou demais. Tente de novo."
 
 log = structlog.get_logger(__name__)
@@ -70,7 +74,10 @@ def claim_task() -> ProviderTask | None:
 def run_task(task: ProviderTask) -> None:
     structlog.contextvars.bind_contextvars(task_id=str(task.globalid), kind=task.kind)
     try:
-        _run_image(task)
+        if task.kind == ProviderTask.Kind.CLASSIFY:
+            _run_classify(task)
+        else:
+            _run_image(task)
     except ContentRefused as exc:
         _fail(task, code="content_refused", message=_REFUSED_MESSAGE, detail=str(exc))
     except (ProviderTemporaryError, requests.RequestException) as exc:
@@ -125,7 +132,7 @@ def _run_image(task: ProviderTask) -> None:
     task.save(update_fields=["provider", "attempts", "updated_at"])
 
     creation = task.creation
-    if task.kind == ProviderTask.Kind.PHOTO_TO_IMAGE:
+    if task.kind == ProviderTask.Kind.GENERATE:
         source_asset = creation.input.photo
         models = port.models
     else:
@@ -142,10 +149,12 @@ def _run_image(task: ProviderTask) -> None:
 
     asset = media.store(data=result.data, kind=Asset.Kind.IMAGE, mime="image/png")
     origin = {
-        ProviderTask.Kind.PHOTO_TO_IMAGE: ImageVersion.Origin.PHOTO,
-        ProviderTask.Kind.IMAGE_EDIT: ImageVersion.Origin.EDIT,
+        ProviderTask.Kind.GENERATE: ImageVersion.Origin.PHOTO,
+        ProviderTask.Kind.EDIT: ImageVersion.Origin.EDIT,
     }[task.kind]
 
+    # A imagem fica guardada; a criação só fica pronta depois que a versão é classificada.
+    # Se a classificação falhar, só ela se repete, sem gerar a imagem de novo.
     with transaction.atomic():
         locked = Creation.objects.select_for_update().get(pk=creation.pk)
         number = locked.versions.count() + 1
@@ -159,10 +168,96 @@ def _run_image(task: ProviderTask) -> None:
             task=task,
         )
         _succeed(task)
-        if task.kind != ProviderTask.Kind.IMAGE_EDIT:
-            locked.current_version = version
-            locked.save(update_fields=["current_version", "updated_at"])
-            apply_transition(instance=locked, fsm=CREATION_FSM, event="image_ready")
+        services.enqueue_version_classification(version)
+
+
+def _run_classify(task: ProviderTask) -> None:
+    """Classifica a foto (antes de gerar) ou uma versão gerada (RN-33, RN-34)."""
+    port = get_image_classification_port()
+    task.provider = port.provider
+    task.attempts += 1
+    task.save(update_fields=["provider", "attempts", "updated_at"])
+
+    creation = task.creation
+    version = task.source_version
+    image = media.read(version.asset if version else creation.input.photo)
+    result = port.classify(image=image, target="version" if version else "photo")
+    _record_cost(task, result.cost_usd)
+    task.model_name = result.model
+    accepted = result.result in Category.values
+    # Quem pediu (RN-36): a leitura da foto tem reserva própria; a da versão herda a da tarefa
+    # que gerou a imagem.
+    owner_task = version.task if version is not None and version.task else task
+    reservation = getattr(owner_task, "quota_reservation", None)
+    ip_hash = reservation.ip_hash if reservation else ""
+
+    with transaction.atomic():
+        Classification.objects.create(
+            creation=creation,
+            version=version,
+            task=task,
+            requested_category=creation.requested_category,
+            result=result.result,
+            decision=(
+                Classification.Decision.ACCEPTED if accepted else Classification.Decision.REJECTED
+            ),
+            confidence=result.confidence,
+            probabilities=result.probabilities,
+            character_probability=result.character_probability,
+            model_name=result.model[:64],
+            question_set_version=result.question_set_version[:16],
+            ip_hash=ip_hash,
+        )
+        _succeed(task)
+        locked = Creation.objects.select_for_update().get(pk=creation.pk)
+        if version is None:
+            _apply_photo_result(locked, result.result, accepted=accepted, ip_hash=ip_hash)
+        else:
+            _apply_version_result(locked, version, result.result, accepted=accepted)
+
+
+def _apply_photo_result(creation: Creation, result: str, *, accepted: bool, ip_hash: str) -> None:
+    if not accepted:
+        creation.rejection_reason = result
+        creation.save(update_fields=["rejection_reason", "updated_at"])
+        apply_transition(
+            instance=creation, fsm=CREATION_FSM, event="photo_rejected", payload={"reason": result}
+        )
+        return
+    creation.category = result
+    creation.save(update_fields=["category", "updated_at"])
+    try:
+        # Savepoint: se a cota acabou entre o envio e a leitura da foto, nada da geração fica.
+        with transaction.atomic():
+            services.enqueue_image(
+                actor=services.actor_of(creation), ip_hash=ip_hash, creation=creation
+            )
+    except (QuotaExceeded, ServiceBusy) as exc:
+        creation.last_error_code = exc.code[:32]
+        creation.last_error_message = exc.detail[:255]
+        creation.save(update_fields=["last_error_code", "last_error_message", "updated_at"])
+        apply_transition(
+            instance=creation, fsm=CREATION_FSM, event="image_failed", payload={"code": exc.code}
+        )
+        return
+    apply_transition(
+        instance=creation, fsm=CREATION_FSM, event="photo_accepted", payload={"category": result}
+    )
+
+
+def _apply_version_result(
+    creation: Creation, version: ImageVersion, result: str, *, accepted: bool
+) -> None:
+    if accepted:
+        version.category = result
+    else:
+        version.rejection_reason = result
+    version.save(update_fields=["category", "rejection_reason", "updated_at"])
+    # A primeira imagem abre a compra; as edições só ganham categoria e preço.
+    if version.origin == ImageVersion.Origin.PHOTO and creation.current_version_id is None:
+        creation.current_version = version
+        creation.save(update_fields=["current_version", "updated_at"])
+        apply_transition(instance=creation, fsm=CREATION_FSM, event="image_ready")
 
 
 def _succeed(task: ProviderTask) -> None:
@@ -232,14 +327,25 @@ def _fail(task: ProviderTask, *, code: str, message: str, detail: str = "") -> N
             ]
         )
         quota.release(task)
-        if task.kind == ProviderTask.Kind.IMAGE_EDIT:
+        # Edições e suas versões não mudam o status da criação: a versão fica sem categoria.
+        if task.kind == ProviderTask.Kind.EDIT:
             return
+        source = task.source_version
+        if source is not None and source.origin == ImageVersion.Origin.EDIT:
+            return
+        reading_photo = task.kind == ProviderTask.Kind.CLASSIFY and source is None
+        if reading_photo:
+            code = "classification_failed" if code != "timeout" else code
+            message = _CLASSIFY_FAILED_MESSAGE
         creation = Creation.objects.select_for_update().get(pk=task.creation_id)
         creation.last_error_code = code
         creation.last_error_message = message
         creation.save(update_fields=["last_error_code", "last_error_message", "updated_at"])
         apply_transition(
-            instance=creation, fsm=CREATION_FSM, event="image_failed", payload={"code": code}
+            instance=creation,
+            fsm=CREATION_FSM,
+            event="classification_failed" if reading_photo else "image_failed",
+            payload={"code": code},
         )
 
 

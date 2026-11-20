@@ -14,7 +14,8 @@ class CartItemSerializer(GlobalIdSerializer):
     creation_id = serializers.UUIDField(source="creation.globalid", read_only=True)
     size_id = serializers.UUIDField(source="size.globalid", read_only=True)
     size_label = serializers.CharField(source="size.label", read_only=True)
-    unit_price_cents = serializers.IntegerField(source="size.price_cents", read_only=True)
+    unit_price_cents = serializers.SerializerMethodField()
+    category = serializers.CharField(source="version.category", read_only=True)
     line_total_cents = serializers.SerializerMethodField()
     image_url = serializers.SerializerMethodField()
     unavailable_reason = serializers.SerializerMethodField()
@@ -26,6 +27,7 @@ class CartItemSerializer(GlobalIdSerializer):
             "creation_id",
             "size_id",
             "size_label",
+            "category",
             "quantity",
             "unit_price_cents",
             "line_total_cents",
@@ -34,8 +36,11 @@ class CartItemSerializer(GlobalIdSerializer):
         ]
         read_only_fields = fields
 
+    def get_unit_price_cents(self, item) -> int | None:
+        return services.unit_price_cents(item)
+
     def get_line_total_cents(self, item) -> int:
-        return item.size.price_cents * item.quantity
+        return (services.unit_price_cents(item) or 0) * item.quantity
 
     def get_image_url(self, item) -> str:
         return media.signed_url(item.version.asset)
@@ -88,6 +93,7 @@ class OrderItemSerializer(GlobalIdSerializer):
             "id",
             "creation_id",
             "size_label",
+            "category",
             "quantity",
             "unit_price_cents",
             "line_total_cents",

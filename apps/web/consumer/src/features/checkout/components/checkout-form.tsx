@@ -23,6 +23,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { useCart } from "@/features/cart/hooks";
+import { categoryLabel } from "@/features/catalog/categories";
 import { type CheckoutValues, checkoutSchema } from "@/features/checkout/schemas";
 import { messageOf } from "@/lib/errors";
 
@@ -385,6 +386,7 @@ export function CheckoutForm() {
                       className="size-14 rounded-xl bg-sunken object-contain"
                     />
                     <span className="min-w-0 flex-1 text-sm">
+                      {item.category ? `${categoryLabel(item.category)} · ` : ""}
                       {item.size_label}
                       <span className="block text-muted">Quantidade: {item.quantity}</span>
                     </span>

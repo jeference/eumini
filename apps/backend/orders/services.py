@@ -10,6 +10,7 @@ from django.db import IntegrityError, transaction
 from django.utils import timezone
 
 from audit.services import record_event
+from catalog import pricing
 from catalog.models import ProductSize
 from common.crypto import encrypt, sha256_hex
 from common.exceptions import Conflict, GuardFailed, ResourceNotFound
@@ -57,12 +58,21 @@ def cart_items(actor):
     ).select_related("creation", "version__asset", "size")
 
 
+def unit_price_cents(item) -> int | None:
+    """Preço da versão escolhida nesse tamanho. None se a combinação não é vendida."""
+    return pricing.price_for(item.version.category, item.size)
+
+
 def unavailable_reason(item: CartItem) -> str:
     """Motivo pelo qual o item não pode ser comprado agora. Vazio se pode."""
     if item.creation.deleted_at is not None:
         return "Esta criação foi excluída."
+    if not item.version.category:
+        return "Esta imagem não pode ser comprada."
     if not item.size.is_active:
         return "Este tamanho não está mais disponível."
+    if unit_price_cents(item) is None:
+        return "Este tamanho não é vendido para esta categoria."
     return ""
 
 
@@ -72,9 +82,17 @@ def add_item(*, actor, creation_id, size_id, quantity: int) -> CartItem:
         raise ResourceNotFound("Criação não encontrada.")
     if creation.status != Creation.Status.READY or creation.current_version_id is None:
         raise GuardFailed("Esta criação ainda não está pronta.", code="creation_not_ready")
+    version = creation.current_version
+    if not version.category:
+        raise GuardFailed(
+            "Esta imagem não pode ser comprada. Edite ou escolha outra versão.",
+            code="version_not_sellable",
+        )
     size = ProductSize.objects.filter(globalid=size_id, is_active=True).first()
     if size is None:
         raise ResourceNotFound("Tamanho não encontrado.")
+    if pricing.price_for(version.category, size) is None:
+        raise GuardFailed("Este tamanho não é vendido para esta categoria.", code="size_not_sold")
     limit = settings.BUSINESS["MAX_ITEM_QUANTITY"]
     if not 1 <= quantity <= limit:
         raise GuardFailed(f"A quantidade deve ser de 1 a {limit}.", code="invalid_quantity")
@@ -239,7 +257,8 @@ def create_order(
     quote = _resolve_shipping(
         actor=actor, quote_id=data["shipping_quote_id"], postal_code=postal_code, items=items
     )
-    subtotal = sum(item.size.price_cents * item.quantity for item in items)
+    prices = {item.pk: unit_price_cents(item) for item in items}
+    subtotal = sum(prices[item.pk] * item.quantity for item in items)
     token = secrets.token_urlsafe(32)
     address = {
         "postal_code": postal_code,
@@ -290,8 +309,8 @@ def create_order(
                     size_label=item.size.label,
                     longest_side_mm=item.size.longest_side_mm,
                     quantity=item.quantity,
-                    unit_price_cents=item.size.price_cents,
-                    style=item.creation.style,
+                    unit_price_cents=prices[item.pk],
+                    category=item.version.category,
                     prompt_text=item.creation.input.text,
                 )
             if actor.user is not None:

@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@kubo/ui/button";
+import { Callout } from "@kubo/ui/callout";
 import { Card } from "@kubo/ui/card";
 import { EmptyState } from "@kubo/ui/empty-state";
 import { Skeleton } from "@kubo/ui/skeleton";
@@ -10,14 +11,21 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { categoryInfo } from "@/features/catalog/categories";
 import { EditModal } from "@/features/creations/components/edit-modal";
 import {
   IMAGE_PROGRESS,
+  PHOTO_PROGRESS,
   ProgressFrame,
   ProgressNotice,
   useElapsedSince,
 } from "@/features/creations/components/progress";
 import { PurchasePanel } from "@/features/creations/components/purchase-panel";
+import {
+  RejectionMessage,
+  WaitlistForm,
+  isGroupRejection,
+} from "@/features/creations/components/rejection";
 import { useCreation, useCreationAction } from "@/features/creations/hooks";
 import type { Creation } from "@/features/creations/types";
 import { messageOf } from "@/lib/errors";
@@ -56,7 +64,9 @@ function StudioContent({ creation }: { creation: Creation }) {
   const router = useRouter();
   const actions = useCreationAction(creation.id);
   const { status } = creation;
+  const isClassifying = status === "classifying";
   const isGeneratingImage = status === "generating_image";
+  const isWorking = isClassifying || isGeneratingImage;
   const isReady = status === "ready";
   const image = creation.versions.find((v) => v.id === creation.current_version_id) ?? null;
   const elapsed = useElapsedSince(creation.active_started_at);
@@ -71,7 +81,7 @@ function StudioContent({ creation }: { creation: Creation }) {
     <div>
       {/* A primeira coluna é exatamente a imagem: a distância até o painel é sempre a mesma. */}
       <div className="grid gap-y-6 lg:grid-cols-[min(900px,42vw,max(400px,calc(100dvh-10rem)))_minmax(0,675px)] lg:justify-center lg:gap-x-[min(4vw,72px)]">
-        {!isGeneratingImage && (
+        {!isWorking && (
           <Button
             variant="secondary"
             size="icon"
@@ -98,16 +108,21 @@ function StudioContent({ creation }: { creation: Creation }) {
               </Button>
             )}
 
-            {isGeneratingImage && (
+            {isWorking && (
               <ProgressFrame elapsed={elapsed}>
                 <div className="skeleton flex size-full items-center justify-center">
                   <Sparkles className="size-10 animate-pulse text-accent/60" aria-hidden />
                 </div>
               </ProgressFrame>
             )}
-            {status === "image_failed" && (
+            {status === "rejected" && <RejectionMessage creation={creation} />}
+            {status === "failed" && (
               <FailureMessage
-                title="Não conseguimos criar a imagem"
+                title={
+                  creation.category
+                    ? "Não conseguimos criar a imagem"
+                    : "Não conseguimos ler a foto"
+                }
                 creation={creation}
                 onRetry={() => run(() => actions.retry.mutateAsync())}
                 isRetrying={actions.retry.isPending}
@@ -126,13 +141,39 @@ function StudioContent({ creation }: { creation: Creation }) {
 
         {/* O painel começa abaixo do topo da imagem. */}
         <aside className="lg:pt-[60px]">
-          {isGeneratingImage && <ProgressNotice progress={IMAGE_PROGRESS} elapsed={elapsed} />}
-          {isReady && <PurchasePanel creation={creation} />}
+          {isClassifying && <ProgressNotice progress={PHOTO_PROGRESS} elapsed={elapsed} />}
+          {isGeneratingImage && (
+            <div className="space-y-5">
+              <CategoryNotice creation={creation} />
+              <ProgressNotice progress={IMAGE_PROGRESS} elapsed={elapsed} />
+            </div>
+          )}
+          {status === "rejected" && isGroupRejection(creation) && (
+            <WaitlistForm creation={creation} />
+          )}
+          {isReady && (
+            <div className="space-y-6">
+              <CategoryNotice creation={creation} />
+              <PurchasePanel creation={creation} />
+            </div>
+          )}
         </aside>
       </div>
 
       <EditModal creation={creation} open={isEditing} onClose={() => setIsEditing(false)} />
     </div>
+  );
+}
+
+/** A página era de uma categoria, mas a foto é de outra: a criação segue na da foto (RN-32). */
+function CategoryNotice({ creation }: { creation: Creation }) {
+  if (!creation.category || creation.category === creation.requested_category) return null;
+  const detected = categoryInfo(creation.category);
+  return (
+    <Callout tone="accent" role="status">
+      Encontramos {detected.inPhoto} na foto, então sua miniatura é da categoria{" "}
+      <strong>{detected.label}</strong>. O preço segue essa categoria.
+    </Callout>
   );
 }
 

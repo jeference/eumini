@@ -13,19 +13,28 @@ def _create(client, **fields):
 def test_create_from_photo_and_request_is_ready_to_buy(visitor_client):
     response = _create(visitor_client)
     assert response.status_code == 202
-    assert response.data["status"] == "generating_image"
+    assert response.data["status"] == "classifying"
+    assert response.data["requested_category"] == "person"
     assert response.data["is_generating"] is True
     drain_worker()
     detail = visitor_client.get(f"/api/creations/{response.data['id']}/").data
     assert detail["status"] == "ready"
+    assert detail["category"] == "person"
     assert detail["is_generating"] is False
     assert len(detail["versions"]) == 1
     assert detail["versions"][0]["image_url"]
+    assert detail["versions"][0]["category"] == "person"
     assert detail["current_version_id"] == detail["versions"][0]["id"]
-    task = ProviderTask.objects.get(creation__globalid=response.data["id"])
-    assert task.kind == ProviderTask.Kind.PHOTO_TO_IMAGE
-    assert "um gato" in task.rendered_prompt and task.prompt_version
-    assert task.status == ProviderTask.Status.SUCCEEDED
+    tasks = ProviderTask.objects.filter(creation__globalid=response.data["id"]).order_by("pk")
+    # Lê a foto, gera a imagem e lê a imagem gerada.
+    assert [(t.kind, t.source_version_id is not None) for t in tasks] == [
+        (ProviderTask.Kind.CLASSIFY, False),
+        (ProviderTask.Kind.GENERATE, False),
+        (ProviderTask.Kind.CLASSIFY, True),
+    ]
+    generate = tasks[1]
+    assert "um gato" in generate.rendered_prompt and generate.prompt_version
+    assert all(t.status == ProviderTask.Status.SUCCEEDED for t in tasks)
 
 
 def test_create_stores_original_photo_without_exposing_it(visitor_client):
@@ -41,15 +50,16 @@ def test_create_stores_original_photo_without_exposing_it(visitor_client):
 
 def test_create_requires_photo(visitor_client):
     response = visitor_client.post(
-        "/api/creations/", {"text": "um gato", "style": "free"}, format="multipart"
+        "/api/creations/", {"text": "um gato", "requested_category": "person"}, format="multipart"
     )
     assert response.status_code == 400
     assert not ProviderTask.objects.exists()
 
 
-def test_invalid_style(visitor_client):
-    response = _create(visitor_client, style="inexistente")
-    assert response.data["code"] == "invalid_style"
+def test_invalid_category(visitor_client):
+    response = _create(visitor_client, requested_category="inexistente")
+    assert response.status_code == 400
+    assert not ProviderTask.objects.exists()
 
 
 def test_photo_without_request(visitor_client):
@@ -74,17 +84,19 @@ def test_list_is_scoped_and_paginated(visitor_client):
     _create(visitor_client)
     data = visitor_client.get("/api/creations/").data
     assert data["count"] == 1
-    assert data["results"][0]["status"] == "generating_image"
+    assert data["results"][0]["status"] == "classifying"
 
 
 def test_content_refusal_shows_message_and_releases_quota(visitor_client):
     creation_id = _create(visitor_client, text="__recusar__").data["id"]
     drain_worker()
     detail = visitor_client.get(f"/api/creations/{creation_id}/").data
-    assert detail["status"] == "image_failed"
+    assert detail["status"] == "failed"
     assert detail["error"]["code"] == "content_refused"
     assert "regras de conteúdo" in detail["error"]["message"]
-    reservation = QuotaReservation.objects.get(task__creation__globalid=creation_id)
+    reservation = QuotaReservation.objects.get(
+        task__creation__globalid=creation_id, kind=QuotaReservation.Kind.IMAGE
+    )
     assert reservation.state == QuotaReservation.State.RELEASED
     assert visitor_client.get("/api/quota/").data["image"]["used"] == 0
 
@@ -92,11 +104,11 @@ def test_content_refusal_shows_message_and_releases_quota(visitor_client):
 def test_provider_failure_retries_then_fails_and_user_can_retry(visitor_client):
     creation_id = _create(visitor_client, text="__falhar__").data["id"]
     drain_worker()
-    task = ProviderTask.objects.get(creation__globalid=creation_id)
+    task = ProviderTask.objects.get(creation__globalid=creation_id, kind=ProviderTask.Kind.GENERATE)
     assert task.attempts == 3
     assert task.status == ProviderTask.Status.FAILED
     detail = visitor_client.get(f"/api/creations/{creation_id}/").data
-    assert detail["status"] == "image_failed"
+    assert detail["status"] == "failed"
     response = visitor_client.post(f"/api/creations/{creation_id}/retry/")
     assert response.status_code == 202
     assert response.data["status"] == "generating_image"
@@ -109,9 +121,7 @@ def _edit_task_model(client, detail) -> str:
         {"version_id": detail["versions"][0]["id"], "instruction": "capa vermelha"},
     )
     drain_worker()
-    edit = ProviderTask.objects.get(
-        creation__globalid=detail["id"], kind=ProviderTask.Kind.IMAGE_EDIT
-    )
+    edit = ProviderTask.objects.get(creation__globalid=detail["id"], kind=ProviderTask.Kind.EDIT)
     assert edit.status == ProviderTask.Status.SUCCEEDED
     return edit.model_name
 
@@ -119,7 +129,7 @@ def _edit_task_model(client, detail) -> str:
 def test_main_model_generates_and_edits(visitor_client):
     detail = make_ready_creation(visitor_client)
     photo = ProviderTask.objects.get(
-        creation__globalid=detail["id"], kind=ProviderTask.Kind.PHOTO_TO_IMAGE
+        creation__globalid=detail["id"], kind=ProviderTask.Kind.GENERATE
     )
     assert photo.model_name == "stub-image"
     assert _edit_task_model(visitor_client, detail) == "stub-image"
@@ -128,7 +138,7 @@ def test_main_model_generates_and_edits(visitor_client):
 def test_fallback_model_takes_over_and_keeps_the_edits(visitor_client):
     detail = make_ready_creation(visitor_client, text="__recusar_principal__")
     photo = ProviderTask.objects.get(
-        creation__globalid=detail["id"], kind=ProviderTask.Kind.PHOTO_TO_IMAGE
+        creation__globalid=detail["id"], kind=ProviderTask.Kind.GENERATE
     )
     assert photo.model_name == "stub-image-reserva"
     assert photo.attempts == 1
@@ -148,6 +158,7 @@ def test_edit_creates_version_and_apply_switches_image(visitor_client):
     edited = visitor_client.get(f"/api/creations/{detail['id']}/").data
     assert len(edited["versions"]) == 2
     assert edited["versions"][1]["parent_id"] == first_version
+    assert edited["versions"][1]["category"] == "person"
     assert edited["status"] == "ready"
     assert edited["current_version_id"] == first_version
 

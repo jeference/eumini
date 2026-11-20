@@ -7,10 +7,15 @@ from conftest import make_ready_creation
 CPF_OK = "52998224725"
 
 
+def size_id(client, code="6cm") -> str:
+    """O tamanho tem o mesmo id em todas as categorias; o preço vem da categoria."""
+    products = client.get("/api/catalog/products/").data
+    return next(size["id"] for p in products for size in p["sizes"] if size["code"] == code)
+
+
 def add_to_cart(client, *, size_code="6cm", quantity=1, creation=None):
     creation = creation or make_ready_creation(client)
-    sizes = client.get("/api/catalog/sizes/").data
-    size = next(size for size in sizes if size["code"] == size_code)
+    size = {"id": size_id(client, size_code)}
     response = client.post(
         "/api/cart/items/",
         {"creation_id": creation["id"], "size_id": size["id"], "quantity": quantity},

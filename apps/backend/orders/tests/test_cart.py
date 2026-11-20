@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from catalog.models import ProductSize
 from conftest import creation_payload, drain_worker, make_ready_creation
-from orders.tests.helpers import add_to_cart
+from orders.tests.helpers import add_to_cart, size_id
 
 
 def test_add_requires_ready_creation(visitor_client):
     creation = visitor_client.post(
         "/api/creations/", creation_payload("a"), format="multipart"
     ).data
-    size = visitor_client.get("/api/catalog/sizes/").data[0]
+    size = {"id": size_id(visitor_client)}
     response = visitor_client.post(
         "/api/cart/items/", {"creation_id": creation["id"], "size_id": size["id"], "quantity": 1}
     )
@@ -51,7 +51,7 @@ def test_cart_is_scoped(visitor_client, other_visitor_client):
 
 def test_cannot_add_other_visitors_creation(visitor_client, other_visitor_client):
     creation = make_ready_creation(visitor_client)
-    size = other_visitor_client.get("/api/catalog/sizes/").data[0]
+    size = {"id": size_id(other_visitor_client)}
     response = other_visitor_client.post(
         "/api/cart/items/", {"creation_id": creation["id"], "size_id": size["id"], "quantity": 1}
     )

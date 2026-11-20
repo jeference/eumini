@@ -11,6 +11,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 import { useCart, useRemoveCartItem, useUpdateCartItem } from "@/features/cart/hooks";
+import { categoryLabel } from "@/features/catalog/categories";
 import { messageOf } from "@/lib/errors";
 
 export default function CartPage() {
@@ -61,8 +62,13 @@ export default function CartPage() {
                     />
                   </Link>
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold">{item.size_label}</p>
-                    <p className="text-sm text-muted">{formatBRL(item.unit_price_cents)} cada</p>
+                    <p className="font-semibold">
+                      {item.category ? `${categoryLabel(item.category)} · ` : ""}
+                      {item.size_label}
+                    </p>
+                    {item.unit_price_cents !== null && (
+                      <p className="text-sm text-muted">{formatBRL(item.unit_price_cents)} cada</p>
+                    )}
                     {item.unavailable_reason ? (
                       <p className="mt-2 text-sm text-danger" role="alert">
                         {item.unavailable_reason}

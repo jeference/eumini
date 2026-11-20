@@ -1,9 +1,9 @@
-import { PromptStep } from "@/features/creations/components/prompt-step";
+import { CategoryPicker } from "@/features/catalog/components/category-picker";
 
 const STEPS = [
   {
     title: "Envie uma foto",
-    text: "Escolha uma foto e um estilo, e a IA cria a imagem em segundos. Se quiser, peça uma mudança.",
+    text: "Escolha a miniatura e envie uma foto. A IA cria a imagem em segundos. Se quiser, peça uma mudança.",
   },
   {
     title: "Ajuste até ficar do seu jeito",
@@ -20,6 +20,11 @@ const QUESTIONS = [
     question: "Preciso criar conta?",
     answer:
       "Não. Você cria e compra sem conta, e acompanha o pedido pelo link enviado ao seu e-mail. A conta serve para ver suas criações em outros dispositivos.",
+  },
+  {
+    question: "Quais miniaturas vocês fazem?",
+    answer:
+      "Uma pessoa, um pet, um casal ou uma pessoa com seu pet. Casal e pessoa com pet são uma peça só, com as figuras juntas. Fotos com mais pessoas ou pets ainda não são aceitas.",
   },
   {
     question: "A peça fica igual à imagem?",
@@ -41,7 +46,7 @@ const QUESTIONS = [
 export default function HomePage() {
   return (
     <div className="space-y-20">
-      <PromptStep />
+      <CategoryPicker />
 
       <section className="mx-auto max-w-5xl" aria-labelledby="como-funciona">
         <h2

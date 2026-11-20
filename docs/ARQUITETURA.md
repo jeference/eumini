@@ -212,7 +212,7 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 |---|---|---|
 | `Creation` | user **ou** visitor, status, categoria pedida (da página), categoria da foto, motivo da recusa, versão atual, excluída em | ● |
 | `CreationInput` | creation, pedido de alteração do cliente, foto (`Asset`, obrigatória), versão dos termos | ● |
-| `ImageVersion` | creation, parent (árvore de versões), origem (`text`, `photo`, `edit`), instrução, asset, tarefa, categoria (nula até ser classificada) | ● |
+| `ImageVersion` | creation, parent (árvore de versões), origem (`photo`, `edit`), instrução, asset, tarefa, categoria ou motivo de recusa (os dois vazios até ser classificada) | ● |
 | `Classification` | creation, versão (nula quando é a foto), tarefa, categoria pedida, resultado (categoria vendida ou motivo de recusa), confiança e probabilidades por classe de quem aparece, probabilidade de personagem, decisão (`accepted`, `rejected`), modelo, versão do conjunto de perguntas | ● |
 | `WaitlistEntry` | e-mail, classificação que recusou, motivo, ator, consentimento (versão do texto e data), avisado em | ● |
 | `ProviderTask` | creation, tipo (`classify`, `generate`, `edit`), provedor, modelo, status, tentativas, próxima tentativa, prompt renderizado, versão do prompt, parâmetros, custo em USD, início e fim, erro, trava (`locked_until`) | ● |
@@ -284,7 +284,7 @@ stateDiagram-v2
     [*] --> classifying
     classifying --> generating_image: foto aceita
     classifying --> rejected: fora das categorias
-    classifying --> failed: erro do classificador
+    classifying --> failed: erro do classificador, ou cota de imagem esgotada
     generating_image --> ready: imagem pronta e classificada
     generating_image --> failed: falha ou recusa
     failed --> classifying: tentar de novo, se falhou a classificação
@@ -364,15 +364,19 @@ sequenceDiagram
     W->>R: envia
     R-->>W: imagem
     W->>S: grava
+    W->>B: cria versão sem categoria, debita cota, cria tarefa classify da versão
+    W->>B: pega tarefa classify da versão
     W->>C: classifica a versão
-    W->>B: cria versão com categoria, debita cota, muda status
+    W->>B: grava a categoria da versão; na primeira, muda o status para ready
 ```
 
 ### Classificação
 
 - **A foto** é classificada com duas perguntas numa chamada só: quem aparece (as quatro categorias vendidas e quatro motivos de recusa) e se há personagem ou marca. Se aceita, a categoria da foto define o prompt.
 - **Cada versão** gerada ou editada passa pelas mesmas duas perguntas, com a descrição de quem aparece adaptada a uma miniatura. A categoria da versão define o preço (RN-34). Se a imagem já está no storage e o classificador falhar, a tarefa repete só a classificação, sem gerar a imagem de novo.
-- **Recusa na foto:** a criação vai para `rejected`, sem reservar cota de geração. A classificação conta só no próprio limite (RN-33).
+- **Recusa na foto:** a criação vai para `rejected`, sem reservar cota de geração. A classificação conta só no próprio limite (RN-33): `classify` em `QUOTA_PER_DAY` [Proposta: 30 por sessão ou conta e 120 por IP]. O envio confere antes se ainda há cota de imagem, para quem esgotou não gastar a leitura.
+- **Cota na leitura da foto:** a cota de imagem só é reservada quando a foto é aceita. Se ela acabou entre o envio e a leitura, a criação vai para `failed` com `quota_exceeded`.
+- **Versão como tarefa própria:** a classificação de cada versão é uma `ProviderTask` `classify` com `source_version`. Ela não usa cota do cliente e herda o hash do IP da tarefa que gerou a imagem. Se falhar de vez, a primeira versão leva a criação a `failed`, e tentar de novo repete só a leitura; uma versão de edição fica sem categoria, sem poder ser comprada.
 - **Custo:** o custo de cada classificação fica na `ProviderTask` e entra no teto global.
 - **Tempo:** a classificação roda no worker, como a geração, para não prender a API. O frontend já faz polling, então a resposta aparece em segundos.
 
@@ -390,8 +394,8 @@ sequenceDiagram
 ### Fluxo de cada resultado
 
 1. Gravar a imagem no storage imediatamente. A Runware não guarda resultados a longo prazo.
-2. Classificar a imagem gerada.
-3. Em uma transação, gravar a `ImageVersion` com a categoria, a `Classification`, os custos informados pelos provedores, debitar a cota e avançar a criação para `ready`.
+2. Em uma transação, gravar a `ImageVersion` ainda sem categoria, o custo informado pelo provedor, debitar a cota e criar a tarefa de classificação da versão.
+3. Na tarefa de classificação, gravar a `Classification` e a categoria da versão. Na primeira versão, ela vira a atual e a criação avança para `ready`.
 
 ### Falhas
 

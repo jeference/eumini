@@ -22,11 +22,14 @@ from PIL import Image, ImageDraw
 from integrations.ports import (
     AddressLookupPort,
     AddressResult,
+    ClassificationResult,
     ContentRefused,
     GatewayCharge,
     GeneratedImage,
+    ImageClassificationPort,
     ImageGenerationPort,
     PaymentGatewayPort,
+    ProviderPermanentError,
     ProviderTemporaryError,
     ShippingOption,
     ShippingPort,
@@ -81,6 +84,32 @@ class StubImageGenerationAdapter(ImageGenerationPort):
         if "__falhar__" in prompt:
             raise ProviderTemporaryError("Falha simulada pelo stub.")
         return GeneratedImage(data=_figurine(size), cost_usd=0.0)
+
+
+class StubImageClassificationAdapter(ImageClassificationPort):
+    """Resultado fixo por alvo, em `STUB_CLASSIFICATION` ({"photo": ..., "version": ...}).
+
+    O valor `__falhar__` simula erro temporário; `__erro__`, erro definitivo.
+    """
+
+    provider = "stub"
+
+    def classify(self, *, image: bytes, target: str) -> ClassificationResult:
+        results = getattr(settings, "STUB_CLASSIFICATION", {})
+        result = results.get(target, "person")
+        if result == "__falhar__":
+            raise ProviderTemporaryError("Falha simulada pelo stub.")
+        if result == "__erro__":
+            raise ProviderPermanentError("Erro simulado pelo stub.")
+        return ClassificationResult(
+            result=result,
+            confidence=0.9,
+            probabilities={result: 0.9},
+            character_probability=0.95 if result == "protected_character" else 0.02,
+            model="stub-classifier",
+            question_set_version="stub",
+            cost_usd=0.0,
+        )
 
 
 def _stub_key(external_id: str) -> str:

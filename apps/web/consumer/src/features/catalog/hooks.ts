@@ -1,25 +1,24 @@
 "use client";
 
-import { unwrap } from "@kubo/api-client";
+import { type Schemas, unwrap } from "@kubo/api-client";
 import { qk, useApiClient } from "@kubo/api-client/react";
 import { useQuery } from "@tanstack/react-query";
 
-const HOUR = 60 * 60 * 1000;
+import type { Category } from "@/features/catalog/categories";
 
-export function useStyles() {
+export type Product = Schemas["Product"];
+
+/** Categorias à venda, com os tamanhos e preços de cada uma. */
+export function useProducts() {
   const api = useApiClient();
   return useQuery({
-    queryKey: qk.styles(),
-    staleTime: HOUR,
-    queryFn: async () => unwrap(await api.GET("/api/catalog/styles/")),
+    queryKey: qk.products(),
+    staleTime: 5 * 60 * 1000,
+    queryFn: async () => unwrap(await api.GET("/api/catalog/products/")),
   });
 }
 
-export function useSizes() {
-  const api = useApiClient();
-  return useQuery({
-    queryKey: qk.sizes(),
-    staleTime: 5 * 60 * 1000,
-    queryFn: async () => unwrap(await api.GET("/api/catalog/sizes/")),
-  });
+export function useProduct(category: Category | "" | undefined): Product | undefined {
+  const { data } = useProducts();
+  return data?.find((product) => product.category === category);
 }

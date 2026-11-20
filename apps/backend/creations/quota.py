@@ -16,13 +16,17 @@ from creations.fsm import TASK_ACTIVE
 from creations.models import ProviderTask, QuotaReservation
 
 _COUNTED = (QuotaReservation.State.RESERVED, QuotaReservation.State.CONSUMED)
+# Só a classificação da foto reserva cota `classify`; a da versão não tem reserva, mas o custo
+# entra no teto pela estimativa do tipo de tarefa.
 _TASK_KIND_TO_QUOTA = {
-    ProviderTask.Kind.PHOTO_TO_IMAGE: QuotaReservation.Kind.IMAGE,
-    ProviderTask.Kind.IMAGE_EDIT: QuotaReservation.Kind.EDIT,
+    ProviderTask.Kind.CLASSIFY: QuotaReservation.Kind.CLASSIFY,
+    ProviderTask.Kind.GENERATE: QuotaReservation.Kind.IMAGE,
+    ProviderTask.Kind.EDIT: QuotaReservation.Kind.EDIT,
 }
 _LIMIT_MESSAGES = {
     QuotaReservation.Kind.IMAGE: "Você atingiu o limite de imagens de hoje.",
     QuotaReservation.Kind.EDIT: "Você atingiu o limite de edições de hoje.",
+    QuotaReservation.Kind.CLASSIFY: "Você atingiu o limite de fotos enviadas hoje.",
 }
 
 

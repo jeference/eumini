@@ -43,11 +43,14 @@ def test_reconcile_stuck_tasks(visitor_client):
         status=ProviderTask.Status.RUNNING, started_at=timezone.now() - timedelta(days=1)
     )
     assert worker.reconcile_stuck_tasks() == 1
-    assert Creation.objects.get(globalid=creation_id).status == Creation.Status.IMAGE_FAILED
+    creation = Creation.objects.get(globalid=creation_id)
+    assert creation.status == Creation.Status.FAILED
+    assert creation.last_error_code == "timeout"
 
 
 def test_ports_resolve_stubs():
     assert ports.get_image_generation_port().provider == "stub"
+    assert ports.get_image_classification_port().provider == "stub"
 
 
 def test_alert_does_not_raise():

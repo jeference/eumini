@@ -1,17 +1,21 @@
 from rest_framework import serializers
 
-from catalog.models import ProductSize
-from common.serializers import GlobalIdSerializer
+from catalog.categories import Category
 
 
-class StyleSerializer(serializers.Serializer):
-    id = serializers.CharField()
+class ProductSizeSerializer(serializers.Serializer):
+    id = serializers.UUIDField(source="size.globalid")
+    code = serializers.CharField(source="size.code")
+    label = serializers.CharField(source="size.label")
+    longest_side_mm = serializers.IntegerField(source="size.longest_side_mm")
+    is_default = serializers.BooleanField(source="size.is_default")
+    price_cents = serializers.IntegerField()
+
+
+class ProductSerializer(serializers.Serializer):
+    """Uma categoria vendida, com os tamanhos e preços dela."""
+
+    category = serializers.ChoiceField(choices=Category.choices)
     label = serializers.CharField()
-    thumbnail = serializers.CharField()
-
-
-class ProductSizeSerializer(GlobalIdSerializer):
-    class Meta:
-        model = ProductSize
-        fields = ["id", "code", "label", "longest_side_mm", "price_cents", "is_default"]
-        read_only_fields = fields
+    from_price_cents = serializers.IntegerField()
+    sizes = ProductSizeSerializer(many=True)

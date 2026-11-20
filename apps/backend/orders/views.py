@@ -23,7 +23,9 @@ def _cart_payload(actor) -> dict:
     available = [item for item in items if not services.unavailable_reason(item)]
     return {
         "items": items,
-        "subtotal_cents": sum(item.size.price_cents * item.quantity for item in available),
+        "subtotal_cents": sum(
+            services.unit_price_cents(item) * item.quantity for item in available
+        ),
         "item_count": sum(item.quantity for item in items),
     }
 

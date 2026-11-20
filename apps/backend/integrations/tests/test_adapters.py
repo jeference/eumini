@@ -18,6 +18,7 @@ from integrations.adapters.abacatepay import AbacatePayAdapter
 from integrations.adapters.media_s3 import S3MediaAdapter
 from integrations.adapters.melhor_envio import MelhorEnvioAdapter
 from integrations.adapters.runware import RunwareImageGenerationAdapter
+from integrations.adapters.typesafe import TypeSafeClassificationAdapter
 from integrations.adapters.viacep import ViaCepAdapter
 from integrations.models import IntegrationCredential
 from integrations.ports import (
@@ -35,6 +36,8 @@ GPT = "openai:gpt-image@2"
 @pytest.fixture
 def _keys(settings):
     settings.RUNWARE_API_KEY = "chave"
+    settings.JEV_API_KEY = "chave"
+    settings.JEV_MODEL = "jev-1.14.0"
     settings.ABACATE_PAY_API_KEY = "chave"
     settings.ABACATE_PAY_BASE_URL = "https://api.abacatepay.com/v2"
     settings.MELHOR_ENVIO_ACCESS_TOKEN = "token"
@@ -310,3 +313,64 @@ def test_s3_signed_url_expires_and_is_signed(s3_adapter):
     assert query["X-Amz-Expires"] == ["300"]
     assert query["X-Amz-Algorithm"] == ["AWS4-HMAC-SHA256"]
     assert query["X-Amz-Signature"]
+
+
+# --- TypeSafe (Jev) ---
+
+TYPESAFE = "https://api.typesafe.ai/v1/systemone"
+
+
+def _jev_answers(choice="person", character=0.02):
+    return {
+        "model": "jev-1.14.0",
+        "answers": {
+            "subject": {"choice": choice, "confidence": 0.87, "probabilities": {choice: 0.87}},
+            "character": {"noul": character},
+        },
+        "usage": {"input_tokens": 2800},
+    }
+
+
+@responses.activate
+def test_typesafe_classifies_photo_with_images_header(_keys):
+    responses.post(TYPESAFE, json=_jev_answers("couple"))
+    result = TypeSafeClassificationAdapter().classify(image=b"png", target="photo")
+    assert (result.result, result.confidence) == ("couple", 0.87)
+    assert result.model == "jev-1.14.0"
+    assert result.question_set_version
+    assert result.cost_usd == pytest.approx(2800 * 0.042 / 1_000_000)
+    request = responses.calls[0].request
+    assert request.headers["TypeSafe-Danger-Zone-Images"] == "true"
+    assert request.headers["Authorization"] == "Bearer chave"
+    body = json.loads(request.body)
+    ref = body["state"]["photo"]
+    assert body["assets"][ref]["data_base64"] == base64.b64encode(b"png").decode()
+    assert set(body["questions"]) == {"subject", "character"}
+    assert "real human being" in body["questions"]["subject"]["criteria"]["person"]
+
+
+@responses.activate
+def test_typesafe_character_overrides_the_subject(_keys):
+    responses.post(TYPESAFE, json=_jev_answers("pet", character=0.97))
+    result = TypeSafeClassificationAdapter().classify(image=b"png", target="version")
+    assert result.result == "protected_character"
+    body = json.loads(responses.calls[0].request.body)
+    assert "figurine" in body["questions"]["subject"]["instructions"]
+
+
+@responses.activate
+@pytest.mark.parametrize(
+    ("status", "error"),
+    [(429, ProviderTemporaryError), (503, ProviderTemporaryError), (400, ProviderPermanentError)],
+)
+def test_typesafe_errors(_keys, status, error):
+    responses.post(TYPESAFE, json={"error": "x"}, status=status)
+    with pytest.raises(error):
+        TypeSafeClassificationAdapter().classify(image=b"png", target="photo")
+
+
+@responses.activate
+def test_typesafe_unexpected_body_is_permanent(_keys):
+    responses.post(TYPESAFE, json={"answers": {}})
+    with pytest.raises(ProviderPermanentError):
+        TypeSafeClassificationAdapter().classify(image=b"png", target="photo")

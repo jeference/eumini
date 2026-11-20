@@ -1,10 +1,12 @@
-"""Estilos e prompts do 2D, ajustados no protótipo contra as referências.
+"""Prompts do 2D: um estilo único, montado em camadas (estilo, categoria, pedido do cliente).
 
-Mudar um prompt exige novo deploy e reteste contra `docs/concorrencia/jujubit/estilos/`.
-Suba `PROMPT_VERSION` a cada mudança: cada `ProviderTask` guarda a versão e o texto enviado.
+Aprovados no teste de 19/11 (`docs/prompts/`, rodada r3). Mudar um prompt exige rodar o teste de
+novo. Suba `PROMPT_VERSION` a cada mudança: cada `ProviderTask` guarda a versão e o texto enviado.
 """
 
-PROMPT_VERSION = "2026-11-03"
+from catalog.categories import Category
+
+PROMPT_VERSION = "2026-11-19"
 
 MAX_PRINT_COLORS = 4
 # Colors we have PLA filament for: name sent to the image model -> hex. Starting values
@@ -28,7 +30,7 @@ FILAMENT_COLORS = {
 # Opens every prompt that produces a 2D image; at the end of the prompt, GPT Image 2 kept the
 # off-list colors of requests and references. Tested 2026-11-02, one image per case: off-list
 # colors were replaced in 3 of 4 cases, but only 1 of 6 images stayed within the limit, so
-# this lowers the color count without guaranteeing it. No braces: templates go through .format().
+# this lowers the color count without guaranteeing it.
 _COLOR_RULE = (
     "This figurine is 3D printed, and only these filament colors exist: "
     + ", ".join(f"{name} ({hex_code})" for name, hex_code in FILAMENT_COLORS.items())
@@ -41,209 +43,126 @@ _COLOR_RULE = (
     "as a color. Do not draw the list, color swatches or any text.\n\n"
 )
 
-_STANDARDIZE_RULES = (
-    "same shape, pose, proportions, clothing, materials and distinctive details, and do not "
-    "add anything that is not in the reference. Show it upright in its natural orientation, "
-    "and complete any part of an object that is cut off "
-    "by the photo or hidden by the camera angle; a character shown only as a head stays only "
-    "a head. Captions, signatures and handwriting around the subject are not part of it, and "
-    "neither is whatever is underneath it, such as a pedestal, a pier, a table or the ground. "
-    "Fur and hair are sculpted as solid shapes. A standing person or character gets a small "
-    "plain round base; anything else rests directly on the background. Three-quarter view. "
-    "Show the whole figurine alone, centered and large, with a small margin on every side, "
-    "isolated on a plain white background."
+# --- Estilo único (o antigo "Pixar") ---
+
+_LOOK = "soft rounded stylized forms, clean smooth materials, a warm friendly look."
+_KEEP = (
+    "same faces, features, hair, clothing and distinctive details, and do not add anyone or "
+    "anything that is not in the reference."
+)
+_STYLE = (
+    "Turn the main subject of this reference image into a 3D model from a modern animated "
+    f"family movie: {_LOOK} Keep it recognizably the same: {_KEEP}"
+)
+_STYLE_WITH_REQUEST = (
+    "Turn the main subject of this reference image into a 3D model from a modern animated "
+    "family movie, with this one change: {request}. Style: "
+    f"{_LOOK} Apart from that change, keep it recognizably the same: {_KEEP}"
 )
 
-# Closes every prompt for a new image. _COLOR_RULE alone left most images over the limit,
-# because the model doesn't know which parts should share a color. Tested 2026-11-03 on 19 text
-# and photo cases, one image per case, counted by eye: images within the limit went from 7 to
-# 15 of 18 in Mini Pop and from 2 to 14 of 18 in Chibi. It still doesn't guarantee the limit,
-# and prints and some original colors are lost. A second pass repainting the image with 4 named
-# colors cut more colors but damaged faces and doubled the cost.
-_COLOR_PLAN = (
-    "\n\nColor plan, more important than color accuracy: the finished figure uses exactly "
-    f"{MAX_PRINT_COLORS} colors from the list, no more, and each part is one flat color with no "
-    "prints, patterns, stripes or logos. These rules change only the colors, never what the "
-    "subject is: every shape, object and feature above stays. Choose by subject. A person or "
-    "character: skin is light skin, or brown for dark skin; hair, beard, eyebrows, eyes and shoes "
-    "all share one dark color (black or brown); the top is one color; the trousers or skirt are "
-    "one color. An animal or toy: its main color, a second color for its next largest part, "
-    "black for eyes and nose, and one color for any accessory. An object, vehicle or building: "
-    "its 2 or 3 main colors, with every small detail repainted in one of them. Do not add any "
-    "person, animal or object that is not in the request or the reference."
+# Sem estas regras, braços, pernas e dedos saíam finos demais para uma peça de 6 cm.
+_PRINT_RULES = (
+    "It will be 3D printed as a small figurine, so it must be sturdy: chunky simplified forms, "
+    "thick arms and legs, simple hands with the fingers together, kept close to the body or "
+    "touching it, nothing thin sticking out, and ears, tails and accessories attached to the body."
 )
-
-# Pixar, Mini Pop and Chibi: tuned on GPT Image 2 against Jujubit's styles of the same name, on
-# 21 text and photo cases (2026-11-02, docs/concorrencia/jujubit/estilos/). Margin wording:
-# "filling the frame" made the figure touch the image border. "child" got a car refused by
-# OpenAI's safety system in Chibi, so it says "humanoid character".
-_STYLE_FRAME = (
+_FRAME = (
+    "Ignore the background and whatever is underneath the subject. Whole subject alone, "
     "centered and large, with a clear white margin on every side so that nothing touches the "
-    "edge of the image,"
-)
-_STYLE_BACKDROP = (
-    "isolated on a plain white background with a soft contact shadow and no base or pedestal."
-    + _COLOR_PLAN
-)
-_STYLE_IGNORE = "Ignore the background and whatever is underneath the subject."
-
-_PIXAR_LOOK = "soft rounded stylized forms, clean smooth materials, a warm friendly look."
-_PIXAR_ANIMAL = (
-    "An animal stays an animal, with its natural body and a friendly cartoon face with big "
-    "expressive eyes."
-)
-# Jujubit's Pixar breaks on objects (returns the photo, or swaps in a person): not copied.
-_PIXAR_OBJECT = (
-    "If the subject is an object, vehicle or building, show only that thing as a rounded "
-    "stylized model, with no people, no face, no eyes, no arms and no legs."
+    "edge of the image, standing on a small plain round base in the figure's dark color, "
+    "isolated on a plain white background with a soft contact shadow."
 )
 
-_MINI_POP_LOOK = (
-    "an oversized wide rounded-square head about half of the total height, with a flat face, "
-    "two large solid glossy black round bead eyes set wide apart at mid-face, a tiny "
-    "triangular nose and no visible mouth, on a short neck and a small slim body with "
-    "separate arms and legs. Hair and clothes are molded as simple smooth shapes, in matte "
-    "vinyl."
-)
-_MINI_POP_OBJECT = (
-    "An object, vehicle or building becomes the character: its shape and colors form the "
-    "oversized head and the outfit of a small humanoid body."
-)
+# --- Categoria ---
 
-_CHIBI_LOOK = (
-    "a large head about 45 percent of the total height, big glossy anime eyes, a tiny nose and "
-    "small mouth, a small rounded body with short limbs, hair sculpted as big smooth locks, and "
-    "clothes with a polished PVC toy finish."
+_PROPORTIONS = (
+    "stylized proportions about four heads tall, a head only slightly larger than realistic and "
+    "large expressive eyes"
 )
-_CHIBI_HUMANOID = (
-    "The figure is always a stylized humanoid anime character: an animal becomes a humanoid "
-    "character with that animal's ears, tail and coloring, wearing clothes, and an object, "
-    "vehicle or building becomes a character holding a small clearly recognizable model of "
-    "it, with hair and outfit in its colors."
+_ANIMAL = (
+    "keeps its natural body and anatomy, slightly stylized, with a friendly cartoon face and big "
+    "expressive eyes"
 )
-
-DEFAULT_STYLE = "free"
-
-GENERATION = {
-    "IMAGES_PER_PROMPT": 1,
-    "IMAGE_SIZE": 1024,
-    # Sent with the current image as reference. Tested 2026-11-01: vague requests ("make it
-    # prettier") otherwise lose the white background, which print preparation relies on.
-    # Placeholder: {instruction}.
-    "EDIT_PROMPT_TEMPLATE": (
-        _COLOR_RULE
-        + "{instruction}. Keep everything else exactly the same, on a plain white background"
+# Sem o bloco, "o assunto principal" fazia o modelo gerar uma pessoa só: 7 de 8 casais e
+# pessoas com pet perderam a segunda figura. Casal e Pessoa + Pet são uma peça só (RN-35).
+_CATEGORY = {
+    Category.PERSON: (
+        f"The subject is one person. Give them {_PROPORTIONS}, and show them full body, standing "
+        "on both feet with the arms relaxed at the sides, even if the photo shows only part of "
+        "them."
     ),
-    # One entry per style the user can pick. Every creation starts from the customer's photo:
-    # STANDARDIZE_PROMPT_TEMPLATE turns it into an image of that style; the REQUEST variant is
-    # for a photo plus a change ({request}).
-    "STYLES": {
-        "free": {
-            # Tuned for GPT Image 2 against Jujubit's Free Style on 16 photos (2026-11-01).
-            # "Whatever is underneath" is what stops it copying pedestals and piers; a broader
-            # base rule put a disc under cars and chairs.
-            "STANDARDIZE_PROMPT_TEMPLATE": (
-                _COLOR_RULE
-                + "Create a clean product photograph of a detailed 3D figurine of the main "
-                "subject of this reference image. Keep it recognizably the same: "
-                + _STANDARDIZE_RULES
-                + _COLOR_PLAN
-            ),
-            "STANDARDIZE_REQUEST_PROMPT_TEMPLATE": (
-                _COLOR_RULE
-                + "Create a clean product photograph of a detailed 3D figurine of the main "
-                "subject of this reference image, with this one change: {request}. Apart from "
-                "that change, keep it recognizably the same: " + _STANDARDIZE_RULES + _COLOR_PLAN
-            ),
-        },
-        "pixar": {
-            "STANDARDIZE_PROMPT_TEMPLATE": (
-                f"{_COLOR_RULE}Turn the main subject of this reference image into a 3D model "
-                f"from a modern animated family movie: {_PIXAR_LOOK} Keep it recognizably the "
-                "same: same features, hair, clothing and distinctive details, and do "
-                "not add anyone or anything that is not in the reference. If the subject is "
-                "one person, or two people side by side, give them a head only slightly larger "
-                "than realistic and large expressive eyes, and show them full body, standing "
-                "with the arms relaxed at the sides, even if the photo shows only part of "
-                f"them. {_PIXAR_ANIMAL} {_PIXAR_OBJECT} {_STYLE_IGNORE} Whole subject alone, "
-                f"{_STYLE_FRAME} {_STYLE_BACKDROP}"
-            ),
-            "STANDARDIZE_REQUEST_PROMPT_TEMPLATE": (
-                f"{_COLOR_RULE}Turn the main subject of this reference image into a 3D model "
-                "from a modern animated family movie, with this one change: {request}. Style: "
-                f"{_PIXAR_LOOK} Apart from that change, keep it recognizably the same: same "
-                "features, hair, clothing and distinctive details, and do not add "
-                "anyone or anything else. A person has a head only slightly larger than "
-                "realistic and large expressive eyes, and is shown full body, standing with "
-                f"the arms relaxed at the sides. {_PIXAR_ANIMAL} {_PIXAR_OBJECT} "
-                f"{_STYLE_IGNORE} Whole subject alone, {_STYLE_FRAME} {_STYLE_BACKDROP}"
-            ),
-        },
-        "mini-pop": {
-            "STANDARDIZE_PROMPT_TEMPLATE": (
-                f"{_COLOR_RULE}Turn the main subject of this reference image into a collectible "
-                f"vinyl bobble-head toy figure: {_MINI_POP_LOOK} Keep it recognizably the same: "
-                "same hair, facial hair, clothing and distinctive details. "
-                "A person is shown full body, even if the photo shows only part of them. Two "
-                "people stay two people, side by side. An animal keeps its animal body on four "
-                f"legs, with the same oversized head and bead eyes. {_MINI_POP_OBJECT} "
-                f"{_STYLE_IGNORE} Front view, shown whole, {_STYLE_FRAME} {_STYLE_BACKDROP}"
-            ),
-            "STANDARDIZE_REQUEST_PROMPT_TEMPLATE": (
-                f"{_COLOR_RULE}Turn the main subject of this reference image into a collectible "
-                "vinyl bobble-head toy figure, with this one change: {request}. Style: "
-                f"{_MINI_POP_LOOK} Apart from that change, keep it recognizably the same: same "
-                "hair, clothing and distinctive details. An animal keeps "
-                f"its animal body, with the same oversized head and bead eyes. "
-                f"{_MINI_POP_OBJECT} {_STYLE_IGNORE} Front view, shown whole, {_STYLE_FRAME} "
-                f"{_STYLE_BACKDROP}"
-            ),
-        },
-        "chibi": {
-            "STANDARDIZE_PROMPT_TEMPLATE": (
-                f"{_COLOR_RULE}Turn the main subject of this reference image into a Japanese "
-                f"chibi anime collectible figure: {_CHIBI_LOOK} Keep it recognizably the same: "
-                "same hair, facial hair, clothing and distinctive details. "
-                "A person is shown full body, even if the photo shows only part of them. Two "
-                "people stay two people, side by side. Requested words appear large on the "
-                f"outfit. {_CHIBI_HUMANOID} {_STYLE_IGNORE} Standing, shown whole, "
-                f"{_STYLE_FRAME} {_STYLE_BACKDROP}"
-            ),
-            "STANDARDIZE_REQUEST_PROMPT_TEMPLATE": (
-                f"{_COLOR_RULE}Turn the main subject of this reference image into a Japanese "
-                "chibi anime collectible figure, with this one change: {request}. Style: "
-                f"{_CHIBI_LOOK} Apart from that change, keep it recognizably the same: same "
-                f"hair, clothing and distinctive details. {_CHIBI_HUMANOID} "
-                f"{_STYLE_IGNORE} Standing, shown whole, {_STYLE_FRAME} {_STYLE_BACKDROP}"
-            ),
-        },
-    },
+    Category.PET: (
+        f"The subject is one animal. It {_ANIMAL}, shown whole in a calm, compact natural pose, "
+        "sitting or standing, even if the photo shows only part of it."
+    ),
+    Category.COUPLE: (
+        "The subject is two people, made as one single figurine. Both are shown full body, "
+        "standing side by side and touching, with an arm around each other or holding hands, so "
+        f"that the two figures are joined into one piece. Give both {_PROPORTIONS}. The two "
+        "figures share the same few colors."
+    ),
+    Category.PERSON_PET: (
+        "The subject is one person with one animal, made as one single figurine. The person is "
+        f"shown full body, standing, with {_PROPORTIONS}, holding the animal in their arms or "
+        "with the animal sitting at their feet pressed against their legs, so that they are "
+        "joined into one piece. If the animal is too large to hold, it stands right beside the "
+        f"person, touching them, scaled down to fit. The animal {_ANIMAL}. Person and animal "
+        "share the same few colors."
+    ),
 }
 
+# --- Plano de cores por categoria ---
 
-_LABELS = {
-    "free": "Livre",
-    "pixar": "Pixar",
-    "mini-pop": "Mini Pop",
-    "chibi": "Chibi",
+_SKIN = "skin (light skin, or brown for dark skin)"
+_COLOR_PLAN_START = (
+    "\n\nColor plan, more important than color accuracy: the finished figurine, base included, "
+    f"uses exactly {MAX_PRINT_COLORS} colors from the list, no more, and each part is one flat "
+    "color with no prints, patterns, stripes or logos. These rules change only the colors, never "
+    "what the subject is: every shape and feature above stays. "
+)
+_COLOR_PLAN_END = " Do not add any person, animal or object that is not in the reference."
+_COLOR_PLAN = {
+    Category.PERSON: (
+        f"Use {_SKIN}; one dark color (black or brown) shared by the hair, beard, eyebrows, eyes, "
+        "shoes and base; one color for the top; and one color for the trousers or skirt. A dress "
+        "or one-piece outfit is a single color."
+    ),
+    Category.PET: (
+        "Use the animal's main color; a second color for its largest marking, or for the belly, "
+        "muzzle or chest; black shared by the eyes, nose and base; and one color for a collar or "
+        "accessory, if it has one. Beak, paws, claws, mouth and tongue reuse one of these colors."
+    ),
+    Category.COUPLE: (
+        f"The two people share the same {MAX_PRINT_COLORS} colors: {_SKIN}; one dark color "
+        "(black or brown) shared by both people's hair, eyes, shoes and the base; one color for "
+        "one person's clothes; and one color for the other person's clothes. Trousers, ties and "
+        "flowers reuse one of these colors. If their skin tones differ, light skin and brown both "
+        "count, so the two outfits share one color."
+    ),
+    Category.PERSON_PET: (
+        f"The person and the animal share the same {MAX_PRINT_COLORS} colors: {_SKIN}; one dark "
+        "color (black or brown) shared by the person's hair, eyes and shoes, the animal's eyes and "
+        "nose, and the base; one color for all of the person's clothes; and one color for the "
+        "animal's fur, feathers or coat. The animal's markings, mouth and tongue, and any "
+        "accessory, reuse one of these colors."
+    ),
 }
-STYLE_IDS = tuple(GENERATION["STYLES"])
+
+# Sent with the current image as reference. Tested 2026-11-01: vague requests ("make it
+# prettier") otherwise lose the white background, which print preparation relies on.
+_EDIT = "{instruction}. Keep everything else exactly the same, on a plain white background"
 
 
-def public_styles() -> list[dict]:
-    return [
-        {"id": style, "label": _LABELS[style], "thumbnail": f"/styles/{style}.webp"}
-        for style in STYLE_IDS
-    ]
-
-
-def photo_prompt(*, style: str, request: str = "") -> str:
-    templates = GENERATION["STYLES"][style]
+def photo_prompt(*, category: str, request: str = "") -> str:
+    """A foto do cliente vira a imagem da figura na categoria detectada."""
+    category = Category(category)
     request = request.strip().rstrip(".")
-    if not request:
-        return templates["STANDARDIZE_PROMPT_TEMPLATE"]
-    return templates["STANDARDIZE_REQUEST_PROMPT_TEMPLATE"].format(request=request)
+    style = _STYLE_WITH_REQUEST.replace("{request}", request) if request else _STYLE
+    return (
+        f"{_COLOR_RULE}{style} {_CATEGORY[category]} {_PRINT_RULES} {_FRAME}"
+        f"{_COLOR_PLAN_START}{_COLOR_PLAN[category]}{_COLOR_PLAN_END}"
+    )
 
 
 def edit_prompt(*, instruction: str) -> str:
-    return GENERATION["EDIT_PROMPT_TEMPLATE"].format(instruction=instruction.strip().rstrip("."))
+    return _COLOR_RULE + _EDIT.replace("{instruction}", instruction.strip().rstrip("."))

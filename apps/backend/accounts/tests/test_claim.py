@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from accounts.authentication import VISITOR_COOKIE
 from conftest import make_ready_creation
-from orders.tests.helpers import place_order
+from orders.tests.helpers import place_order, size_id
 
 
 def _logged_in_with_cookie(user, visitor_client):
@@ -20,7 +20,7 @@ def _logged_in_with_cookie(user, visitor_client):
 
 def test_claim_moves_creations_and_cart(user, visitor_client):
     creation = make_ready_creation(visitor_client)
-    size = visitor_client.get("/api/catalog/sizes/").data[0]
+    size = {"id": size_id(visitor_client)}
     visitor_client.post(
         "/api/cart/items/", {"creation_id": creation["id"], "size_id": size["id"], "quantity": 1}
     )

@@ -58,7 +58,7 @@ class CreationListView(ListAPIView):
             actor=actor,
             ip_hash=ip_hash,
             text=values.get("text", ""),
-            style=values["style"],
+            requested_category=values["requested_category"],
             photo_bytes=values["photo"].read(),
             request_id=request_id_of(request),
         )
@@ -149,3 +149,23 @@ class QuotaView(APIView):
     @extend_schema(responses=s.QuotaSerializer)
     def get(self, request):
         return Response(s.QuotaSerializer(quota.usage_for(actor_from_request(request))).data)
+
+
+class WaitlistView(APIView):
+    permission_classes = [IsActor]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "generation_write"
+
+    @extend_schema(request=s.WaitlistCreateSerializer, responses={201: None})
+    def post(self, request):
+        data = s.WaitlistCreateSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+        actor = actor_from_request(request)
+        creation = services.get_creation(actor, data.validated_data["creation_id"])
+        services.join_waitlist(
+            actor=actor,
+            creation=creation,
+            email=data.validated_data["email"],
+            consent=data.validated_data["consent"],
+        )
+        return Response(status=status.HTTP_201_CREATED)

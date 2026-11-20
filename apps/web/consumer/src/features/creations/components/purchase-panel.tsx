@@ -12,7 +12,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { useAddToCart } from "@/features/cart/hooks";
-import { useSizes } from "@/features/catalog/hooks";
+import { REJECTION_MESSAGES, categoryInfo } from "@/features/catalog/categories";
+import { useProduct } from "@/features/catalog/hooks";
 import type { Creation } from "@/features/creations/types";
 import { messageOf } from "@/lib/errors";
 
@@ -20,7 +21,10 @@ const MAX_QUANTITY = 10;
 
 export function PurchasePanel({ creation }: { creation: Creation }) {
   const router = useRouter();
-  const { data: sizes = [] } = useSizes();
+  // O preço vem da categoria da imagem atual, não da página de entrada (RN-34).
+  const version = creation.versions.find((v) => v.id === creation.current_version_id);
+  const product = useProduct(version?.category);
+  const sizes = product?.sizes ?? [];
   const add = useAddToCart();
   const [chosenId, setChosenId] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -30,6 +34,15 @@ export function PurchasePanel({ creation }: { creation: Creation }) {
     sizes.find((option) => option.id === chosenId) ??
     sizes.find((option) => option.is_default) ??
     sizes[0];
+
+  if (version?.rejection_reason) {
+    return (
+      <Callout tone="danger" role="alert">
+        Esta imagem não pode ser comprada. {REJECTION_MESSAGES[version.rejection_reason]} Edite a
+        imagem ou escolha outra versão.
+      </Callout>
+    );
+  }
 
   function addToCart(buyNow: boolean) {
     if (!size) return;
@@ -56,6 +69,11 @@ export function PurchasePanel({ creation }: { creation: Creation }) {
     // Sem animação no celular: o transform moveria os botões fixos enquanto roda.
     <div className="space-y-6 pb-10 lg:animate-fade-in lg:pb-0">
       <div>
+        {version?.category && (
+          <p className="mb-3 text-sm font-medium text-muted">
+            Miniatura {categoryInfo(version.category).label}
+          </p>
+        )}
         <p className="text-2xl font-semibold lg:text-xl" data-testid="price">
           <span className="rounded-full bg-highlight px-3 py-1 text-ink">
             {size ? formatBRL(size.price_cents * quantity) : "…"}

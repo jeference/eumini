@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 
-from catalog.models import ProductSize
+from catalog.models import ProductPrice, ProductSize
 from orders.models import Address, Order
 from orders.tests.helpers import add_to_cart, order_payload, place_order, post_order, quote_for
 
@@ -22,9 +22,11 @@ def test_create_order_freezes_values_and_masks_cpf(visitor_client):
     assert "cpf" not in data
     order = Order.objects.get(globalid=data["id"])
     assert "52998224725" not in order.cpf_encrypted
-    assert order.items.get().prompt_text == "um dragão azul"
+    item = order.items.get()
+    assert item.prompt_text == "um dragão azul"
+    assert (item.category, item.unit_price_cents) == ("person", 9990)
 
-    ProductSize.objects.filter(code="6cm").update(price_cents=1)
+    ProductPrice.objects.filter(category="person", size__code="6cm").update(price_cents=1)
     assert visitor_client.get(f"/api/orders/{data['id']}/").data["subtotal_cents"] == 2 * 9990
 
 

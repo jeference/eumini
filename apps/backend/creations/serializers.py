@@ -5,6 +5,7 @@ from datetime import datetime
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
+from catalog.categories import Category, RejectionReason
 from common.serializers import GlobalIdSerializer
 from creations.fsm import TASK_ACTIVE
 from creations.models import Creation, ImageVersion, ProviderTask
@@ -14,6 +15,10 @@ from media import services as media
 class ImageVersionSerializer(GlobalIdSerializer):
     parent_id = serializers.UUIDField(source="parent.globalid", allow_null=True, read_only=True)
     image_url = serializers.SerializerMethodField()
+    category = serializers.ChoiceField(choices=Category.choices, allow_blank=True, read_only=True)
+    rejection_reason = serializers.ChoiceField(
+        choices=RejectionReason.choices, allow_blank=True, read_only=True
+    )
 
     class Meta:
         model = ImageVersion
@@ -24,6 +29,8 @@ class ImageVersionSerializer(GlobalIdSerializer):
             "origin",
             "instruction",
             "image_url",
+            "category",
+            "rejection_reason",
             "created_at",
         ]
         read_only_fields = fields
@@ -67,12 +74,13 @@ class CreationErrorSerializer(serializers.Serializer):
 
 
 class CreationListSerializer(GlobalIdSerializer):
+    category = serializers.ChoiceField(choices=Category.choices, allow_blank=True, read_only=True)
     thumbnail_url = serializers.SerializerMethodField()
     text = serializers.CharField(source="input.text", read_only=True)
 
     class Meta:
         model = Creation
-        fields = ["id", "status", "style", "text", "thumbnail_url", "created_at"]
+        fields = ["id", "status", "category", "text", "thumbnail_url", "created_at"]
         read_only_fields = fields
 
     def get_thumbnail_url(self, creation) -> str:
@@ -82,6 +90,10 @@ class CreationListSerializer(GlobalIdSerializer):
 
 class CreationDetailSerializer(GlobalIdSerializer):
     text = serializers.CharField(source="input.text", read_only=True)
+    category = serializers.ChoiceField(choices=Category.choices, allow_blank=True, read_only=True)
+    rejection_reason = serializers.ChoiceField(
+        choices=RejectionReason.choices, allow_blank=True, read_only=True
+    )
     current_version_id = serializers.UUIDField(
         source="current_version.globalid", allow_null=True, read_only=True
     )
@@ -96,7 +108,9 @@ class CreationDetailSerializer(GlobalIdSerializer):
         fields = [
             "id",
             "status",
-            "style",
+            "requested_category",
+            "category",
+            "rejection_reason",
             "text",
             "active_started_at",
             "current_version_id",
@@ -111,7 +125,7 @@ class CreationDetailSerializer(GlobalIdSerializer):
     @extend_schema_field(ProviderTaskSerializer(many=True))
     def get_edit_tasks(self, creation):
         tasks = (
-            creation.tasks.filter(kind=ProviderTask.Kind.IMAGE_EDIT)
+            creation.tasks.filter(kind=ProviderTask.Kind.EDIT)
             .select_related("source_version")
             .order_by("-created_at")[:20]
         )
@@ -125,12 +139,16 @@ class CreationDetailSerializer(GlobalIdSerializer):
 
     def get_active_started_at(self, creation) -> datetime | None:
         """Início da etapa em andamento: o tempo na tela sobrevive a recarregar a página."""
+        # A classificação da versão faz parte da etapa da imagem: conta desde o início dela.
         task = (
             creation.tasks.filter(status__in=TASK_ACTIVE)
-            .exclude(kind=ProviderTask.Kind.IMAGE_EDIT)
-            .order_by("-created_at")
+            .exclude(kind=ProviderTask.Kind.EDIT)
+            .exclude(source_version__origin=ImageVersion.Origin.EDIT)
+            .order_by("created_at")
             .first()
         )
+        if task is not None and task.source_version_id is not None:
+            return task.source_version.task.created_at if task.source_version.task else None
         return task.created_at if task else None
 
     def get_is_generating(self, creation) -> bool:
@@ -139,8 +157,14 @@ class CreationDetailSerializer(GlobalIdSerializer):
 
 class CreationCreateSerializer(serializers.Serializer):
     text = serializers.CharField(required=False, allow_blank=True, max_length=1000)
-    style = serializers.CharField(max_length=24)
+    requested_category = serializers.ChoiceField(choices=Category.choices)
     photo = serializers.ImageField()
+
+
+class WaitlistCreateSerializer(serializers.Serializer):
+    creation_id = serializers.UUIDField()
+    email = serializers.EmailField()
+    consent = serializers.BooleanField()
 
 
 class EditRequestSerializer(serializers.Serializer):
@@ -161,3 +185,4 @@ class QuotaKindSerializer(serializers.Serializer):
 class QuotaSerializer(serializers.Serializer):
     image = QuotaKindSerializer()
     edit = QuotaKindSerializer()
+    classify = QuotaKindSerializer()

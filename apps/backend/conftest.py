@@ -18,6 +18,8 @@ STUBS = "integrations.adapters.stubs"
 @pytest.fixture(autouse=True)
 def _offline_settings(settings, tmp_path, db):
     settings.IMAGE_GENERATION_ADAPTER = f"{STUBS}.StubImageGenerationAdapter"
+    settings.IMAGE_CLASSIFICATION_ADAPTER = f"{STUBS}.StubImageClassificationAdapter"
+    settings.STUB_CLASSIFICATION = {"photo": "person", "version": "person"}
     settings.PAYMENT_GATEWAY_ADAPTER = f"{STUBS}.StubPaymentGatewayAdapter"
     settings.SHIPPING_ADAPTER = f"{STUBS}.StubShippingAdapter"
     settings.ADDRESS_LOOKUP_ADAPTER = f"{STUBS}.StubAddressLookupAdapter"
@@ -93,19 +95,19 @@ def drain_worker(max_rounds: int = 20) -> None:
             return
 
 
-def photo_upload():
+def photo_upload(size=(64, 64)):
     buffer = io.BytesIO()
-    Image.new("RGB", (64, 64), "white").save(buffer, format="PNG")
+    Image.new("RGB", size, "white").save(buffer, format="PNG")
     buffer.seek(0)
     buffer.name = "foto.png"
     return buffer
 
 
 def creation_payload(text="um dragão azul", **fields):
-    """Corpo de `POST /api/creations/`: foto e o pedido de alteração."""
+    """Corpo de `POST /api/creations/`: foto, categoria da página e o pedido de alteração."""
     return {
         "text": text,
-        "style": "free",
+        "requested_category": "person",
         "photo": photo_upload(),
         **fields,
     }

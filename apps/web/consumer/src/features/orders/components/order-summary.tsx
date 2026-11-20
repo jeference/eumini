@@ -3,6 +3,8 @@ import { Callout } from "@kubo/ui/callout";
 import type { Schemas } from "@kubo/api-client";
 import { formatBRL } from "@kubo/ui/lib/format";
 
+import { categoryLabel } from "@/features/catalog/categories";
+
 type Shipment = Schemas["ShipmentInfo"] | null;
 
 export function OrderSummary({
@@ -35,6 +37,7 @@ export function OrderSummary({
               className="size-16 rounded-xl bg-sunken object-contain"
             />
             <span className="min-w-0 flex-1 text-sm">
+              {item.category ? `${categoryLabel(item.category)} · ` : ""}
               {item.size_label}
               <span className="block text-muted">Quantidade: {item.quantity}</span>
             </span>

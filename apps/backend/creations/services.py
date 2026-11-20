@@ -9,11 +9,18 @@ from django.db import transaction
 from django.utils import timezone
 
 from catalog import prompts
+from catalog.categories import GROUP_REASONS, Category
 from common.exceptions import GuardFailed, ResourceNotFound
 from common.fsm import apply_transition
 from creations import quota
 from creations.fsm import CREATION_FSM, TASK_ACTIVE
-from creations.models import Creation, CreationInput, ProviderTask
+from creations.models import (
+    Creation,
+    CreationInput,
+    ImageVersion,
+    ProviderTask,
+    WaitlistEntry,
+)
 from media import services as media
 from media.models import Asset
 
@@ -61,13 +68,14 @@ def start_creation(
     actor,
     ip_hash: str,
     text: str,
-    style: str,
+    requested_category: str,
     photo_bytes: bytes,
     request_id: str = "",
 ) -> Creation:
+    """Guarda a foto e pede a classificação. A imagem só é gerada se a foto for aceita (RN-33)."""
     text = text.strip()
-    if style not in prompts.STYLE_IDS:
-        raise GuardFailed("Estilo inválido.", code="invalid_style")
+    if requested_category not in Category.values:
+        raise GuardFailed("Categoria inválida.", code="invalid_category")
     prepared = media.prepare_photo(photo_bytes)
     original_photo = media.store(
         data=prepared.original, kind=Asset.Kind.ORIGINAL, mime=prepared.original_mime
@@ -75,7 +83,11 @@ def start_creation(
     photo = media.store(data=prepared.normalized, kind=Asset.Kind.PHOTO, mime="image/png")
 
     with transaction.atomic():
-        creation = Creation.objects.create(style=style, **actor.owner_fields())
+        # Só confere a cota de imagem, sem reservar: quem esgotou não gasta a classificação.
+        quota.reserve(actor=actor, ip_hash=ip_hash, task_kind=ProviderTask.Kind.GENERATE)
+        creation = Creation.objects.create(
+            requested_category=requested_category, **actor.owner_fields()
+        )
         CreationInput.objects.create(
             creation=creation,
             text=text,
@@ -83,7 +95,7 @@ def start_creation(
             original_photo=original_photo,
             terms_version=settings.BUSINESS["TERMS_VERSION"],
         )
-        _enqueue_image(actor=actor, ip_hash=ip_hash, creation=creation)
+        _enqueue_photo_classification(actor=actor, ip_hash=ip_hash, creation=creation)
         _record_started(creation, actor, request_id)
     return creation
 
@@ -100,29 +112,70 @@ def _record_started(creation: Creation, actor, request_id: str) -> None:
     )
 
 
-def _enqueue_image(*, actor, ip_hash: str, creation: Creation) -> ProviderTask:
+def _enqueue_photo_classification(*, actor, ip_hash: str, creation: Creation) -> ProviderTask:
+    return _new_task(
+        actor=actor, ip_hash=ip_hash, creation=creation, kind=ProviderTask.Kind.CLASSIFY
+    )
+
+
+def enqueue_image(*, actor, ip_hash: str, creation: Creation) -> ProviderTask:
+    """Gera a imagem na categoria detectada. Reserva a cota de imagem (levanta QuotaExceeded)."""
     return _new_task(
         actor=actor,
         ip_hash=ip_hash,
         creation=creation,
-        kind=ProviderTask.Kind.PHOTO_TO_IMAGE,
-        rendered_prompt=prompts.photo_prompt(style=creation.style, request=creation.input.text),
+        kind=ProviderTask.Kind.GENERATE,
+        rendered_prompt=prompts.photo_prompt(
+            category=creation.category, request=creation.input.text
+        ),
     )
 
 
+def enqueue_version_classification(version: ImageVersion) -> ProviderTask:
+    """Classifica uma versão gerada (RN-34). Não usa cota do cliente; o custo entra no teto."""
+    return ProviderTask.objects.create(
+        creation=version.creation,
+        kind=ProviderTask.Kind.CLASSIFY,
+        source_version=version,
+        next_attempt_at=timezone.now(),
+    )
+
+
+def actor_of(creation: Creation):
+    """O dono da criação, para o worker reservar cota em nome dele."""
+    from common.actor import Actor
+
+    if creation.user_id is not None:
+        return Actor(user=creation.user)
+    return Actor(visitor=creation.visitor)
+
+
 def retry(*, actor, ip_hash: str, creation: Creation, request_id: str = "") -> Creation:
-    """Tenta a imagem de novo. Uma nova reserva de cota: a anterior foi devolvida."""
+    """Tenta de novo a etapa que falhou: a leitura da foto, a leitura da imagem ou a imagem.
+
+    Uma nova reserva de cota quando a etapa usa cota: a anterior foi devolvida.
+    """
+    unclassified = (
+        creation.versions.filter(category="", rejection_reason="").order_by("number").first()
+        if creation.category and creation.current_version_id is None
+        else None
+    )
 
     def effects():
         creation.last_error_code = ""
         creation.last_error_message = ""
         creation.save(update_fields=["last_error_code", "last_error_message", "updated_at"])
-        _enqueue_image(actor=actor, ip_hash=ip_hash, creation=creation)
+        if not creation.category:
+            _enqueue_photo_classification(actor=actor, ip_hash=ip_hash, creation=creation)
+        elif unclassified is not None:
+            enqueue_version_classification(unclassified)
+        else:
+            enqueue_image(actor=actor, ip_hash=ip_hash, creation=creation)
 
     apply_transition(
         instance=creation,
         fsm=CREATION_FSM,
-        event="retry",
+        event="retry" if creation.category else "retry_classification",
         actor=actor,
         effects=effects,
         request_id=request_id,
@@ -149,7 +202,7 @@ def request_edit(
             actor=actor,
             ip_hash=ip_hash,
             creation=creation,
-            kind=ProviderTask.Kind.IMAGE_EDIT,
+            kind=ProviderTask.Kind.EDIT,
             source_version=version,
             instruction=instruction,
             rendered_prompt=prompts.edit_prompt(instruction=instruction),
@@ -161,7 +214,7 @@ def cancel_edit(*, creation: Creation, task_id) -> ProviderTask:
     with transaction.atomic():
         task = (
             creation.tasks.select_for_update()
-            .filter(globalid=task_id, kind=ProviderTask.Kind.IMAGE_EDIT)
+            .filter(globalid=task_id, kind=ProviderTask.Kind.EDIT)
             .first()
         )
         if task is None:
@@ -203,6 +256,33 @@ def apply_version(*, actor, creation: Creation, version_id, request_id: str = ""
         )
     creation.refresh_from_db()
     return creation
+
+
+def join_waitlist(*, actor, creation: Creation, email: str, consent: bool) -> WaitlistEntry:
+    """Lista de espera de quem foi recusado por ter gente ou pets demais na foto (RN-37)."""
+    if not consent:
+        raise GuardFailed("Aceite receber o aviso por e-mail.", code="consent_required")
+    if (
+        creation.status != Creation.Status.REJECTED
+        or creation.rejection_reason not in GROUP_REASONS
+    ):
+        raise GuardFailed(
+            "A lista de espera é só para fotos com mais pessoas ou pets.", code="not_waitlistable"
+        )
+    classification = (
+        creation.classifications.filter(version__isnull=True).order_by("-created_at").first()
+    )
+    entry, _ = WaitlistEntry.objects.get_or_create(
+        email=email.strip().lower(),
+        reason=creation.rejection_reason,
+        defaults={
+            "classification": classification,
+            "consent_version": settings.BUSINESS["WAITLIST_CONSENT_VERSION"],
+            "consented_at": timezone.now(),
+            **actor.owner_fields(),
+        },
+    )
+    return entry
 
 
 def delete_creation(*, actor, creation: Creation, request_id: str = "") -> None:

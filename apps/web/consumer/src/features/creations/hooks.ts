@@ -6,6 +6,7 @@ import { qk, useApiClient } from "@kubo/api-client/react";
 import { useActorReady } from "@kubo/web-core/session";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import type { Category } from "@/features/catalog/categories";
 import type { Creation } from "@/features/creations/types";
 import { stableUrl } from "@/lib/stable-url";
 
@@ -59,7 +60,8 @@ function useCreationSetter() {
 
 export interface StartCreationInput {
   text: string;
-  style: string;
+  /** A página de entrada. Quem decide a categoria é o classificador. */
+  requestedCategory: Category;
   photo: File;
 }
 
@@ -70,7 +72,7 @@ export function useStartCreation() {
     mutationFn: async (input: StartCreationInput) => {
       const form = new FormData();
       form.set("text", input.text);
-      form.set("style", input.style);
+      form.set("requested_category", input.requestedCategory);
       form.set("photo", input.photo);
       return unwrap(
         await api.POST("/api/creations/", {
@@ -81,7 +83,7 @@ export function useStartCreation() {
     },
     onSuccess: (creation) => {
       setCreation(creation);
-      track("prompt_submitted", { style: creation.style });
+      track("prompt_submitted", { category: creation.requested_category });
     },
   });
 }
@@ -124,6 +126,18 @@ export function useCreationAction(id: string) {
   });
 
   return { retry, edit, cancelEdit, applyVersion };
+}
+
+/** Lista de espera de quem foi recusado por ter gente ou pets demais na foto. */
+export function useJoinWaitlist() {
+  const api = useApiClient();
+  return useMutation({
+    mutationFn: async (body: { creation_id: string; email: string; consent: boolean }) => {
+      const result = await api.POST("/api/waitlist/", { body });
+      if (!result.response.ok) unwrap(result);
+    },
+    onSuccess: () => track("waitlist_joined"),
+  });
 }
 
 export function useDeleteCreation() {

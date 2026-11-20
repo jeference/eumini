@@ -155,7 +155,9 @@ def test_visitor_write_requires_client_header(visitor_client):
     """Proteção contra CSRF: o cookie sozinho não autoriza escrita."""
     forged = APIClient()
     forged.cookies[VISITOR_COOKIE] = visitor_client.visitor_token
-    response = forged.post("/api/creations/", {"text": "x", "style": "free"}, format="multipart")
+    response = forged.post(
+        "/api/creations/", {"text": "x", "requested_category": "person"}, format="multipart"
+    )
     assert response.status_code in (401, 403)
 
 

@@ -205,30 +205,14 @@ export interface paths {
         patch: operations["cart_items_partial_update"];
         trace?: never;
     };
-    "/api/catalog/sizes/": {
+    "/api/catalog/products/": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["catalog_sizes_list"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/catalog/styles/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["catalog_styles_list"];
+        get: operations["catalog_products_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -575,6 +559,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/waitlist/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["waitlist_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/webhooks/abacatepay/": {
         parameters: {
             query?: never;
@@ -628,6 +628,8 @@ export interface components {
             user: components["schemas"]["User"];
             tokens: components["schemas"]["TokenPair"];
         };
+        /** @enum {unknown} */
+        BlankEnum: "";
         Cart: {
             items: components["schemas"]["CartItem"][];
             subtotal_cents: number;
@@ -641,8 +643,9 @@ export interface components {
             /** Format: uuid */
             readonly size_id: string;
             readonly size_label: string;
+            readonly category: string;
             readonly quantity: number;
-            readonly unit_price_cents: number;
+            readonly unit_price_cents: number | null;
             readonly line_total_cents: number;
             readonly image_url: string;
             readonly unavailable_reason: string;
@@ -654,6 +657,14 @@ export interface components {
             size_id: string;
             quantity: number;
         };
+        /**
+         * @description * `person` - Pessoa
+         *     * `pet` - Pet
+         *     * `couple` - Casal
+         *     * `person_pet` - Pessoa + Pet
+         * @enum {string}
+         */
+        CategoryEnum: "person" | "pet" | "couple" | "person_pet";
         Charge: {
             /** Format: uuid */
             readonly id: string;
@@ -681,7 +692,7 @@ export interface components {
         };
         CreationCreateRequest: {
             text?: string;
-            style: string;
+            requested_category: components["schemas"]["CategoryEnum"];
             /** Format: binary */
             photo: string;
         };
@@ -689,7 +700,9 @@ export interface components {
             /** Format: uuid */
             readonly id: string;
             readonly status: components["schemas"]["CreationStatusEnum"];
-            readonly style: string;
+            readonly requested_category: components["schemas"]["CategoryEnum"];
+            readonly category: components["schemas"]["CategoryEnum"] | components["schemas"]["BlankEnum"];
+            readonly rejection_reason: components["schemas"]["RejectionReasonEnum"] | components["schemas"]["BlankEnum"];
             readonly text: string;
             /**
              * Format: date-time
@@ -713,19 +726,21 @@ export interface components {
             /** Format: uuid */
             readonly id: string;
             readonly status: components["schemas"]["CreationStatusEnum"];
-            readonly style: string;
+            readonly category: components["schemas"]["CategoryEnum"] | components["schemas"]["BlankEnum"];
             readonly text: string;
             readonly thumbnail_url: string;
             /** Format: date-time */
             readonly created_at: string;
         };
         /**
-         * @description * `generating_image` - Gerando imagem
-         *     * `image_failed` - Falha na imagem
+         * @description * `classifying` - Lendo a foto
+         *     * `rejected` - Foto não aceita
+         *     * `generating_image` - Gerando imagem
          *     * `ready` - Pronta para comprar
+         *     * `failed` - Não deu certo
          * @enum {string}
          */
-        CreationStatusEnum: "generating_image" | "image_failed" | "ready";
+        CreationStatusEnum: "classifying" | "rejected" | "generating_image" | "ready" | "failed";
         DetailResponse: {
             detail: string;
         };
@@ -753,6 +768,8 @@ export interface components {
             readonly origin: components["schemas"]["OriginEnum"];
             readonly instruction: string;
             readonly image_url: string;
+            readonly category: components["schemas"]["CategoryEnum"] | components["schemas"]["BlankEnum"];
+            readonly rejection_reason: components["schemas"]["RejectionReasonEnum"] | components["schemas"]["BlankEnum"];
             /** Format: date-time */
             readonly created_at: string;
         };
@@ -763,6 +780,7 @@ export interface components {
         };
         /**
          * @description * `buy_now_clicked` - buy_now_clicked
+         *     * `category_selected` - category_selected
          *     * `checkout_started` - checkout_started
          *     * `edit_requested` - edit_requested
          *     * `item_added_to_cart` - item_added_to_cart
@@ -772,9 +790,10 @@ export interface components {
          *     * `prompt_submitted` - prompt_submitted
          *     * `shipping_quoted` - shipping_quoted
          *     * `size_selected` - size_selected
+         *     * `waitlist_joined` - waitlist_joined
          * @enum {string}
          */
-        NameEnum: "buy_now_clicked" | "checkout_started" | "edit_requested" | "item_added_to_cart" | "page_viewed" | "pix_copied" | "pix_generated" | "prompt_submitted" | "shipping_quoted" | "size_selected";
+        NameEnum: "buy_now_clicked" | "category_selected" | "checkout_started" | "edit_requested" | "item_added_to_cart" | "page_viewed" | "pix_copied" | "pix_generated" | "prompt_submitted" | "shipping_quoted" | "size_selected" | "waitlist_joined";
         OrderCreateRequest: {
             item_ids: string[];
             /** Format: uuid */
@@ -832,6 +851,7 @@ export interface components {
             /** Format: uuid */
             readonly creation_id: string;
             readonly size_label: string;
+            readonly category: string;
             readonly quantity: number;
             readonly unit_price_cents: number;
             readonly line_total_cents: number;
@@ -931,14 +951,21 @@ export interface components {
             first_name?: string;
             phone?: string;
         };
+        /** @description Uma categoria vendida, com os tamanhos e preços dela. */
+        Product: {
+            category: components["schemas"]["CategoryEnum"];
+            label: string;
+            from_price_cents: number;
+            sizes: components["schemas"]["ProductSize"][];
+        };
         ProductSize: {
             /** Format: uuid */
-            readonly id: string;
-            readonly code: string;
-            readonly label: string;
-            readonly longest_side_mm: number;
-            readonly price_cents: number;
-            readonly is_default: boolean;
+            id: string;
+            code: string;
+            label: string;
+            longest_side_mm: number;
+            is_default: boolean;
+            price_cents: number;
         };
         ProviderTask: {
             /** Format: uuid */
@@ -956,11 +983,12 @@ export interface components {
             readonly finished_at: string | null;
         };
         /**
-         * @description * `photo_to_image` - Foto para imagem
-         *     * `image_edit` - Edição de imagem
+         * @description * `classify` - Classificação
+         *     * `generate` - Foto para imagem
+         *     * `edit` - Edição de imagem
          * @enum {string}
          */
-        ProviderTaskKindEnum: "photo_to_image" | "image_edit";
+        ProviderTaskKindEnum: "classify" | "generate" | "edit";
         /**
          * @description * `queued` - Na fila
          *     * `running` - Em execução
@@ -973,6 +1001,7 @@ export interface components {
         Quota: {
             image: components["schemas"]["QuotaKind"];
             edit: components["schemas"]["QuotaKind"];
+            classify: components["schemas"]["QuotaKind"];
         };
         QuotaKind: {
             limit: number;
@@ -997,6 +1026,15 @@ export interface components {
             user: components["schemas"]["User"];
             detail: string;
         };
+        /**
+         * @description * `three_or_more_people` - 3 ou mais pessoas
+         *     * `multiple_pets` - 2 ou mais pets
+         *     * `group_with_pets` - Grupo com pets
+         *     * `no_subject` - Sem pessoa nem pet
+         *     * `protected_character` - Personagem ou marca
+         * @enum {string}
+         */
+        RejectionReasonEnum: "three_or_more_people" | "multiple_pets" | "group_with_pets" | "no_subject" | "protected_character";
         ResendTrackingRequest: {
             /** Format: email */
             email: string;
@@ -1019,11 +1057,6 @@ export interface components {
             readonly delivery_days: number;
             /** Format: date-time */
             readonly expires_at: string;
-        };
-        Style: {
-            id: string;
-            label: string;
-            thumbnail: string;
         };
         TokenPair: {
             access: string;
@@ -1048,6 +1081,13 @@ export interface components {
         };
         VisitorResponse: {
             token: string;
+        };
+        WaitlistCreateRequest: {
+            /** Format: uuid */
+            creation_id: string;
+            /** Format: email */
+            email: string;
+            consent: boolean;
         };
     };
     responses: never;
@@ -1362,7 +1402,7 @@ export interface operations {
             };
         };
     };
-    catalog_sizes_list: {
+    catalog_products_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -1376,26 +1416,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ProductSize"][];
-                };
-            };
-        };
-    };
-    catalog_styles_list: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Style"][];
+                    "application/json": components["schemas"]["Product"][];
                 };
             };
         };
@@ -1956,6 +1977,29 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["VisitorResponse"];
                 };
+            };
+        };
+    };
+    waitlist_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WaitlistCreateRequest"];
+                "multipart/form-data": components["schemas"]["WaitlistCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description No response body */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

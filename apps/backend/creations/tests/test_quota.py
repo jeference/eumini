@@ -17,8 +17,9 @@ def _business(settings, **overrides):
 
 def test_quota_is_debited_only_on_success(visitor_client):
     _create(visitor_client)
-    usage = visitor_client.get("/api/quota/").data["image"]
-    assert usage["used"] == 1  # reservada conta, para não passar do limite
+    usage = visitor_client.get("/api/quota/").data
+    # A foto ainda está sendo lida: só a leitura reservou cota (reservada conta).
+    assert (usage["classify"]["used"], usage["image"]["used"]) == (1, 0)
     drain_worker()
     assert visitor_client.get("/api/quota/").data["image"] == {
         "limit": 10,
@@ -28,7 +29,7 @@ def test_quota_is_debited_only_on_success(visitor_client):
 
 
 def test_daily_limit_blocks(visitor_client, settings):
-    _business(settings, QUOTA_PER_DAY={"image": 1, "edit": 15})
+    _business(settings, QUOTA_PER_DAY={"image": 1, "edit": 15, "classify": 30})
     assert _create(visitor_client).status_code == 202
     drain_worker()
     response = _create(visitor_client)
@@ -38,8 +39,9 @@ def test_daily_limit_blocks(visitor_client, settings):
 
 
 def test_ip_limit_applies_across_sessions(visitor_client, other_visitor_client, settings):
-    _business(settings, QUOTA_PER_IP_PER_DAY={"image": 1, "edit": 60})
+    _business(settings, QUOTA_PER_IP_PER_DAY={"image": 1, "edit": 60, "classify": 120})
     assert _create(visitor_client).status_code == 202
+    drain_worker()
     assert _create(other_visitor_client).status_code == 429
 
 
@@ -53,10 +55,10 @@ def test_active_task_limit(visitor_client, settings):
 
 def test_spend_cap_pauses_generation_but_not_catalog(visitor_client, settings):
     _business(settings, DAILY_SPEND_CAP_USD=0.01)
-    creation = Creation.objects.create(style="free", visitor=visitor_client.visitor)
+    creation = Creation.objects.create(requested_category="person", visitor=visitor_client.visitor)
     ProviderTask.objects.create(
         creation=creation,
-        kind=ProviderTask.Kind.PHOTO_TO_IMAGE,
+        kind=ProviderTask.Kind.GENERATE,
         status=ProviderTask.Status.SUCCEEDED,
         cost_usd=Decimal("0.05"),
     )
@@ -64,4 +66,4 @@ def test_spend_cap_pauses_generation_but_not_catalog(visitor_client, settings):
     response = _create(visitor_client)
     assert response.status_code == 503
     assert response.data["code"] == "generation_paused"
-    assert visitor_client.get("/api/catalog/sizes/").status_code == 200
+    assert visitor_client.get("/api/catalog/products/").status_code == 200

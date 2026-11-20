@@ -21,6 +21,8 @@ ALLOWED_EVENTS = {
     "shipping_quoted",
     "pix_generated",
     "pix_copied",
+    "category_selected",
+    "waitlist_joined",
 }
 
 

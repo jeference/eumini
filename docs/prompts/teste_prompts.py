@@ -1,6 +1,6 @@
 """Teste dos prompts por categoria no estilo único (o antigo "pixar").
 
-Uso, a partir da raiz do repositório:
+Usa o prompt de produção (`apps/backend/catalog/prompts.py`). Uso, a partir da raiz:
     apps/backend/.venv/Scripts/python.exe -I docs/prompts/teste_prompts.py <rodada> [id ...]
 
 Gera uma imagem por caso de `casos.json` na Runware, como o worker faz (modelo principal e,
@@ -31,120 +31,14 @@ import teste_jev  # noqa: E402
 RUNWARE_URL = "https://api.runware.ai/v1"
 TAMANHO = 1024
 
-# --- Camadas do prompt -------------------------------------------------------------------
-
-ESTILO = (
-    "Turn the main subject of this reference image into a 3D model from a modern animated "
-    f"family movie: {P._PIXAR_LOOK} Keep it recognizably the same: same faces, features, hair, "
-    "clothing and distinctive details, and do not add anyone or anything that is not in the "
-    "reference."
-)
-
-IMPRESSAO = (
-    "It will be 3D printed as a small figurine, so it must be sturdy: chunky simplified forms, "
-    "thick arms and legs, simple hands with the fingers together, kept close to the body or "
-    "touching it, nothing thin sticking out, and ears, tails and accessories attached to the body."
-)
-
-PROPORCAO = (
-    "stylized proportions about four heads tall, a head only slightly larger than realistic and "
-    "large expressive eyes"
-)
-ANIMAL = (
-    "keeps its natural body and anatomy, slightly stylized, with a friendly cartoon face and big "
-    "expressive eyes"
-)
-
-CATEGORIA = {
-    "person": (
-        f"The subject is one person. Give them {PROPORCAO}, and show them full body, standing on "
-        "both feet with the arms relaxed at the sides, even if the photo shows only part of them."
-    ),
-    "pet": (
-        f"The subject is one animal. It {ANIMAL}, shown whole in a calm, compact natural pose, "
-        "sitting or standing, even if the photo shows only part of it."
-    ),
-    "couple": (
-        "The subject is two people, made as one single figurine. Both are shown full body, standing "
-        "side by side and touching, with an arm around each other or holding hands, so that the "
-        f"two figures are joined into one piece. Give both {PROPORCAO}. The two figures share the "
-        "same few colors."
-    ),
-    "person_pet": (
-        "The subject is one person with one animal, made as one single figurine. The person is "
-        f"shown full body, standing, with {PROPORCAO}, holding the animal in their arms or with "
-        "the animal sitting at their feet pressed against their legs, so that they are joined into "
-        "one piece. If the animal is too large to hold, it stands right beside the person, touching "
-        f"them, scaled down to fit. The animal {ANIMAL}. Person and animal share the same few colors."
-    ),
-}
-
-SEM_BASE = "isolated on a plain white background with a soft contact shadow and no base or pedestal."
-COM_BASE = (
-    "standing on a small plain round base in one of the figure's colors, isolated on a plain "
-    "white background with a soft contact shadow."
-)
+# --- Prompt --------------------------------------------------------------------------------
+# A rodada usa o prompt de produção (`catalog/prompts.py`). O texto exato de cada rodada
+# anterior (r0 a r3) fica em `resultados/<rodada>/resultado.json`, no campo `prompt`.
 
 
-BASE_ESCURA = (
-    "standing on a small plain round base in the figure's dark color, isolated on a plain white "
-    "background with a soft contact shadow."
-)
+def prompt_da_rodada(categoria: str) -> str:
+    return P.photo_prompt(category=categoria)
 
-_CORES_INICIO = (
-    "\n\nColor plan, more important than color accuracy: the finished figurine, base included, "
-    f"uses exactly {P.MAX_PRINT_COLORS} colors from the list, no more, and each part is one flat "
-    "color with no prints, patterns, stripes or logos. These rules change only the colors, never "
-    "what the subject is: every shape and feature above stays. "
-)
-_CORES_FIM = " Do not add any person, animal or object that is not in the reference."
-_PELE = "skin (light skin, or brown for dark skin)"
-CORES = {
-    "person": (
-        f"Use {_PELE}; one dark color (black or brown) shared by the hair, beard, eyebrows, eyes, "
-        "shoes and base; one color for the top; and one color for the trousers or skirt. A dress "
-        "or one-piece outfit is a single color."
-    ),
-    "pet": (
-        "Use the animal's main color; a second color for its largest marking, or for the belly, "
-        "muzzle or chest; black shared by the eyes, nose and base; and one color for a collar or "
-        "accessory, if it has one. Beak, paws, claws, mouth and tongue reuse one of these colors."
-    ),
-    "couple": (
-        f"The two people share the same {P.MAX_PRINT_COLORS} colors: {_PELE}; one dark color "
-        "(black or brown) shared by both people's hair, eyes, shoes and the base; one color for "
-        "one person's clothes; and one color for the other person's clothes. Trousers, ties and "
-        "flowers reuse one of these colors. If their skin tones differ, light skin and brown both "
-        "count, so the two outfits share one color."
-    ),
-    "person_pet": (
-        f"The person and the animal share the same {P.MAX_PRINT_COLORS} colors: {_PELE}; one dark "
-        "color (black or brown) shared by the person's hair, eyes and shoes, the animal's eyes and "
-        "nose, and the base; one color for all of the person's clothes; and one color for the "
-        "animal's fur, feathers or coat. The animal's markings, mouth and tongue, and any "
-        "accessory, reuse one of these colors."
-    ),
-}
-
-
-def prompt_camadas(categoria: str, base: str, cores: str | None = None) -> str:
-    plano = P._COLOR_PLAN if cores is None else _CORES_INICIO + cores + _CORES_FIM
-    return (
-        f"{P._COLOR_RULE}{ESTILO} {CATEGORIA[categoria]} {IMPRESSAO} {P._STYLE_IGNORE} "
-        f"Whole subject alone, {P._STYLE_FRAME} {base}{plano}"
-    )
-
-
-RODADAS = {
-    # Linha de base: o prompt Pixar que está no código hoje, igual para todas as categorias.
-    "r0": lambda categoria: P.GENERATION["STYLES"]["pixar"]["STANDARDIZE_PROMPT_TEMPLATE"],
-    # Bloco por categoria e regras de impressão, sem base.
-    "r1": lambda categoria: prompt_camadas(categoria, SEM_BASE),
-    # Igual à r1, com base redonda.
-    "r2": lambda categoria: prompt_camadas(categoria, COM_BASE),
-    # Plano de cores por categoria, com base na cor escura da figura.
-    "r3": lambda categoria: prompt_camadas(categoria, BASE_ESCURA, CORES[categoria]),
-}
 
 # --- Runware ----------------------------------------------------------------------------
 
@@ -202,7 +96,7 @@ def foto_png(arquivo: Path) -> bytes:
 
 
 def rodar_caso(rodada: str, caso: dict, pasta: Path, sessao_jev: requests.Session) -> dict:
-    prompt = RODADAS[rodada](caso["categoria"])
+    prompt = prompt_da_rodada(caso["categoria"])
     foto = foto_png(BASE / caso["arquivo"])
     resultado = {"id": caso["id"], "categoria": caso["categoria"], "prompt": prompt, "tentativas": []}
     t0 = time.monotonic()

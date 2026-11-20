@@ -52,6 +52,15 @@ def test_prepare_photo_limits_normalized_size_and_validates_type():
         services.prepare_photo(gif.getvalue())
 
 
+def test_prepare_photo_enlarges_small_photos_for_the_classifier():
+    buffer = io.BytesIO()
+    Image.new("RGB", (231, 300)).save(buffer, format="PNG")
+    prepared = services.prepare_photo(buffer.getvalue())
+    normalized = Image.open(io.BytesIO(prepared.normalized))
+    assert min(normalized.size) == 280
+    assert Image.open(io.BytesIO(prepared.original)).size == (231, 300)
+
+
 @pytest.mark.parametrize(
     ("image_format", "mime"),
     [("JPEG", "image/jpeg"), ("PNG", "image/png"), ("WEBP", "image/webp")],

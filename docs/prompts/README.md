@@ -15,7 +15,7 @@
   - Feita na Runware, como o worker faz: GPT Image 2 e, se ele falhar, Nano Banana Pro.
   - Uma imagem por caso, a partir da foto, sem pedido do cliente.
 - **Classificação:** cada imagem gerada passa pelo Jev, com as perguntas de versão do [teste do classificador](../classificador/README.md).
-- **Para rodar de novo:** `apps/backend/.venv/Scripts/python.exe -I docs/prompts/teste_prompts.py <rodada> [id ...]`. A comparação sai de `docs/prompts/comparar.py`.
+- **Para rodar de novo:** `apps/backend/.venv/Scripts/python.exe -I docs/prompts/teste_prompts.py <rodada> [id ...]`. O script usa o prompt de produção, em `apps/backend/catalog/prompts.py`. O texto exato das rodadas r0 a r3 ficou em `resultados/<rodada>/resultado.json`. A comparação sai de `docs/prompts/comparar.py`.
 
 ## Rodadas
 
@@ -28,12 +28,7 @@
 
 As imagens de cada rodada estão em `resultados/<rodada>/` (com `folha.jpg`). A comparação lado a lado, com foto, r0, r1, r2 e r3, está em [`resultados/comparativo.jpg`](resultados/comparativo.jpg).
 
-O texto das camadas está em [`teste_prompts.py`](teste_prompts.py):
-- **Estilo:** `ESTILO`, a partir de `_PIXAR_LOOK`.
-- **Categoria:** `CATEGORIA`.
-- **Impressão:** `IMPRESSAO`.
-- **Plano de cores:** `CORES`.
-- **Base:** `BASE_ESCURA`.
+As camadas aprovadas (estilo, categoria, regras de impressão, base e plano de cores) estão em [`catalog/prompts.py`](../../apps/backend/catalog/prompts.py).
 
 ## O que o teste mostrou
 

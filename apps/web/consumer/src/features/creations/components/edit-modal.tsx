@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@kubo/ui/button";
+import { formatBRL } from "@kubo/ui/lib/format";
 import { cn } from "@kubo/ui/lib/utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
@@ -13,8 +14,10 @@ import {
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { REJECTION_MESSAGES, categoryInfo } from "@/features/catalog/categories";
+import { useProduct } from "@/features/catalog/hooks";
 import { useCreationAction } from "@/features/creations/hooks";
-import type { Creation, EditTask } from "@/features/creations/types";
+import type { Creation, EditTask, ImageVersion } from "@/features/creations/types";
 import { messageOf } from "@/lib/errors";
 
 const MAX_INSTRUCTION = 200;
@@ -234,6 +237,7 @@ function Editor({ creation, onClose }: { creation: Creation; onClose: () => void
                   <Sparkles className="size-4 text-accent" aria-hidden />
                   Pronto!
                 </div>
+                <VersionCategory version={version} />
                 <button
                   type="button"
                   disabled={isBusy}
@@ -293,6 +297,27 @@ function Editor({ creation, onClose }: { creation: Creation; onClose: () => void
         </section>
       </div>
     </>
+  );
+}
+
+/** Uma edição pode mudar quem aparece, e com isso a categoria e o preço (RN-34). */
+function VersionCategory({ version }: { version: ImageVersion }) {
+  const product = useProduct(version.category);
+  if (version.rejection_reason) {
+    return (
+      <Warning>
+        Esta versão não pode ser comprada. {REJECTION_MESSAGES[version.rejection_reason]}
+      </Warning>
+    );
+  }
+  if (!version.category) {
+    return <p className="text-sm text-muted lg:text-[13px]">Conferindo a miniatura…</p>;
+  }
+  return (
+    <p className="text-sm text-muted lg:text-[13px]">
+      Miniatura {categoryInfo(version.category).label}
+      {product ? `, a partir de ${formatBRL(product.from_price_cents)}` : ""}
+    </p>
   );
 }
 

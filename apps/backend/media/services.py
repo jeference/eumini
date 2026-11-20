@@ -10,6 +10,7 @@ from django.utils import timezone
 from PIL import Image, ImageOps, UnidentifiedImageError
 
 from common.exceptions import GuardFailed
+from integrations.adapters.typesafe_questions import MIN_SIDE as PHOTO_MIN_SIDE
 from integrations.ports import get_media_storage_port
 from media.models import Asset
 
@@ -93,6 +94,12 @@ def prepare_photo(raw: bytes) -> PreparedPhoto:
     )
     max_side = settings.BUSINESS["IMAGE_SIZE"]
     clean.thumbnail((max_side, max_side))
+    # O classificador recusa imagens com um lado pequeno demais: amplia até o mínimo.
+    if min(clean.size) < PHOTO_MIN_SIDE:
+        scale = PHOTO_MIN_SIDE / min(clean.size)
+        clean = clean.resize(
+            (round(clean.width * scale), round(clean.height * scale)), Image.Resampling.LANCZOS
+        )
     return PreparedPhoto(
         original=original,
         original_mime=_PHOTO_MIMES[source_format],

@@ -3,14 +3,20 @@
 from django.conf import settings
 from django.db import models
 
+from catalog.categories import Category
 from common.models import BaseModel
+
+# Categoria vendida ou motivo de recusa: o resultado de uma classificação.
+_RESULT_MAX_LENGTH = 32
 
 
 class Creation(BaseModel):
     class Status(models.TextChoices):
+        CLASSIFYING = "classifying", "Lendo a foto"
+        REJECTED = "rejected", "Foto não aceita"
         GENERATING_IMAGE = "generating_image", "Gerando imagem"
-        IMAGE_FAILED = "image_failed", "Falha na imagem"
         READY = "ready", "Pronta para comprar"
+        FAILED = "failed", "Não deu certo"
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -26,10 +32,11 @@ class Creation(BaseModel):
         on_delete=models.SET_NULL,
         related_name="creations",
     )
-    status = models.CharField(
-        max_length=24, choices=Status.choices, default=Status.GENERATING_IMAGE
-    )
-    style = models.CharField(max_length=24)
+    status = models.CharField(max_length=24, choices=Status.choices, default=Status.CLASSIFYING)
+    # A página de entrada é só uma sugestão: quem decide a categoria é o classificador (RN-32).
+    requested_category = models.CharField(max_length=16, choices=Category.choices)
+    category = models.CharField(max_length=16, choices=Category.choices, blank=True)
+    rejection_reason = models.CharField(max_length=_RESULT_MAX_LENGTH, blank=True)
     current_version = models.ForeignKey(
         "creations.ImageVersion", null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
     )
@@ -55,8 +62,10 @@ class ProviderTask(BaseModel):
     """Uma chamada a um provedor de IA. É também a fila do worker."""
 
     class Kind(models.TextChoices):
-        PHOTO_TO_IMAGE = "photo_to_image", "Foto para imagem"
-        IMAGE_EDIT = "image_edit", "Edição de imagem"
+        # Sem `source_version`, classifica a foto; com ela, a versão gerada.
+        CLASSIFY = "classify", "Classificação"
+        GENERATE = "generate", "Foto para imagem"
+        EDIT = "edit", "Edição de imagem"
 
     class Status(models.TextChoices):
         QUEUED = "queued", "Na fila"
@@ -105,6 +114,10 @@ class ImageVersion(BaseModel):
     task = models.ForeignKey(
         ProviderTask, null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
     )
+    # A classificação da versão define a categoria e o preço (RN-34). Os dois vazios: ainda não
+    # foi classificada. Com motivo de recusa, a versão não pode ser comprada.
+    category = models.CharField(max_length=16, choices=Category.choices, blank=True)
+    rejection_reason = models.CharField(max_length=_RESULT_MAX_LENGTH, blank=True)
 
     class Meta(BaseModel.Meta):
         ordering = ["number"]
@@ -119,6 +132,7 @@ class QuotaReservation(BaseModel):
     class Kind(models.TextChoices):
         IMAGE = "image", "Geração 2D"
         EDIT = "edit", "Edição"
+        CLASSIFY = "classify", "Classificação da foto"
 
     class State(models.TextChoices):
         RESERVED = "reserved", "Reservada"
@@ -138,4 +152,56 @@ class QuotaReservation(BaseModel):
         indexes = [
             models.Index(fields=["actor_key", "kind", "day"]),
             models.Index(fields=["ip_hash", "kind", "day"]),
+        ]
+
+
+class Classification(BaseModel):
+    """Toda classificação, da foto ou de uma versão (RN-36)."""
+
+    class Decision(models.TextChoices):
+        ACCEPTED = "accepted", "Aceita"
+        REJECTED = "rejected", "Recusada"
+
+    creation = models.ForeignKey(Creation, on_delete=models.CASCADE, related_name="classifications")
+    version = models.ForeignKey(
+        ImageVersion, null=True, blank=True, on_delete=models.CASCADE, related_name="+"
+    )
+    task = models.ForeignKey(
+        ProviderTask, null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
+    )
+    requested_category = models.CharField(max_length=16, choices=Category.choices)
+    result = models.CharField(max_length=_RESULT_MAX_LENGTH)
+    decision = models.CharField(max_length=8, choices=Decision.choices)
+    confidence = models.FloatField(null=True, blank=True)
+    probabilities = models.JSONField(default=dict, blank=True)
+    character_probability = models.FloatField(null=True, blank=True)
+    model_name = models.CharField(max_length=64)
+    question_set_version = models.CharField(max_length=16)
+    ip_hash = models.CharField(max_length=64, blank=True)
+
+    class Meta(BaseModel.Meta):
+        indexes = [models.Index(fields=["result", "-created_at"])]
+
+
+class WaitlistEntry(BaseModel):
+    """Quem foi recusado e quer ser avisado quando a categoria existir (RN-37)."""
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
+    )
+    visitor = models.ForeignKey(
+        "accounts.Visitor", null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
+    )
+    email = models.EmailField()
+    classification = models.ForeignKey(
+        Classification, on_delete=models.PROTECT, related_name="waitlist_entries"
+    )
+    reason = models.CharField(max_length=_RESULT_MAX_LENGTH)
+    consent_version = models.CharField(max_length=16)
+    consented_at = models.DateTimeField()
+    notified_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta(BaseModel.Meta):
+        constraints = [
+            models.UniqueConstraint(fields=["email", "reason"], name="waitlist_email_reason_uq")
         ]

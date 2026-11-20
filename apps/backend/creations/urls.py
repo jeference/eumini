@@ -4,6 +4,7 @@ from creations import views
 
 urlpatterns = [
     path("quota/", views.QuotaView.as_view(), name="quota"),
+    path("waitlist/", views.WaitlistView.as_view(), name="waitlist"),
     path("creations/", views.CreationListView.as_view(), name="creation-list"),
     path("creations/<uuid:creation_id>/", views.CreationDetailView.as_view(), name="creation"),
     path(

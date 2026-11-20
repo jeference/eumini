@@ -21,7 +21,7 @@ export const IMAGE_PROGRESS: Progress = {
   subtitle: "Isso leva alguns segundos. Pode sair desta página: sua criação continua aqui.",
   steps: [
     "Entendendo sua ideia",
-    "Rascunhando o objeto",
+    "Rascunhando a miniatura",
     "Escolhendo as cores",
     "Caprichando nos detalhes",
   ],
@@ -33,6 +33,16 @@ export const IMAGE_PROGRESS: Progress = {
   ],
   secondsPerStep: 3,
   secondsPerPhrase: 4,
+};
+
+// A leitura da foto leva menos de um segundo no classificador; com a fila, poucos segundos.
+export const PHOTO_PROGRESS: Progress = {
+  title: "Lendo a foto",
+  subtitle: "Conferindo quem está na foto para escolher a miniatura certa.",
+  steps: ["Recebendo a foto", "Procurando pessoas e pets"],
+  lastStepPhrases: ["Procurando pessoas e pets", "Conferindo os detalhes", "Quase lá"],
+  secondsPerStep: 1,
+  secondsPerPhrase: 3,
 };
 
 /** Segundos desde o início da etapa, informado pelo servidor: sobrevive a recarregar a página. */

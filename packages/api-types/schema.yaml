@@ -285,9 +285,9 @@ paths:
       responses:
         '204':
           description: No response body
-  /api/catalog/sizes/:
+  /api/catalog/products/:
     get:
-      operationId: catalog_sizes_list
+      operationId: catalog_products_list
       tags:
       - catalog
       responses:
@@ -297,21 +297,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProductSize'
-          description: ''
-  /api/catalog/styles/:
-    get:
-      operationId: catalog_styles_list
-      tags:
-      - catalog
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Style'
+                  $ref: '#/components/schemas/Product'
           description: ''
   /api/creations/:
     get:
@@ -859,6 +845,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/VisitorResponse'
           description: ''
+  /api/waitlist/:
+    post:
+      operationId: waitlist_create
+      tags:
+      - waitlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WaitlistCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WaitlistCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '201':
+          description: No response body
   /api/webhooks/abacatepay/:
     post:
       operationId: webhooks_abacatepay_create
@@ -967,6 +973,9 @@ components:
       required:
       - tokens
       - user
+    BlankEnum:
+      enum:
+      - ''
     Cart:
       type: object
       properties:
@@ -1000,11 +1009,15 @@ components:
         size_label:
           type: string
           readOnly: true
+        category:
+          type: string
+          readOnly: true
         quantity:
           type: integer
           readOnly: true
         unit_price_cents:
           type: integer
+          nullable: true
           readOnly: true
         line_total_cents:
           type: integer
@@ -1016,6 +1029,7 @@ components:
           type: string
           readOnly: true
       required:
+      - category
       - creation_id
       - id
       - image_url
@@ -1042,6 +1056,18 @@ components:
       - creation_id
       - quantity
       - size_id
+    CategoryEnum:
+      enum:
+      - person
+      - pet
+      - couple
+      - person_pet
+      type: string
+      description: |-
+        * `person` - Pessoa
+        * `pet` - Pet
+        * `couple` - Casal
+        * `person_pet` - Pessoa + Pet
     Charge:
       type: object
       properties:
@@ -1109,16 +1135,14 @@ components:
         text:
           type: string
           maxLength: 1000
-        style:
-          type: string
-          minLength: 1
-          maxLength: 24
+        requested_category:
+          $ref: '#/components/schemas/CategoryEnum'
         photo:
           type: string
           format: binary
       required:
       - photo
-      - style
+      - requested_category
     CreationDetail:
       type: object
       properties:
@@ -1130,9 +1154,20 @@ components:
           allOf:
           - $ref: '#/components/schemas/CreationStatusEnum'
           readOnly: true
-        style:
-          type: string
+        requested_category:
+          allOf:
+          - $ref: '#/components/schemas/CategoryEnum'
           readOnly: true
+        category:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/CategoryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        rejection_reason:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/RejectionReasonEnum'
+          - $ref: '#/components/schemas/BlankEnum'
         text:
           type: string
           readOnly: true
@@ -1172,14 +1207,16 @@ components:
           readOnly: true
       required:
       - active_started_at
+      - category
       - created_at
       - current_version_id
       - edit_tasks
       - error
       - id
       - is_generating
+      - rejection_reason
+      - requested_category
       - status
-      - style
       - text
       - versions
     CreationError:
@@ -1203,9 +1240,11 @@ components:
           allOf:
           - $ref: '#/components/schemas/CreationStatusEnum'
           readOnly: true
-        style:
-          type: string
+        category:
           readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/CategoryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
         text:
           type: string
           readOnly: true
@@ -1217,22 +1256,26 @@ components:
           format: date-time
           readOnly: true
       required:
+      - category
       - created_at
       - id
       - status
-      - style
       - text
       - thumbnail_url
     CreationStatusEnum:
       enum:
+      - classifying
+      - rejected
       - generating_image
-      - image_failed
       - ready
+      - failed
       type: string
       description: |-
+        * `classifying` - Lendo a foto
+        * `rejected` - Foto não aceita
         * `generating_image` - Gerando imagem
-        * `image_failed` - Falha na imagem
         * `ready` - Pronta para comprar
+        * `failed` - Não deu certo
     DetailResponse:
       type: object
       properties:
@@ -1297,11 +1340,22 @@ components:
         image_url:
           type: string
           readOnly: true
+        category:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/CategoryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        rejection_reason:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/RejectionReasonEnum'
+          - $ref: '#/components/schemas/BlankEnum'
         created_at:
           type: string
           format: date-time
           readOnly: true
       required:
+      - category
       - created_at
       - id
       - image_url
@@ -1309,6 +1363,7 @@ components:
       - number
       - origin
       - parent_id
+      - rejection_reason
     LoginRequest:
       type: object
       properties:
@@ -1326,6 +1381,7 @@ components:
     NameEnum:
       enum:
       - buy_now_clicked
+      - category_selected
       - checkout_started
       - edit_requested
       - item_added_to_cart
@@ -1335,9 +1391,11 @@ components:
       - prompt_submitted
       - shipping_quoted
       - size_selected
+      - waitlist_joined
       type: string
       description: |-
         * `buy_now_clicked` - buy_now_clicked
+        * `category_selected` - category_selected
         * `checkout_started` - checkout_started
         * `edit_requested` - edit_requested
         * `item_added_to_cart` - item_added_to_cart
@@ -1347,6 +1405,7 @@ components:
         * `prompt_submitted` - prompt_submitted
         * `shipping_quoted` - shipping_quoted
         * `size_selected` - size_selected
+        * `waitlist_joined` - waitlist_joined
     OrderCreateRequest:
       type: object
       properties:
@@ -1552,6 +1611,9 @@ components:
         size_label:
           type: string
           readOnly: true
+        category:
+          type: string
+          readOnly: true
         quantity:
           type: integer
           readOnly: true
@@ -1565,6 +1627,7 @@ components:
           type: string
           readOnly: true
       required:
+      - category
       - creation_id
       - id
       - image_url
@@ -1795,28 +1858,41 @@ components:
         phone:
           type: string
           maxLength: 32
+    Product:
+      type: object
+      description: Uma categoria vendida, com os tamanhos e preços dela.
+      properties:
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        label:
+          type: string
+        from_price_cents:
+          type: integer
+        sizes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductSize'
+      required:
+      - category
+      - from_price_cents
+      - label
+      - sizes
     ProductSize:
       type: object
       properties:
         id:
           type: string
           format: uuid
-          readOnly: true
         code:
           type: string
-          readOnly: true
         label:
           type: string
-          readOnly: true
         longest_side_mm:
           type: integer
-          readOnly: true
-        price_cents:
-          type: integer
-          readOnly: true
         is_default:
           type: boolean
-          readOnly: true
+        price_cents:
+          type: integer
       required:
       - code
       - id
@@ -1874,12 +1950,14 @@ components:
       - status
     ProviderTaskKindEnum:
       enum:
-      - photo_to_image
-      - image_edit
+      - classify
+      - generate
+      - edit
       type: string
       description: |-
-        * `photo_to_image` - Foto para imagem
-        * `image_edit` - Edição de imagem
+        * `classify` - Classificação
+        * `generate` - Foto para imagem
+        * `edit` - Edição de imagem
     ProviderTaskStatusEnum:
       enum:
       - queued
@@ -1901,7 +1979,10 @@ components:
           $ref: '#/components/schemas/QuotaKind'
         edit:
           $ref: '#/components/schemas/QuotaKind'
+        classify:
+          $ref: '#/components/schemas/QuotaKind'
       required:
+      - classify
       - edit
       - image
     QuotaKind:
@@ -1970,6 +2051,20 @@ components:
       required:
       - detail
       - user
+    RejectionReasonEnum:
+      enum:
+      - three_or_more_people
+      - multiple_pets
+      - group_with_pets
+      - no_subject
+      - protected_character
+      type: string
+      description: |-
+        * `three_or_more_people` - 3 ou mais pessoas
+        * `multiple_pets` - 2 ou mais pets
+        * `group_with_pets` - Grupo com pets
+        * `no_subject` - Sem pessoa nem pet
+        * `protected_character` - Personagem ou marca
     ResendTrackingRequest:
       type: object
       properties:
@@ -2033,19 +2128,6 @@ components:
       - price_cents
       - service_name
       - shipping_days
-    Style:
-      type: object
-      properties:
-        id:
-          type: string
-        label:
-          type: string
-        thumbnail:
-          type: string
-      required:
-      - id
-      - label
-      - thumbnail
     TokenPair:
       type: object
       properties:
@@ -2114,6 +2196,22 @@ components:
           type: string
       required:
       - token
+    WaitlistCreateRequest:
+      type: object
+      properties:
+        creation_id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+          minLength: 1
+        consent:
+          type: boolean
+      required:
+      - consent
+      - creation_id
+      - email
   securitySchemes:
     jwtAuth:
       type: http

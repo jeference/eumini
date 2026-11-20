@@ -8,6 +8,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.utils import timezone
 
+from catalog import pricing
 from common.exceptions import GuardFailed
 from fulfillment.services import origin_postal_code
 from integrations.ports import ShippingItem, get_address_lookup_port, get_shipping_port
@@ -29,7 +30,8 @@ def shipping_items_from_cart(items) -> list[ShippingItem]:
             height_cm=item.size.package_height_cm,
             length_cm=item.size.package_length_cm,
             weight_kg=item.size.package_weight_grams / 1000,
-            insurance_cents=item.size.price_cents * item.quantity,
+            insurance_cents=(pricing.price_for(item.version.category, item.size) or 0)
+            * item.quantity,
             quantity=item.quantity,
         )
         for item in items

@@ -1,5 +1,6 @@
 from django.db import models
 
+from catalog.categories import Category
 from common.models import BaseModel
 
 
@@ -9,7 +10,6 @@ class ProductSize(BaseModel):
     code = models.CharField(max_length=16, unique=True)
     label = models.CharField(max_length=40)
     longest_side_mm = models.PositiveIntegerField()
-    price_cents = models.PositiveIntegerField()
     package_weight_grams = models.PositiveIntegerField()
     package_width_cm = models.PositiveSmallIntegerField()
     package_height_cm = models.PositiveSmallIntegerField()
@@ -20,6 +20,20 @@ class ProductSize(BaseModel):
 
     class Meta(BaseModel.Meta):
         ordering = ["sort_order"]
+
+
+class ProductPrice(BaseModel):
+    """Preço por categoria e tamanho (RN-11). Só existem as combinações vendidas."""
+
+    category = models.CharField(max_length=16, choices=Category.choices)
+    size = models.ForeignKey(ProductSize, on_delete=models.PROTECT, related_name="prices")
+    price_cents = models.PositiveIntegerField()
+    is_active = models.BooleanField(default=True)
+
+    class Meta(BaseModel.Meta):
+        constraints = [
+            models.UniqueConstraint(fields=["category", "size"], name="product_price_uq")
+        ]
 
 
 class Filament(BaseModel):

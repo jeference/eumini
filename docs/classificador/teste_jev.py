@@ -4,7 +4,8 @@ Uso, a partir da raiz do repositório:
     apps/backend/.venv/Scripts/python.exe -I docs/classificador/teste_jev.py [modelo] [repetições]
 
 Lê a chave JEV_API_KEY de apps/backend/.env e grava o resultado em
-docs/classificador/resultados/<modelo>.json.
+docs/classificador/resultados/<modelo>.json. As perguntas vêm de
+apps/backend/integrations/adapters/typesafe_questions.py, as mesmas de produção.
 """
 
 import base64
@@ -26,69 +27,19 @@ URL = "https://api.typesafe.ai/v1/systemone"
 PRECO_ENTRADA_POR_MILHAO = 0.042  # US$, tokens de entrada (inclui as imagens)
 VENDIDAS = {"person", "pet", "couple", "person_pet"}
 
-ASSUNTO_FOTO = {
-    "person": "Exactly one real human being, and no animal.",
-    "pet": "Exactly one real living animal of any species, and no human.",
-    "couple": "Exactly two real human beings, and no animal.",
-    "person_pet": "Exactly one real human being together with exactly one real living animal.",
-    "three_or_more_people": "Three or more real human beings, and no animal.",
-    "multiple_pets": "Two or more real living animals, and no human.",
-    "group_with_pets": "Humans and animals together, with two or more humans or two or more animals.",
-    "no_subject": (
-        "No real human being or real living animal: objects, food, vehicles, buildings, landscapes, "
-        "documents, text, toys, plush animals, statues or figurines."
-    ),
-}
+# As perguntas e a decisão são as de produção: o teste mede exatamente o que roda no app.
+sys.path.insert(0, str(RAIZ / "apps/backend/integrations/adapters"))
+import typesafe_questions as Q  # noqa: E402
 
-ASSUNTO_VERSAO = {
-    "person": "Exactly one human figure, and no animal figure.",
-    "pet": "Exactly one animal figure (even if it wears clothes or a costume, or poses like a human), and no human figure.",
-    "couple": "Exactly two human figures, and no animal figure.",
-    "person_pet": "Exactly one human figure together with exactly one animal figure.",
-    "three_or_more_people": "Three or more human figures, and no animal figure.",
-    "multiple_pets": "Two or more animal figures, and no human figure.",
-    "group_with_pets": "Human and animal figures together, with two or more humans or two or more animals.",
-    "no_subject": "No human or animal figure: objects, food, vehicles, buildings, abstract shapes or text.",
-}
-
-PERSONAGEM = (
-    "Does `{ref}` show a copyrighted or trademarked fictional character, mascot or superhero "
-    "(for example Mickey Mouse, Batman, Spider-Man or Pikachu), or a person or animal wearing "
-    "such a character's costume or logo?"
-)
+LADO_MINIMO = Q.MIN_SIDE
 
 
 def perguntas(tipo: str) -> dict:
-    if tipo == "foto":
-        return {
-            "subject": {
-                "type": "choice",
-                "instructions": (
-                    "Count only the main subjects of `photo`. Ignore people or animals that are tiny, "
-                    "blurred or far in the background. Who is in `photo`?"
-                ),
-                "criteria": ASSUNTO_FOTO,
-            },
-            "character": {"type": "noul", "instructions": PERSONAGEM.format(ref="photo")},
-        }
-    return {
-        "subject": {
-            "type": "choice",
-            "instructions": "`photo` is a render of a collectible figurine. Count the characters that make up the figurine.",
-            "criteria": ASSUNTO_VERSAO,
-        },
-        "character": {"type": "noul", "instructions": PERSONAGEM.format(ref="photo")},
-    }
-
-
-LIMITE_PERSONAGEM = 0.8  # na v1, os personagens ficaram entre 0,97 e 0,99, e o maior caso negativo em 0,67
-LADO_MINIMO = 280  # px; o Jev recusa imagens menores (erro 400 "Invalid image dimensions")
+    return Q.questions("photo" if tipo == "foto" else "version")
 
 
 def decidir(respostas: dict) -> str:
-    if respostas["character"]["noul"] >= LIMITE_PERSONAGEM:
-        return "protected_character"
-    return respostas["subject"]["choice"]
+    return Q.decide(respostas)
 
 
 def imagem_base64(arquivo: Path) -> str:

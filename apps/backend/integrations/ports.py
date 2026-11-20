@@ -45,6 +45,30 @@ class ImageGenerationPort(ABC):
         """Imagem de referência + instrução: transforma a foto do cliente e edita versões."""
 
 
+# --- Classificação ---
+
+
+@dataclass(frozen=True)
+class ClassificationResult:
+    # Categoria vendida (`catalog.categories.Category`) ou motivo de recusa (`RejectionReason`).
+    result: str
+    # Escolha de quem aparece: a confiança e a probabilidade de cada classe.
+    confidence: float | None
+    probabilities: dict
+    character_probability: float | None
+    model: str
+    question_set_version: str
+    cost_usd: float | None = None
+
+
+class ImageClassificationPort(ABC):
+    provider = ""
+
+    @abstractmethod
+    def classify(self, *, image: bytes, target: str) -> ClassificationResult:
+        """`target`: `photo` (foto do cliente, antes de gerar) ou `version` (imagem gerada)."""
+
+
 # --- Pagamento ---
 
 
@@ -161,6 +185,10 @@ def reset_ports() -> None:
 
 def get_image_generation_port() -> ImageGenerationPort:
     return _resolve("IMAGE_GENERATION_ADAPTER")
+
+
+def get_image_classification_port() -> ImageClassificationPort:
+    return _resolve("IMAGE_CLASSIFICATION_ADAPTER")
 
 
 def get_payment_gateway_port() -> PaymentGatewayPort:
