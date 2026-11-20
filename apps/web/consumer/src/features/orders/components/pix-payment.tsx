@@ -3,9 +3,8 @@
 import { track } from "@kubo/analytics";
 import type { Schemas } from "@kubo/api-client";
 import { Button } from "@kubo/ui/button";
-import { formatBRL } from "@kubo/ui/lib/format";
 import { Check, Copy } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 /** Passo a passo do pagamento, com o QR Code na tela. */
@@ -22,26 +21,14 @@ const COPY_STEPS = [
   "Revise as informações e confirme o pagamento. Pronto! O status do pedido será atualizado na mesma hora.",
 ];
 
-function useCountdown(expiresAt: string): number {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-  return Math.max(0, Math.floor((new Date(expiresAt).getTime() - now) / 1000));
-}
-
 /**
  * Pagamento do PIX: QR Code, passo a passo numerado e "Copiar código Pix" na largura
  * toda. No celular, um embaixo do outro; no computador, o passo a passo ao lado do QR.
  */
 export function PixPayment({ charge }: { charge: Schemas["Charge"] }) {
-  const remaining = useCountdown(charge.expires_at);
   const [copied, setCopied] = useState(false);
   // O código só aparece por extenso se o navegador não deixar copiar.
   const [showCode, setShowCode] = useState(false);
-  const minutes = String(Math.floor(remaining / 60)).padStart(2, "0");
-  const seconds = String(remaining % 60).padStart(2, "0");
   const hasQr = Boolean(charge.pix_qr_base64);
 
   async function copy() {
@@ -86,23 +73,7 @@ export function PixPayment({ charge }: { charge: Schemas["Charge"] }) {
             {charge.pix_br_code}
           </p>
         )}
-        <p className="text-center text-sm text-muted">
-          {remaining > 0 ? (
-            <>
-              O código expira em{" "}
-              <span className="font-mono font-medium text-ink" data-testid="pix-countdown">
-                {minutes}:{seconds}
-              </span>
-            </>
-          ) : (
-            "Este código venceu. Estamos conferindo o pagamento."
-          )}
-        </p>
       </div>
-
-      <p className="font-display text-3xl font-semibold tabular-nums">
-        {formatBRL(charge.amount_cents)}
-      </p>
     </div>
   );
 }
