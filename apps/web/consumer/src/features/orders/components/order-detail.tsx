@@ -65,15 +65,20 @@ export function OrderDetail({ id }: { id: string }) {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <div>
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="font-display text-3xl font-semibold tracking-tight">
-            Pedido {order.number}
-          </h1>
-          <StatusBadge label={badge.label} tone={badge.tone} />
+      {/* Esperando o PIX, a tela é só o pagamento: número, status e data vêm depois. */}
+      {order.status === "pending_payment" ? (
+        <h1 className="sr-only">Pagamento do pedido</h1>
+      ) : (
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="font-display text-3xl font-semibold tracking-tight">
+              Pedido {order.number}
+            </h1>
+            <StatusBadge label={badge.label} tone={badge.tone} />
+          </div>
+          <p className="mt-1 text-sm text-muted">Feito em {formatDate(order.created_at)}</p>
         </div>
-        <p className="mt-1 text-sm text-muted">Feito em {formatDate(order.created_at)}</p>
-      </div>
+      )}
 
       {order.status === "paid" && (
         <Callout tone="accent" role="status" className="p-4 text-base">
