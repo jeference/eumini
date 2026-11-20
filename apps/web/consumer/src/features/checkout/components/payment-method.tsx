@@ -29,20 +29,10 @@ function MethodLabel({
 }
 
 /**
- * Escolha da forma de pagamento: nada vem marcado, e cartão aparece como "Em breve".
- * `error`: tentou concluir sem escolher. `children` aparece abaixo das opções.
+ * Forma de pagamento: o Pix, única aceita hoje, já vem marcado; cartão aparece como
+ * "Em breve". `children` aparece abaixo das opções.
  */
-export function PaymentMethodPicker({
-  pixChosen,
-  onChoosePix,
-  error,
-  children,
-}: {
-  pixChosen: boolean;
-  onChoosePix: () => void;
-  error: boolean;
-  children?: ReactNode;
-}) {
+export function PaymentMethodPicker({ children }: { children?: ReactNode }) {
   return (
     <Card asChild className="p-5 sm:p-6">
       <fieldset aria-labelledby={STEP_HEADING_ID}>
@@ -58,8 +48,8 @@ export function PaymentMethodPicker({
             name="payment_method"
             size="sm"
             indicator={false}
-            checked={pixChosen}
-            onSelect={onChoosePix}
+            checked
+            onSelect={() => undefined}
           >
             <MethodLabel icon={QrCode} title="Pix" />
           </RadioCard>
@@ -75,11 +65,6 @@ export function PaymentMethodPicker({
             <MethodLabel icon={CreditCard} title="Crédito" note="Em breve" />
           </RadioCard>
         </div>
-        {error && (
-          <p className="mt-2 text-xs font-medium text-danger" role="alert">
-            Escolha a forma de pagamento.
-          </p>
-        )}
         {children && <div className="mt-5 space-y-5">{children}</div>}
       </fieldset>
     </Card>

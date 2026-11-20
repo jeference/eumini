@@ -31,7 +31,7 @@ import { ContactStep } from "@/features/checkout/components/contact-step";
 import { DeliveryStep } from "@/features/checkout/components/delivery-step";
 
 import { PaymentMethodPicker } from "@/features/checkout/components/payment-method";
-import { PixModal } from "@/features/checkout/components/pix-modal";
+import { PixScreen } from "@/features/checkout/components/pix-screen";
 import {
   type CheckoutValues,
   checkoutSchema,
@@ -100,10 +100,7 @@ export function CheckoutForm() {
   const addressCep = useRef<string | null>(null);
   // A mesma chave em toda tentativa: um clique duplo nunca cria dois pedidos.
   const idempotencyKey = useRef(crypto.randomUUID());
-  // Forma de pagamento: nada vem marcado.
-  const [pixChosen, setPixChosen] = useState(false);
-  const [methodError, setMethodError] = useState(false);
-  // Pedido criado no "Concluir pagamento". O PIX aparece num modal por cima do Pagar.
+  // Pedido criado no "Concluir pagamento". O PIX aparece em tela cheia por cima do Pagar.
   const [orderId, setOrderId] = useState<string | null>(null);
   const [pixOpen, setPixOpen] = useState(false);
 
@@ -265,8 +262,8 @@ export function CheckoutForm() {
     };
   }, [cepDigits, itemKey, api, form, quoteMutate]);
 
-  // "Concluir pagamento" no Pix: cria o pedido e já gera o PIX. Se o PIX falhar, o modal
-  // tenta de novo sozinho e oferece "Tentar de novo".
+  // "Concluir pagamento" no Pix: cria o pedido e já gera o PIX. Se o PIX falhar, a tela do PIX
+  // tenta de novo sozinha e oferece "Tentar de novo".
   const placeOrder = useMutation({
     mutationFn: async (values: CheckoutValues) => {
       const order = unwrap(
@@ -370,15 +367,11 @@ export function CheckoutForm() {
   }
 
   function pay() {
-    if (!pixChosen) {
-      setMethodError(true);
-      return;
-    }
     if (!selectedQuote) {
       goTo("entrega");
       return;
     }
-    // Já criou o pedido e voltou do modal: reabre o mesmo PIX.
+    // Já criou o pedido e voltou da tela do PIX: reabre o mesmo PIX.
     if (orderId) {
       setPixOpen(true);
       return;
@@ -445,14 +438,7 @@ export function CheckoutForm() {
               className="space-y-4"
             >
               {step === "pagar" ? (
-                <PaymentMethodPicker
-                  pixChosen={pixChosen}
-                  onChoosePix={() => {
-                    setPixChosen(true);
-                    setMethodError(false);
-                  }}
-                  error={methodError}
-                >
+                <PaymentMethodPicker>
                   {shippingNotice && (
                     <Callout tone="accent" role="alert">
                       {shippingNotice}
@@ -505,7 +491,7 @@ export function CheckoutForm() {
         </div>
       </div>
 
-      {orderId && <PixModal orderId={orderId} open={pixOpen} onClose={() => setPixOpen(false)} />}
+      {orderId && <PixScreen orderId={orderId} open={pixOpen} onClose={() => setPixOpen(false)} />}
     </div>
   );
 }

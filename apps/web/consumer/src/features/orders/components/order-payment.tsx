@@ -16,16 +16,8 @@ import { messageOf } from "@/lib/errors";
  * Pagamento de um pedido aguardando PIX: mostra o PIX válido, gera um se faltar
  * (uma tentativa automática) e oferece um novo quando o prazo termina.
  * Fora de `pending_payment` e `expired`, não mostra nada.
- *
- * `bare`: sem moldura de cartão no PIX, para usar dentro de um modal.
  */
-export function OrderPayment({
-  order,
-  bare = false,
-}: {
-  order: Schemas["OrderDetail"];
-  bare?: boolean;
-}) {
+export function OrderPayment({ order }: { order: Schemas["OrderDetail"] }) {
   const pay = usePayOrder(order.id);
   const triedPay = useRef(false);
   const payMutate = pay.mutate;
@@ -40,7 +32,7 @@ export function OrderPayment({
   }, [needsCharge, payMutate]);
 
   if (order.status === "pending_payment" && order.charge?.status === "pending") {
-    return <PixPayment charge={order.charge} bare={bare} />;
+    return <PixPayment charge={order.charge} />;
   }
 
   if (needsCharge) {
