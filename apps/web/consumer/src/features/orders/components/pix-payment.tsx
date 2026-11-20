@@ -12,9 +12,9 @@ import { toast } from "sonner";
 
 /** Computador: paga escaneando o QR com o celular, ou copiando o código. */
 const QR_STEPS = [
-  "Abra o app do seu banco",
-  "Escolha a opção de pagar com QR Code",
-  "Leia o QR Code ou, se preferir, copie o código Pix e cole no Pix Copia e Cola",
+  'Na opção Pix, escolha "Ler QR Code".',
+  "Leia o QR Code ou, se preferir, copie o código para Pix Copia e Cola.",
+  "Revise as informações e confirme o pagamento. Pronto! O status do pedido será atualizado na mesma hora.",
 ];
 
 /** Celular: não dá para escanear a própria tela, então é só o copia e cola. */
@@ -99,22 +99,26 @@ export function PixPayment({ charge }: { charge: Schemas["Charge"] }) {
             />
           )}
 
-          <div className="min-w-0 flex-1 space-y-5">
+          <div className="min-w-0 flex-1">
             {hasQr && <StepList steps={QR_STEPS} className="[@media(pointer:coarse)]:hidden" />}
             <StepList
               steps={COPY_STEPS}
               className={cn(hasQr && "hidden [@media(pointer:coarse)]:block")}
             />
-            <Button variant="primary" size="lg" className="w-full sm:w-auto" onClick={copy}>
-              {copied ? <Check /> : <Copy />}
-              {copied ? "Código copiado" : "Copiar código Pix"}
-            </Button>
-            {showCode && (
-              <p className="break-all rounded-2xl bg-sunken p-3 font-mono text-xs text-muted">
-                {charge.pix_br_code}
-              </p>
-            )}
           </div>
+        </div>
+
+        {/* Abaixo do QR e das instruções, na largura dos dois. */}
+        <div className="space-y-3">
+          <Button variant="primary" size="lg" className="w-full" onClick={copy}>
+            {copied ? <Check /> : <Copy />}
+            {copied ? "Código copiado" : "Copiar código Pix"}
+          </Button>
+          {showCode && (
+            <p className="break-all rounded-2xl bg-sunken p-3 font-mono text-xs text-muted">
+              {charge.pix_br_code}
+            </p>
+          )}
         </div>
       </Card>
       <p className="font-display text-3xl font-semibold tabular-nums">
