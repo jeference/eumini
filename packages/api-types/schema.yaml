@@ -1431,10 +1431,6 @@ components:
           type: string
           minLength: 1
           maxLength: 14
-        phone:
-          type: string
-          minLength: 1
-          maxLength: 20
         postal_code:
           type: string
           minLength: 1
@@ -1473,7 +1469,6 @@ components:
       - name
       - neighborhood
       - number
-      - phone
       - postal_code
       - shipping_quote_id
       - state
@@ -1501,9 +1496,6 @@ components:
           type: string
           readOnly: true
         cpf_masked:
-          type: string
-          readOnly: true
-        phone:
           type: string
           readOnly: true
         postal_code:
@@ -1588,7 +1580,6 @@ components:
       - neighborhood
       - number
       - paid_at
-      - phone
       - postal_code
       - shipment
       - shipping_cents

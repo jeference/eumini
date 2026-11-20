@@ -237,7 +237,7 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 |---|---|---|
 | `Cart`, `CartItem` | ator; creation, versão da imagem, tamanho, quantidade. A categoria vem da versão, e só versões de categoria vendida entram | ● |
 | `Address` | user, CEP, rua, número, complemento, bairro, cidade, UF | ● Só para contas |
-| `Order` | número, user (nulo), `customer_email`, nome, CPF criptografado, telefone, endereço congelado, status, subtotal, frete, total, serviço de frete, prazo prometido, aceite dos termos (versão e data), hash do token de acompanhamento, chave de idempotência | ● |
+| `Order` | número, user (nulo), `customer_email`, nome, CPF criptografado, endereço congelado, status, subtotal, frete, total, serviço de frete, prazo prometido, aceite dos termos (versão e data), hash do token de acompanhamento, chave de idempotência | ● |
 | `OrderItem` | order, creation, versão comprada, categoria, tamanho, quantidade, preço unitário e prompt congelados | ● |
 | `ShippingQuote` | ator, CEP de origem e destino, itens, serviço, preço, prazo, resposta bruta, válido até | ● |
 

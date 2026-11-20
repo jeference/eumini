@@ -19,9 +19,6 @@ export const checkoutSchema = z.object({
   email: z.string().email("Informe um e-mail válido."),
   name: z.string().trim().min(3, "Informe seu nome completo."),
   cpf: z.string().refine(isValidCpf, "Informe um CPF válido."),
-  phone: z
-    .string()
-    .refine((v) => [10, 11].includes(digits(v).length), "Informe o telefone com DDD."),
   postal_code: z.string().refine((v) => digits(v).length === 8, "Informe um CEP válido."),
   street: z.string().trim().min(2, "Informe a rua."),
   number: z.string().trim().min(1, "Informe o número."),
@@ -43,7 +40,7 @@ export type FormStep = "dados" | "entrega";
 
 /** Campos validados ao sair de cada etapa. Pagar só tem a forma de pagamento e o aceite. */
 export const STEP_FIELDS = {
-  dados: ["email", "name", "cpf", "phone"],
+  dados: ["email", "name", "cpf"],
   entrega: ["postal_code", "street", "number", "complement", "neighborhood", "city", "state"],
 } as const satisfies Record<FormStep, readonly (keyof CheckoutValues)[]>;
 

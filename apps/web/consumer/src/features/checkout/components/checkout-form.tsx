@@ -8,7 +8,7 @@ import { Button } from "@kubo/ui/button";
 import { Callout } from "@kubo/ui/callout";
 import { EmptyState } from "@kubo/ui/empty-state";
 import { Form } from "@kubo/ui/form";
-import { formatBRL, formatCep, formatPhone } from "@kubo/ui/lib/format";
+import { formatBRL, formatCep } from "@kubo/ui/lib/format";
 import { Skeleton } from "@kubo/ui/skeleton";
 import { Steps } from "@kubo/ui/steps";
 import { useSession } from "@kubo/web-core/session";
@@ -76,7 +76,6 @@ export function CheckoutForm() {
       email: "",
       name: "",
       cpf: "",
-      phone: "",
       postal_code: "",
       street: "",
       number: "",
@@ -176,7 +175,6 @@ export function CheckoutForm() {
     const current = form.getValues();
     if (!current.email) form.setValue("email", user.email);
     if (!current.name && user.first_name) form.setValue("name", user.first_name);
-    if (!current.phone && user.phone) form.setValue("phone", formatPhone(user.phone));
   }, [user, form]);
 
   useEffect(() => {

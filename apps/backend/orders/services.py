@@ -245,9 +245,6 @@ def create_order(
     cpf = _digits(data["cpf"])
     if not _valid_cpf(cpf):
         raise GuardFailed("Informe um CPF válido.", code="invalid_cpf")
-    phone = _digits(data["phone"])
-    if len(phone) not in (10, 11):
-        raise GuardFailed("Informe um telefone com DDD.", code="invalid_phone")
     postal_code = shipping.normalize_postal_code(data["postal_code"])
     state = data["state"].strip().upper()
     if len(state) != 2:
@@ -279,7 +276,6 @@ def create_order(
                 customer_name=data["name"].strip(),
                 cpf_encrypted=encrypt(cpf),
                 cpf_last_digits=cpf[-2:],
-                phone=phone,
                 postal_code=postal_code,
                 street=address["street"],
                 address_number=address["number"],

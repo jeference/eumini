@@ -60,7 +60,6 @@ def test_validations(visitor_client):
     cases = [
         ({"cpf": "11111111111"}, "invalid_cpf"),
         ({"cpf": "52998224724"}, "invalid_cpf"),
-        ({"phone": "123"}, "invalid_phone"),
         ({"accept_terms": False}, "terms_required"),
         ({"postal_code": "02000-000"}, "shipping_quote_invalid"),
     ]
@@ -124,7 +123,7 @@ def test_tracking_link_shows_only_masked_data(visitor_client, anon):
     response = anon.get(f"/api/orders/track/{token}/")
     assert response.status_code == 200
     assert response.data["number"] == order["number"]
-    for private in ("customer_email", "cpf_masked", "phone", "street", "charge"):
+    for private in ("customer_email", "cpf_masked", "street", "charge"):
         assert private not in response.data
     assert anon.get("/api/orders/track/invalido/").status_code == 404
 

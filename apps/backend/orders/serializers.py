@@ -71,7 +71,6 @@ class OrderCreateSerializer(serializers.Serializer):
     email = serializers.EmailField()
     name = serializers.CharField(max_length=120)
     cpf = serializers.CharField(max_length=14)
-    phone = serializers.CharField(max_length=20)
     postal_code = serializers.CharField(max_length=9)
     street = serializers.CharField(max_length=160)
     number = serializers.CharField(max_length=20)
@@ -162,7 +161,6 @@ class OrderDetailSerializer(GlobalIdSerializer):
             "customer_email",
             "customer_name",
             "cpf_masked",
-            "phone",
             "postal_code",
             "street",
             "address_number",

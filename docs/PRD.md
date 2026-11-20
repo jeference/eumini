@@ -132,7 +132,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | 5 | **Comprar** | Vê a imagem e, ao lado, escolhe tamanho e quantidade. Pode **Editar** a imagem antes | Mostra os tamanhos e preços da categoria e informa que a peça pode diferir da imagem. Mantém a criação salva |
 | 6 | **Editar** (opcional) | Pede ajustes pelo chat, compara versões, cancela ou conclui | Gera uma nova versão a partir da escolhida e a reclassifica. A versão concluída passa a ser a imagem da compra |
 | 7 | **Carrinho** | Revê itens ou segue direto com **Comprar agora** | Mantém o carrinho entre visitas |
-| 8 | **Checkout** | Em 3 etapas, uma por vez: **Seus dados** (e-mail, nome, CPF, celular), **Entrega** (CEP, número e frete) e **Pagar** (forma de pagamento, sem nenhuma marcada, e aceite dos termos). O botão de ação (**Continuar**, e **Concluir pagamento** no Pagar) fica fixo no rodapé do celular e abaixo do resumo no desktop. Cada etapa mostra só o que é dela; para voltar, o cliente clica na etapa no indicador, inclusive na tela de pagamento | Preenche rua, bairro, cidade e UF pelo CEP, cota o frete e mostra o total sempre visível. Botões nunca ficam bloqueados: ao avançar, aponta o campo que falta |
+| 8 | **Checkout** | Em 3 etapas, uma por vez: **Seus dados** (e-mail, nome e CPF), **Entrega** (CEP, número e frete) e **Pagar** (forma de pagamento, sem nenhuma marcada, e aceite dos termos). O botão de ação (**Continuar**, e **Concluir pagamento** no Pagar) fica fixo no rodapé do celular e abaixo do resumo no desktop. Cada etapa mostra só o que é dela; para voltar, o cliente clica na etapa no indicador, inclusive na tela de pagamento | Preenche rua, bairro, cidade e UF pelo CEP, cota o frete e mostra o total sempre visível. Botões nunca ficam bloqueados: ao avançar, aponta o campo que falta |
 | 9 | **Pagamento** | Com Pix escolhido, **Concluir pagamento** cria o pedido e abre um modal com o QR Code e o copia e cola; **Voltar** fecha e volta ao Pagar, reabrindo o mesmo PIX. Cartão de crédito aparece como "Em breve", sem funcionar | Mostra o valor e o prazo de 30 minutos e aguarda a confirmação. No computador, QR Code com o passo a passo ao lado; no celular, só o copia e cola. Confirmado o pagamento, leva à página do pedido |
 | 10 | **Pedido confirmado** | Vê o número e o prazo | Envia e-mail com link de acompanhamento |
 | 11 | **Acompanhar** | Consulta o status e o rastreio | Mostra Confirmado → Em produção → Enviado → Entregue |
@@ -201,7 +201,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RF-COM-02 | Mostrar o preço por categoria e tamanho e o total em reais | P0 |
 | RF-COM-04 | Adicionar ao carrinho ou seguir direto com Comprar agora | P0 |
 | RF-COM-05 | Manter o carrinho da sessão ou da conta | P0 |
-| RF-COM-06 | Finalizar sem conta, informando e-mail, nome, CPF, telefone e endereço | P0 |
+| RF-COM-06 | Finalizar sem conta, informando e-mail, nome, CPF e endereço | P0 |
 | RF-COM-07 | Cotar o frete por CEP, com valor e prazo por serviço | P0 |
 | RF-COM-08 | Somar ao prazo de entrega o prazo de produção da Kubo | P0 |
 | RF-COM-09 | Pagar com PIX, com QR Code, copia e cola e prazo visível | P0 |

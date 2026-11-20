@@ -39,7 +39,6 @@ def order_payload(item_ids, quote_id, **overrides):
         "email": "comprador@exemplo.com",
         "name": "Ana Souza",
         "cpf": CPF_OK,
-        "phone": "11999998888",
         "postal_code": "01310-100",
         "street": "Av. Paulista",
         "number": "1000",

@@ -803,7 +803,6 @@ export interface components {
             email: string;
             name: string;
             cpf: string;
-            phone: string;
             postal_code: string;
             street: string;
             number: string;
@@ -823,7 +822,6 @@ export interface components {
             readonly customer_email: string;
             readonly customer_name: string;
             readonly cpf_masked: string;
-            readonly phone: string;
             readonly postal_code: string;
             readonly street: string;
             readonly address_number: string;

@@ -100,7 +100,6 @@ class Order(BaseModel):
     customer_name = models.CharField(max_length=120)
     cpf_encrypted = models.TextField()
     cpf_last_digits = models.CharField(max_length=2)
-    phone = models.CharField(max_length=20)
 
     postal_code = models.CharField(max_length=8)
     street = models.CharField(max_length=160)
