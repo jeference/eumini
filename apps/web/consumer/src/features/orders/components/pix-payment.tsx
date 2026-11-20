@@ -75,9 +75,6 @@ export function PixPayment({ charge }: { charge: Schemas["Charge"] }) {
 
   return (
     <div className="space-y-3">
-      <p className="font-display text-3xl font-semibold tabular-nums">
-        {formatBRL(charge.amount_cents)}
-      </p>
       <Card className="space-y-5 p-5 sm:p-6">
         <p className="text-sm text-muted">
           {remaining > 0 ? (
@@ -120,6 +117,9 @@ export function PixPayment({ charge }: { charge: Schemas["Charge"] }) {
           </div>
         </div>
       </Card>
+      <p className="font-display text-3xl font-semibold tabular-nums">
+        {formatBRL(charge.amount_cents)}
+      </p>
     </div>
   );
 }
