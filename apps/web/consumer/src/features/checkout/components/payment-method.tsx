@@ -9,11 +9,23 @@ import type { ReactNode } from "react";
 
 import { STEP_HEADING_ID } from "@/features/checkout/components/checkout-step";
 
-function MethodLabel({ icon: Icon, title }: { icon: LucideIcon; title: string }) {
+/** Nome da forma de pagamento. `note` vai numa linha pequena embaixo (cabe lado a lado no celular). */
+function MethodLabel({
+  icon: Icon,
+  title,
+  note,
+}: {
+  icon: LucideIcon;
+  title: string;
+  note?: string;
+}) {
   return (
     <span className="flex items-center gap-2.5">
-      <Icon aria-hidden className="size-5 text-accent" />
-      <span className="text-sm font-semibold">{title}</span>
+      <Icon aria-hidden className="size-5 shrink-0 text-accent" />
+      <span>
+        <span className="block text-sm font-semibold">{title}</span>
+        {note && <span className="block text-[11px] font-semibold text-muted">{note}</span>}
+      </span>
     </span>
   );
 }
@@ -43,20 +55,26 @@ export function PaymentMethodPicker({
         >
           Forma de pagamento
         </h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <RadioCard name="payment_method" size="sm" checked={pixChosen} onSelect={onChoosePix}>
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <RadioCard
+            name="payment_method"
+            size="sm"
+            indicator={false}
+            checked={pixChosen}
+            onSelect={onChoosePix}
+          >
             <MethodLabel icon={QrCode} title="Pix" />
           </RadioCard>
           {/* Ainda não aceito: aparece para o cliente saber que vem aí. */}
           <RadioCard
             name="payment_method"
             size="sm"
+            indicator={false}
             checked={false}
             onSelect={() => undefined}
             disabled
-            aside={<span className="text-xs font-semibold text-muted">Em breve</span>}
           >
-            <MethodLabel icon={CreditCard} title="Cartão de crédito" />
+            <MethodLabel icon={CreditCard} title="Crédito" note="Em breve" />
           </RadioCard>
         </div>
         {error && (
