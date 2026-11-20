@@ -4,8 +4,6 @@ import type { Schemas } from "@kubo/api-client";
 import { Card } from "@kubo/ui/card";
 import { formatBRL } from "@kubo/ui/lib/format";
 import { cn } from "@kubo/ui/lib/utils";
-import { ChevronDown } from "lucide-react";
-import { useState } from "react";
 
 import { categoryLabel } from "@/features/catalog/categories";
 
@@ -59,47 +57,13 @@ function SummaryLines({ items, subtotal, shippingCents }: SummaryProps) {
   );
 }
 
-/** Celular: barra com o total, que abre a lista de itens. */
-export function CheckoutSummaryBar(props: SummaryProps) {
-  const [open, setOpen] = useState(false);
-  const total = props.subtotal + (props.shippingCents ?? 0);
-  const count = props.items.reduce((sum, item) => sum + item.quantity, 0);
-
+/**
+ * Resumo do pedido, sempre aberto. No desktop fica ao lado das etapas; no celular, só
+ * na etapa Pagamento (`className` decide onde aparece).
+ */
+export function CheckoutSummary({ className, ...props }: SummaryProps & { className?: string }) {
   return (
-    <Card className="overflow-hidden lg:hidden">
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-controls="resumo-celular"
-        onClick={() => setOpen((value) => !value)}
-        className="flex w-full items-center gap-2 px-5 py-4 text-left focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent"
-      >
-        <span className="flex-1 text-sm font-semibold">
-          Resumo do pedido
-          <span className="font-normal text-muted">
-            {" "}
-            · {count} {count === 1 ? "item" : "itens"}
-          </span>
-        </span>
-        <span className="font-semibold tabular-nums">{formatBRL(total)}</span>
-        <ChevronDown
-          aria-hidden
-          className={cn("size-4 text-muted transition-transform", open && "rotate-180")}
-        />
-      </button>
-      {open && (
-        <div id="resumo-celular" className="space-y-4 border-t border-line p-5">
-          <SummaryLines {...props} />
-        </div>
-      )}
-    </Card>
-  );
-}
-
-/** Desktop: painel fixo ao lado das etapas. */
-export function CheckoutSummaryPanel(props: SummaryProps) {
-  return (
-    <Card asChild className="space-y-4 p-5 max-lg:hidden">
+    <Card asChild className={cn("space-y-4 p-5", className)}>
       <aside aria-label="Resumo do pedido">
         <h2 className="font-display text-lg font-semibold">Resumo</h2>
         <SummaryLines {...props} />

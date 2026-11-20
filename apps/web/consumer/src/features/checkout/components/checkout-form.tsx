@@ -26,10 +26,7 @@ import {
   CheckoutStep,
   STEP_HEADING_ID,
 } from "@/features/checkout/components/checkout-step";
-import {
-  CheckoutSummaryBar,
-  CheckoutSummaryPanel,
-} from "@/features/checkout/components/checkout-summary";
+import { CheckoutSummary } from "@/features/checkout/components/checkout-summary";
 import { ContactStep } from "@/features/checkout/components/contact-step";
 import { DeliveryStep } from "@/features/checkout/components/delivery-step";
 
@@ -443,7 +440,6 @@ export function CheckoutForm() {
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
         <div className="space-y-4">
-          <CheckoutSummaryBar items={items} subtotal={subtotal} shippingCents={shippingCents} />
           <Form {...form}>
             <form
               id={CHECKOUT_FORM_ID}
@@ -503,9 +499,23 @@ export function CheckoutForm() {
               )}
             </form>
           </Form>
+          {/* Celular: o resumo só aparece no Pagamento, perto do botão de concluir. */}
+          {step === "pagar" && (
+            <CheckoutSummary
+              className="lg:hidden"
+              items={items}
+              subtotal={subtotal}
+              shippingCents={shippingCents}
+            />
+          )}
         </div>
         <div className="h-fit space-y-4 lg:sticky lg:top-6">
-          <CheckoutSummaryPanel items={items} subtotal={subtotal} shippingCents={shippingCents} />
+          <CheckoutSummary
+            className="max-lg:hidden"
+            items={items}
+            subtotal={subtotal}
+            shippingCents={shippingCents}
+          />
           <CheckoutAction finish={step === "pagar"} pending={placeOrder.isPending} />
         </div>
       </div>
