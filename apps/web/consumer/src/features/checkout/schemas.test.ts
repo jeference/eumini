@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { checkoutSchema, isValidCpf } from "./schemas";
+import {
+  checkoutSchema,
+  firstIncompleteStep,
+  isValidCpf,
+  STEP_FIELDS,
+  stepOfField,
+} from "./schemas";
 
 const VALID = {
   email: "ana@exemplo.com",
@@ -29,5 +35,25 @@ describe("checkout", () => {
     expect(checkoutSchema.safeParse({ ...VALID, phone: "123" }).success).toBe(false);
     expect(checkoutSchema.safeParse({ ...VALID, state: "São Paulo" }).success).toBe(false);
     expect(checkoutSchema.safeParse({ ...VALID, postal_code: "123" }).success).toBe(false);
+  });
+});
+
+describe("etapas do checkout", () => {
+  it("cobre todos os campos do formulário, sem repetir", () => {
+    const fields = [...STEP_FIELDS.dados, ...STEP_FIELDS.entrega].sort();
+    expect(fields).toEqual(Object.keys(checkoutSchema.shape).sort());
+  });
+
+  it("acha a etapa dona de cada campo", () => {
+    expect(stepOfField("cpf")).toBe("dados");
+    expect(stepOfField("number")).toBe("entrega");
+    expect(stepOfField("accept_terms")).toBeNull();
+  });
+
+  it("começa na primeira etapa incompleta", () => {
+    expect(firstIncompleteStep({ ...VALID, cpf: "" })).toBe("dados");
+    expect(firstIncompleteStep({ ...VALID, cpf: "", number: "" })).toBe("dados");
+    expect(firstIncompleteStep({ ...VALID, number: "" })).toBe("entrega");
+    expect(firstIncompleteStep(VALID)).toBe("pagamento");
   });
 });

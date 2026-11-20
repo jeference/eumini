@@ -132,8 +132,8 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | 5 | **Comprar** | Vê a imagem e, ao lado, escolhe tamanho e quantidade. Pode **Editar** a imagem antes | Mostra os tamanhos e preços da categoria e informa que a peça pode diferir da imagem. Mantém a criação salva |
 | 6 | **Editar** (opcional) | Pede ajustes pelo chat, compara versões, cancela ou conclui | Gera uma nova versão a partir da escolhida e a reclassifica. A versão concluída passa a ser a imagem da compra |
 | 7 | **Carrinho** | Revê itens ou segue direto com **Comprar agora** | Mantém o carrinho entre visitas |
-| 8 | **Checkout** | Informa e-mail, nome, CPF, telefone e endereço. Escolhe o frete | Preenche o endereço pelo CEP (P1), cota o frete e mostra o total |
-| 9 | **Pagamento** | Paga o PIX por QR Code ou copia e cola | Mostra o prazo de 30 minutos e aguarda a confirmação |
+| 8 | **Checkout** | Em 3 etapas, uma por vez: **Seus dados** (e-mail, nome, CPF, celular), **Entrega** (CEP, número e frete) e **Pagamento** (aceite dos termos e gerar o PIX). Etapas feitas viram resumo com "Alterar" | Preenche rua, bairro, cidade e UF pelo CEP, cota o frete e mostra o total sempre visível. Botões nunca ficam bloqueados: ao avançar, aponta o campo que falta |
+| 9 | **Pagamento** | Paga o PIX por QR Code ou copia e cola | Mostra o valor e o prazo de 30 minutos e aguarda a confirmação. No celular o copia e cola vem primeiro; no computador, o QR Code |
 | 10 | **Pedido confirmado** | Vê o número e o prazo | Envia e-mail com link de acompanhamento |
 | 11 | **Acompanhar** | Consulta o status e o rastreio | Mostra Confirmado → Em produção → Enviado → Entregue |
 
@@ -343,7 +343,7 @@ A retenção de arquivos tem prazos próprios, porque fotos e rostos são dados 
 
 | Grupo | Métrica |
 |---|---|
-| **Funil** | Foto enviada → foto aceita → 2D gerado → tamanho escolhido → item no carrinho → checkout iniciado → PIX gerado → pago, por categoria |
+| **Funil** | Foto enviada → foto aceita → 2D gerado → tamanho escolhido → item no carrinho → checkout iniciado → dados concluídos → entrega concluída → PIX gerado → pago, por categoria |
 | **Classificação** | Recusas por motivo; categoria pedida × detectada; versões que mudaram de categoria na edição; inscrições na lista de espera por categoria |
 | **Custo** | Custo de IA por criação e por venda; custo total por dia |
 | **Confiabilidade** | Taxa de falha e de recusa por etapa; tarefas presas |

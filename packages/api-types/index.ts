@@ -782,6 +782,7 @@ export interface components {
          * @description * `buy_now_clicked` - buy_now_clicked
          *     * `category_selected` - category_selected
          *     * `checkout_started` - checkout_started
+         *     * `checkout_step_completed` - checkout_step_completed
          *     * `edit_requested` - edit_requested
          *     * `item_added_to_cart` - item_added_to_cart
          *     * `page_viewed` - page_viewed
@@ -793,7 +794,7 @@ export interface components {
          *     * `waitlist_joined` - waitlist_joined
          * @enum {string}
          */
-        NameEnum: "buy_now_clicked" | "category_selected" | "checkout_started" | "edit_requested" | "item_added_to_cart" | "page_viewed" | "pix_copied" | "pix_generated" | "prompt_submitted" | "shipping_quoted" | "size_selected" | "waitlist_joined";
+        NameEnum: "buy_now_clicked" | "category_selected" | "checkout_started" | "checkout_step_completed" | "edit_requested" | "item_added_to_cart" | "page_viewed" | "pix_copied" | "pix_generated" | "prompt_submitted" | "shipping_quoted" | "size_selected" | "waitlist_joined";
         OrderCreateRequest: {
             item_ids: string[];
             /** Format: uuid */

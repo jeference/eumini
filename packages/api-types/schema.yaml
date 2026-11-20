@@ -1383,6 +1383,7 @@ components:
       - buy_now_clicked
       - category_selected
       - checkout_started
+      - checkout_step_completed
       - edit_requested
       - item_added_to_cart
       - page_viewed
@@ -1397,6 +1398,7 @@ components:
         * `buy_now_clicked` - buy_now_clicked
         * `category_selected` - category_selected
         * `checkout_started` - checkout_started
+        * `checkout_step_completed` - checkout_step_completed
         * `edit_requested` - edit_requested
         * `item_added_to_cart` - item_added_to_cart
         * `page_viewed` - page_viewed

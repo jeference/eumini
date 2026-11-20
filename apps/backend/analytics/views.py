@@ -18,6 +18,7 @@ ALLOWED_EVENTS = {
     "item_added_to_cart",
     "buy_now_clicked",
     "checkout_started",
+    "checkout_step_completed",
     "shipping_quoted",
     "pix_generated",
     "pix_copied",

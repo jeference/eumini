@@ -5,17 +5,13 @@ import { track } from "@kubo/analytics";
 import { ApiError, type Schemas, unwrap } from "@kubo/api-client";
 import { qk, useApiClient } from "@kubo/api-client/react";
 import { Button } from "@kubo/ui/button";
-import { Callout } from "@kubo/ui/callout";
-import { Card } from "@kubo/ui/card";
-import { Checkbox } from "@kubo/ui/checkbox";
 import { EmptyState } from "@kubo/ui/empty-state";
-import { Form, TextField } from "@kubo/ui/form";
-import { formatBRL, formatCep, formatCpf, formatPhone } from "@kubo/ui/lib/format";
-import { RadioCard } from "@kubo/ui/radio-card";
+import { Form } from "@kubo/ui/form";
+import { formatBRL, formatCep, formatPhone } from "@kubo/ui/lib/format";
 import { Skeleton } from "@kubo/ui/skeleton";
+import { Steps } from "@kubo/ui/steps";
 import { useSession } from "@kubo/web-core/session";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Lock } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -23,11 +19,37 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { useCart } from "@/features/cart/hooks";
-import { categoryLabel } from "@/features/catalog/categories";
-import { type CheckoutValues, checkoutSchema } from "@/features/checkout/schemas";
+import { CheckoutStep, type StepState } from "@/features/checkout/components/checkout-step";
+import {
+  CheckoutSummaryBar,
+  CheckoutSummaryPanel,
+} from "@/features/checkout/components/checkout-summary";
+import { ContactStep, ContactSummary } from "@/features/checkout/components/contact-step";
+import { DeliveryStep, DeliverySummary } from "@/features/checkout/components/delivery-step";
+import { PaymentStep } from "@/features/checkout/components/payment-step";
+import {
+  type CheckoutValues,
+  checkoutSchema,
+  firstIncompleteStep,
+  STEP_FIELDS,
+  type Step,
+  STEPS,
+  stepOfField,
+} from "@/features/checkout/schemas";
 import { messageOf } from "@/lib/errors";
 
 type Quote = Schemas["ShippingQuote"];
+
+const STEP_LABELS: Record<Step, string> = {
+  dados: "Seus dados",
+  entrega: "Entrega",
+  pagamento: "Pagamento",
+};
+const STEP_ITEMS = STEPS.map((id) => ({ id, label: STEP_LABELS[id] }));
+const ADDRESS_FIELDS = ["street", "neighborhood", "city", "state"] as const;
+
+const indexOf = (step: Step) => STEPS.indexOf(step);
+const isStep = (value: string | null): value is Step => STEPS.includes(value as Step);
 
 export function CheckoutForm() {
   const api = useApiClient();
@@ -40,6 +62,7 @@ export function CheckoutForm() {
 
   const form = useForm<CheckoutValues>({
     resolver: zodResolver(checkoutSchema),
+    mode: "onTouched",
     defaultValues: {
       email: "",
       name: "",
@@ -59,9 +82,22 @@ export function CheckoutForm() {
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [selectedQuoteId, setSelectedQuoteId] = useState<string | null>(null);
   const [shippingNotice, setShippingNotice] = useState<string | null>(null);
+  const [shippingError, setShippingError] = useState<string | null>(null);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [termsError, setTermsError] = useState(false);
+  const [lookupPending, setLookupPending] = useState(false);
+  const [editingAddress, setEditingAddress] = useState(false);
+  // CEP a que rua, bairro, cidade e UF pertencem: evita buscar de novo o que já veio salvo.
+  const addressCep = useRef<string | null>(null);
   // A mesma chave em toda tentativa: um clique duplo nunca cria dois pedidos.
   const idempotencyKey = useRef(crypto.randomUUID());
+
+  // A etapa mora na URL para o voltar do navegador voltar uma etapa. Nunca passa da
+  // mais avançada já liberada (recarregar a página recomeça do início).
+  const [reached, setReached] = useState<Step>("dados");
+  const requested = params.get("etapa");
+  const wanted: Step = isStep(requested) ? requested : "dados";
+  const step: Step = indexOf(wanted) <= indexOf(reached) ? wanted : reached;
 
   const items = (cart?.items ?? []).filter(
     (item) => !item.unavailable_reason && (!onlyItem || item.id === onlyItem),
@@ -70,6 +106,25 @@ export function CheckoutForm() {
   const itemKey = itemIds.join(",");
   const subtotal = items.reduce((total, item) => total + item.line_total_cents, 0);
   const selectedQuote = quotes.find((quote) => quote.id === selectedQuoteId) ?? null;
+
+  function stepUrl(next: Step) {
+    const search = new URLSearchParams(params.toString());
+    if (next === "dados") search.delete("etapa");
+    else search.set("etapa", next);
+    const query = search.toString();
+    return query ? `/checkout?${query}` : "/checkout";
+  }
+
+  function goTo(next: Step) {
+    router.push(stepUrl(next), { scroll: false });
+  }
+
+  // URL pedindo uma etapa ainda não liberada: corrige sem criar entrada no histórico.
+  useEffect(() => {
+    if (wanted !== step) router.replace(stepUrl(step), { scroll: false });
+    // stepUrl muda a cada render; o que importa é a etapa.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wanted, step]);
 
   const { data: addresses } = useQuery({
     queryKey: qk.addresses(),
@@ -89,6 +144,7 @@ export function CheckoutForm() {
   useEffect(() => {
     const saved = addresses?.[0];
     if (!saved || form.getValues("postal_code")) return;
+    addressCep.current = saved.postal_code.replace(/\D/g, "");
     form.reset({
       ...form.getValues(),
       postal_code: formatCep(saved.postal_code),
@@ -131,29 +187,45 @@ export function CheckoutForm() {
   });
   const quoteMutate = quote.mutate;
 
-  // CEP completo: busca o endereço e cota o frete.
+  // CEP completo: cota o frete e, se o endereço ainda não é desse CEP, busca o endereço.
   useEffect(() => {
     setShippingNotice(null);
+    setShippingError(null);
     if (cepDigits.length !== 8 || !itemKey) {
       setQuotes([]);
       setSelectedQuoteId(null);
       setQuoteError(null);
+      setLookupPending(false);
       return;
     }
     quoteMutate({ postalCode: cepDigits, itemIds: itemKey.split(",") });
+    if (addressCep.current === cepDigits) return;
+
+    let cancelled = false;
+    setLookupPending(true);
     void (async () => {
-      const { data } = await api.GET("/api/shipping/address/{postal_code}/", {
-        params: { path: { postal_code: cepDigits } },
-      });
-      if (!data) return;
-      const current = form.getValues();
-      if (data.street && !current.street) form.setValue("street", data.street);
-      if (data.neighborhood && !current.neighborhood) {
-        form.setValue("neighborhood", data.neighborhood);
+      let data: Schemas["AddressLookup"] | undefined;
+      try {
+        ({ data } = await api.GET("/api/shipping/address/{postal_code}/", {
+          params: { path: { postal_code: cepDigits } },
+        }));
+      } catch {
+        data = undefined;
       }
-      if (data.city && !current.city) form.setValue("city", data.city);
-      if (data.state && !current.state) form.setValue("state", data.state);
+      if (cancelled) return;
+      // Endereço de outro CEP não serve: troca tudo, e o que faltar o cliente digita.
+      addressCep.current = cepDigits;
+      form.setValue("street", data?.street || "");
+      form.setValue("neighborhood", data?.neighborhood || "");
+      form.setValue("city", data?.city || "");
+      form.setValue("state", data?.state || "");
+      form.clearErrors([...ADDRESS_FIELDS]);
+      setEditingAddress(false);
+      setLookupPending(false);
     })();
+    return () => {
+      cancelled = true;
+    };
   }, [cepDigits, itemKey, api, form, quoteMutate]);
 
   const placeOrder = useMutation({
@@ -208,13 +280,61 @@ export function CheckoutForm() {
         return;
       }
       if (error instanceof ApiError && error.fieldErrors) {
+        // Leva o cliente à primeira etapa com campo recusado.
+        let target: Step | null = null;
         for (const [field, messages] of Object.entries(error.fieldErrors)) {
           form.setError(field as keyof CheckoutValues, { message: messages[0] });
+          const owner = stepOfField(field);
+          if (owner && (!target || indexOf(owner) < indexOf(target))) target = owner;
+          if ((ADDRESS_FIELDS as readonly string[]).includes(field)) setEditingAddress(true);
         }
+        if (target) goTo(target);
       }
       toast.error(messageOf(error));
     },
   });
+
+  function complete(done: Exclude<Step, "pagamento">, next: Step) {
+    track("checkout_step_completed", { step: done });
+    if (indexOf(next) > indexOf(reached)) setReached(next);
+    goTo(next);
+  }
+
+  async function advance() {
+    if (step === "dados") {
+      if (await form.trigger([...STEP_FIELDS.dados], { shouldFocus: true })) {
+        complete("dados", "entrega");
+      }
+      return;
+    }
+    if (cepDigits.length !== 8 || lookupPending) {
+      await form.trigger("postal_code", { shouldFocus: true });
+      return;
+    }
+    if (!(await form.trigger([...STEP_FIELDS.entrega], { shouldFocus: true }))) return;
+    if (!selectedQuote) {
+      setShippingError(
+        quote.isPending ? "Aguarde o cálculo do frete." : "Escolha uma opção de frete.",
+      );
+      return;
+    }
+    complete("entrega", "pagamento");
+  }
+
+  function pay() {
+    if (!selectedQuote) {
+      goTo("entrega");
+      return;
+    }
+    if (!acceptTerms) {
+      setTermsError(true);
+      return;
+    }
+    void form.handleSubmit(
+      (values) => placeOrder.mutate(values),
+      () => goTo(firstIncompleteStep(form.getValues())),
+    )();
+  }
 
   if (isLoading || !cart) {
     return (
@@ -240,7 +360,11 @@ export function CheckoutForm() {
     );
   }
 
-  const canSubmit = Boolean(selectedQuote) && acceptTerms && !quote.isPending;
+  const stateOf = (id: Step): StepState =>
+    id === step ? "open" : indexOf(id) < indexOf(step) ? "done" : "todo";
+  const values = form.getValues();
+  const shippingCents = selectedQuote?.price_cents ?? null;
+  const next = onlyItem ? `/checkout?item=${onlyItem}` : "/checkout";
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -248,199 +372,78 @@ export function CheckoutForm() {
       {!user && (
         <p className="mt-2 text-sm text-muted">
           Não precisa de conta: enviamos o acompanhamento para o seu e-mail.{" "}
-          <Link href="/entrar?next=/checkout" className="text-accent underline">
+          <Link href={`/entrar?next=${encodeURIComponent(next)}`} className="text-accent underline">
             Já tenho conta
           </Link>
         </p>
       )}
 
-      <Form {...form}>
-        <form
-          noValidate
-          onSubmit={form.handleSubmit((values) => placeOrder.mutate(values))}
-          className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]"
-        >
-          <div className="space-y-8">
-            <fieldset className="space-y-4">
-              <legend className="font-display text-lg font-semibold">Seus dados</legend>
-              <TextField
-                control={form.control}
-                name="email"
-                label="E-mail"
-                type="email"
-                autoComplete="email"
-                hint="O link de acompanhamento vai para este e-mail."
-              />
-              <TextField
-                control={form.control}
-                name="name"
-                label="Nome completo"
-                autoComplete="name"
-              />
-              <div className="grid gap-4 sm:grid-cols-2">
-                <TextField
-                  control={form.control}
-                  name="cpf"
-                  label="CPF"
-                  inputMode="numeric"
-                  format={formatCpf}
-                  hint="Necessário para a nota fiscal e o envio."
-                />
-                <TextField
-                  control={form.control}
-                  name="phone"
-                  label="Telefone"
-                  type="tel"
-                  autoComplete="tel"
-                  format={formatPhone}
-                />
-              </div>
-            </fieldset>
+      <Steps steps={STEP_ITEMS} current={step} onSelect={goTo} className="mt-6 max-w-xl" />
 
-            <fieldset className="space-y-4">
-              <legend className="font-display text-lg font-semibold">Entrega</legend>
-              <TextField
-                control={form.control}
-                name="postal_code"
-                label="CEP"
-                inputMode="numeric"
-                autoComplete="postal-code"
-                format={formatCep}
-                className="sm:max-w-48"
-              />
-              <TextField
-                control={form.control}
-                name="street"
-                label="Rua"
-                autoComplete="address-line1"
-              />
-              <div className="grid gap-4 sm:grid-cols-[140px_minmax(0,1fr)]">
-                <TextField control={form.control} name="number" label="Número" />
-                <TextField
-                  control={form.control}
-                  name="complement"
-                  label="Complemento (opcional)"
-                />
-              </div>
-              <TextField control={form.control} name="neighborhood" label="Bairro" />
-              <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_100px]">
-                <TextField control={form.control} name="city" label="Cidade" />
-                <TextField control={form.control} name="state" label="UF" maxLength={2} />
-              </div>
-            </fieldset>
-
-            <fieldset className="space-y-3">
-              <legend className="font-display text-lg font-semibold">Frete</legend>
-              {cepDigits.length !== 8 && (
-                <p className="text-sm text-muted">Informe o CEP para ver as opções.</p>
-              )}
-              {quote.isPending && <Skeleton className="h-16 w-full" />}
-              {quoteError && (
-                <div className="flex flex-wrap items-center gap-3 text-sm text-danger" role="alert">
-                  {quoteError}
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => quoteMutate({ postalCode: cepDigits, itemIds })}
-                  >
-                    Tentar de novo
-                  </Button>
-                </div>
-              )}
-              {shippingNotice && (
-                <Callout tone="accent" role="alert">
-                  {shippingNotice}
-                </Callout>
-              )}
-              {!quote.isPending &&
-                quotes.map((option) => (
-                  <RadioCard
-                    key={option.id}
-                    name="shipping"
-                    checked={option.id === selectedQuoteId}
-                    onSelect={() => setSelectedQuoteId(option.id)}
-                    aside={formatBRL(option.price_cents)}
-                  >
-                    <span className="block text-sm font-semibold">
-                      {option.company} {option.service_name}
-                    </span>
-                    <span className="block text-xs text-muted">
-                      Até {option.delivery_days} dias úteis, com a produção
-                    </span>
-                  </RadioCard>
-                ))}
-            </fieldset>
-          </div>
-
-          <Card asChild className="h-fit space-y-4 p-5 lg:sticky lg:top-6">
-            <aside>
-              <h2 className="font-display text-lg font-semibold">Resumo</h2>
-              <ul className="space-y-3">
-                {items.map((item) => (
-                  <li key={item.id} className="flex items-center gap-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- imagem dinâmica */}
-                    <img
-                      src={item.image_url}
-                      alt=""
-                      className="size-14 rounded-xl bg-sunken object-contain"
-                    />
-                    <span className="min-w-0 flex-1 text-sm">
-                      {item.category ? `${categoryLabel(item.category)} · ` : ""}
-                      {item.size_label}
-                      <span className="block text-muted">Quantidade: {item.quantity}</span>
-                    </span>
-                    <span className="text-sm tabular-nums">{formatBRL(item.line_total_cents)}</span>
-                  </li>
-                ))}
-              </ul>
-              <dl className="space-y-1.5 border-t border-line pt-3 text-sm">
-                <div className="flex justify-between">
-                  <dt className="text-muted">Subtotal</dt>
-                  <dd className="tabular-nums">{formatBRL(subtotal)}</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-muted">Frete</dt>
-                  <dd className="tabular-nums">
-                    {selectedQuote ? formatBRL(selectedQuote.price_cents) : "—"}
-                  </dd>
-                </div>
-                <div className="flex justify-between pt-1.5 text-lg font-semibold">
-                  <dt>Total</dt>
-                  <dd className="tabular-nums" data-testid="total">
-                    {formatBRL(subtotal + (selectedQuote?.price_cents ?? 0))}
-                  </dd>
-                </div>
-              </dl>
-              <Checkbox
-                checked={acceptTerms}
-                onChange={(event) => setAcceptTerms(event.target.checked)}
+      <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
+        <div className="space-y-4">
+          <CheckoutSummaryBar items={items} subtotal={subtotal} shippingCents={shippingCents} />
+          <Form {...form}>
+            <form
+              noValidate
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (step === "pagamento") pay();
+                else void advance();
+              }}
+              className="space-y-4"
+            >
+              <CheckoutStep
+                number={1}
+                title={STEP_LABELS.dados}
+                state={stateOf("dados")}
+                summary={<ContactSummary values={values} />}
+                onEdit={() => goTo("dados")}
               >
-                Li e aceito os{" "}
-                <Link href="/termos" target="_blank" className="underline">
-                  Termos de Uso
-                </Link>{" "}
-                e a{" "}
-                <Link href="/trocas" target="_blank" className="underline">
-                  Política de Trocas
-                </Link>
-                . Sei que a peça impressa pode ter diferenças de cor e detalhe em relação à prévia.
-              </Checkbox>
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                className="w-full"
-                disabled={!canSubmit}
-                pending={placeOrder.isPending}
+                <ContactStep />
+              </CheckoutStep>
+              <CheckoutStep
+                number={2}
+                title={STEP_LABELS.entrega}
+                state={stateOf("entrega")}
+                summary={<DeliverySummary values={values} quote={selectedQuote} />}
+                onEdit={() => goTo("entrega")}
               >
-                <Lock aria-hidden />
-                Pagar com PIX
-              </Button>
-            </aside>
-          </Card>
-        </form>
-      </Form>
+                <DeliveryStep
+                  cepComplete={cepDigits.length === 8}
+                  lookupPending={lookupPending}
+                  editingAddress={editingAddress}
+                  onEditAddress={() => setEditingAddress(true)}
+                  quotes={quotes}
+                  quotePending={quote.isPending}
+                  quoteError={quoteError}
+                  onRetryQuote={() => quoteMutate({ postalCode: cepDigits, itemIds })}
+                  selectedQuoteId={selectedQuoteId}
+                  onSelectQuote={(id) => {
+                    setSelectedQuoteId(id);
+                    setShippingError(null);
+                  }}
+                  shippingError={shippingError}
+                />
+              </CheckoutStep>
+              <CheckoutStep number={3} title={STEP_LABELS.pagamento} state={stateOf("pagamento")}>
+                <PaymentStep
+                  totalCents={subtotal + (shippingCents ?? 0)}
+                  acceptTerms={acceptTerms}
+                  onAcceptTerms={(checked) => {
+                    setAcceptTerms(checked);
+                    if (checked) setTermsError(false);
+                  }}
+                  termsError={termsError}
+                  shippingNotice={shippingNotice}
+                  pending={placeOrder.isPending}
+                />
+              </CheckoutStep>
+            </form>
+          </Form>
+        </div>
+        <CheckoutSummaryPanel items={items} subtotal={subtotal} shippingCents={shippingCents} />
+      </div>
     </div>
   );
 }
