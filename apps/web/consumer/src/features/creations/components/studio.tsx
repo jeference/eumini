@@ -78,20 +78,21 @@ function StudioContent({ creation }: { creation: Creation }) {
   return (
     <div>
       {/* A primeira coluna é exatamente a imagem: a distância até o painel é sempre a mesma. */}
-      <div className="grid gap-y-6 lg:grid-cols-[min(900px,42vw,max(400px,calc(100dvh-10rem)))_minmax(0,675px)] lg:justify-center lg:gap-x-[min(4vw,72px)]">
-        {!isWorking && (
-          <Button
-            variant="secondary"
-            size="icon"
-            aria-label="Voltar e começar outra criação"
-            className="-mb-3 justify-self-start lg:col-span-2"
-            onClick={() => router.push("/")}
-          >
-            <ArrowLeft />
-          </Button>
-        )}
-
+      {/* No desktop, o recuo à esquerda reserva o lugar da seta de voltar, ao lado da imagem. */}
+      <div className="grid gap-y-6 lg:grid-cols-[min(900px,42vw,max(400px,calc(100dvh-10rem)))_minmax(0,675px)] lg:justify-center lg:gap-x-[min(4vw,72px)] lg:pl-14">
         <section className="relative mx-auto w-full min-w-0 max-w-[560px] lg:max-w-none">
+          {!isWorking && (
+            <Button
+              variant="secondary"
+              size="icon"
+              aria-label="Voltar e começar outra criação"
+              className="mb-3 lg:absolute lg:right-full lg:top-0 lg:mb-0 lg:mr-4"
+              onClick={() => router.push("/")}
+            >
+              <ArrowLeft />
+            </Button>
+          )}
+
           <Card className="relative aspect-square w-full overflow-hidden">
             {isReady && image && (
               <Button
