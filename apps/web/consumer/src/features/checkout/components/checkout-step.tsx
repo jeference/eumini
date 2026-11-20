@@ -1,21 +1,37 @@
 import { Button } from "@kubo/ui/button";
 import { Card } from "@kubo/ui/card";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Lock } from "lucide-react";
 import type { ReactNode } from "react";
 
-/** Avança para a próxima etapa: à direita, como o sentido do fluxo. */
-export function ContinueButton({ pending = false }: { pending?: boolean }) {
+/** Id do formulário do checkout: o botão de ação fica fora dele, junto do resumo. */
+export const CHECKOUT_FORM_ID = "checkout-form";
+
+/**
+ * Ação da etapa: "Continuar" nas etapas de dados e entrega, "Concluir pagamento" no Pagar.
+ * Fixo no rodapé do celular; no desktop, logo abaixo do resumo do pedido.
+ */
+export function CheckoutAction({ finish, pending }: { finish: boolean; pending: boolean }) {
   return (
-    <div className="flex justify-end">
+    <div className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] lg:static lg:border-0 lg:bg-transparent lg:p-0">
       <Button
         type="submit"
+        form={CHECKOUT_FORM_ID}
         variant="primary"
         size="lg"
-        className="w-full sm:w-auto"
+        className="w-full"
         pending={pending}
       >
-        Continuar
-        <ArrowRight aria-hidden />
+        {finish ? (
+          <>
+            <Lock aria-hidden />
+            Concluir pagamento
+          </>
+        ) : (
+          <>
+            Continuar
+            <ArrowRight aria-hidden />
+          </>
+        )}
       </Button>
     </div>
   );

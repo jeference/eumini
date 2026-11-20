@@ -54,6 +54,6 @@ describe("etapas do checkout", () => {
     expect(firstIncompleteStep({ ...VALID, cpf: "" })).toBe("dados");
     expect(firstIncompleteStep({ ...VALID, cpf: "", number: "" })).toBe("dados");
     expect(firstIncompleteStep({ ...VALID, number: "" })).toBe("entrega");
-    expect(firstIncompleteStep(VALID)).toBe("revisar");
+    expect(firstIncompleteStep(VALID)).toBe("pagar");
   });
 });

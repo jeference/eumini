@@ -52,7 +52,14 @@ function StepList({ steps, className }: { steps: string[]; className?: string })
  * Pagamento do PIX. No computador, QR Code à esquerda e passo a passo à direita.
  * No celular (toque), nada de QR: só o passo a passo do copia e cola.
  */
-export function PixPayment({ charge }: { charge: Schemas["Charge"] }) {
+export function PixPayment({
+  charge,
+  bare = false,
+}: {
+  charge: Schemas["Charge"];
+  /** Sem moldura de cartão: para dentro de um modal. */
+  bare?: boolean;
+}) {
   const remaining = useCountdown(charge.expires_at);
   const [copied, setCopied] = useState(false);
   // O código só aparece por extenso se o navegador não deixar copiar.
@@ -75,7 +82,7 @@ export function PixPayment({ charge }: { charge: Schemas["Charge"] }) {
 
   return (
     <div className="space-y-3">
-      <Card className="space-y-5 p-5 sm:p-6">
+      <Card className={cn("space-y-5", bare ? "border-0 p-0 shadow-none" : "p-5 sm:p-6")}>
         <p className="text-sm text-muted">
           {remaining > 0 ? (
             <>

@@ -99,7 +99,7 @@ export function CheckoutSummaryBar(props: SummaryProps) {
 /** Desktop: painel fixo ao lado das etapas. */
 export function CheckoutSummaryPanel(props: SummaryProps) {
   return (
-    <Card asChild className="h-fit space-y-4 p-5 max-lg:hidden lg:sticky lg:top-6">
+    <Card asChild className="space-y-4 p-5 max-lg:hidden">
       <aside aria-label="Resumo do pedido">
         <h2 className="font-display text-lg font-semibold">Resumo</h2>
         <SummaryLines {...props} />

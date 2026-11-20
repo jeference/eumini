@@ -17,15 +17,14 @@ import { messageOf } from "@/lib/errors";
  * (uma tentativa automática) e oferece um novo quando o prazo termina.
  * Fora de `pending_payment` e `expired`, não mostra nada.
  *
- * `autoGenerate={false}`: quem usa decide quando gerar (o checkout tem o botão
- * "Gerar QR Code"); sem PIX válido, não mostra nada.
+ * `bare`: sem moldura de cartão no PIX, para usar dentro de um modal.
  */
 export function OrderPayment({
   order,
-  autoGenerate = true,
+  bare = false,
 }: {
   order: Schemas["OrderDetail"];
-  autoGenerate?: boolean;
+  bare?: boolean;
 }) {
   const pay = usePayOrder(order.id);
   const triedPay = useRef(false);
@@ -34,18 +33,17 @@ export function OrderPayment({
   const needsCharge =
     order.status === "pending_payment" && (!order.charge || order.charge.status !== "pending");
   useEffect(() => {
-    if (autoGenerate && needsCharge && !triedPay.current) {
+    if (needsCharge && !triedPay.current) {
       triedPay.current = true;
       payMutate(undefined, { onError: (error) => toast.error(messageOf(error)) });
     }
-  }, [autoGenerate, needsCharge, payMutate]);
+  }, [needsCharge, payMutate]);
 
   if (order.status === "pending_payment" && order.charge?.status === "pending") {
-    return <PixPayment charge={order.charge} />;
+    return <PixPayment charge={order.charge} bare={bare} />;
   }
 
   if (needsCharge) {
-    if (!autoGenerate) return null;
     if (!pay.isError) return <Skeleton className="h-72 w-full" />;
     return (
       <Card className="space-y-3 p-5 text-center" role="alert">

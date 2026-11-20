@@ -9,7 +9,6 @@ import { Skeleton } from "@kubo/ui/skeleton";
 import { MapPin } from "lucide-react";
 import { useFormContext, useWatch } from "react-hook-form";
 
-import { ContinueButton } from "@/features/checkout/components/checkout-step";
 import type { CheckoutValues } from "@/features/checkout/schemas";
 
 type Quote = Schemas["ShippingQuote"];
@@ -170,35 +169,6 @@ export function DeliveryStep({
           )}
         </fieldset>
       )}
-
-      <ContinueButton />
     </div>
-  );
-}
-
-export function DeliverySummary({
-  values,
-  quote,
-}: {
-  values: CheckoutValues;
-  quote: Quote | null;
-}) {
-  return (
-    <p className="space-y-0.5">
-      <span className="block text-ink">
-        {values.street}, {values.number}
-        {values.complement ? `, ${values.complement}` : ""}
-      </span>
-      <span className="block">
-        {values.neighborhood}, {values.city}/{values.state.toUpperCase()} · CEP{" "}
-        {formatCep(values.postal_code)}
-      </span>
-      {quote && (
-        <span className="block">
-          {quoteLabel(quote)} · até {quote.delivery_days} dias úteis ·{" "}
-          {formatBRL(quote.price_cents)}
-        </span>
-      )}
-    </p>
   );
 }

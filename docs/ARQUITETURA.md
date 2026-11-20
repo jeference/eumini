@@ -573,7 +573,7 @@ apps/web/consumer/src/
 | `/criar/[categoria]` | Página da categoria (`pessoa`, `pet`, `casal`, `pessoa-e-pet`), com exemplos, preço "a partir de" e o envio de foto. Templates futuros ganham rotas próprias sobre o mesmo componente |
 | `/criacoes` | Minhas criações |
 | `/criacoes/[id]` | **Hub:** mostra a geração ou, com a imagem pronta, a compra ao lado dela |
-| `/carrinho`, `/checkout` | Carrinho e checkout. `?item=` limita o checkout a um item (Comprar agora). `?etapa=` guarda a etapa (dados, entrega, revisar, pagar) e `?pedido=` abre a etapa Pagar do pedido já criado |
+| `/carrinho`, `/checkout` | Carrinho e checkout. `?item=` limita o checkout a um item (Comprar agora). `?etapa=` guarda a etapa (dados, entrega, pagar) |
 | `/pedidos`, `/pedidos/[id]` | Pedidos da conta ou da sessão. O hub muda conforme o status, inclusive o pagamento PIX |
 | `/acompanhar/[token]` | Acompanhamento do convidado |
 | `/entrar`, `/cadastro`, `/verificar-email`, `/recuperar-senha` | Conta |
