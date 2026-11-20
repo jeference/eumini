@@ -3,8 +3,9 @@ import { Check } from "lucide-react";
 import { cn } from "../lib/utils";
 
 /**
- * Progresso de um fluxo em etapas, com o rótulo abaixo de cada bolinha. Sem amarelo, para
- * não competir com o botão principal: atual em roxo, feitas com check, próximas contornadas.
+ * Progresso de um fluxo em etapas, com o rótulo abaixo de cada bolinha. Neutro, para não
+ * tirar o foco do conteúdo: atual com contorno roxo, próximas com contorno claro, e o
+ * check das feitas em roxo.
  * Etapas feitas são clicáveis para voltar; as próximas só aparecem.
  */
 export function Steps<T extends string>({
@@ -29,19 +30,15 @@ export function Steps<T extends string>({
             <span
               className={cn(
                 "relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold transition-colors",
-                active && "bg-accent text-white",
-                done && "bg-accent-soft text-accent",
-                !active && !done && "border-2 border-stroke bg-surface text-muted",
+                "border-2 bg-surface",
+                active && "border-accent text-accent",
+                done && "border-stroke text-accent",
+                !active && !done && "border-stroke text-muted",
               )}
             >
               {done ? <Check className="size-4" strokeWidth={3} aria-hidden /> : index + 1}
             </span>
-            <span
-              className={cn(
-                "text-xs font-semibold",
-                active ? "text-ink" : done ? "text-accent" : "text-muted",
-              )}
-            >
+            <span className={cn("text-xs font-semibold", active ? "text-accent" : "text-muted")}>
               {step.label}
             </span>
           </>
@@ -56,10 +53,7 @@ export function Steps<T extends string>({
             {index < steps.length - 1 && (
               <span
                 aria-hidden
-                className={cn(
-                  "absolute left-1/2 top-3.5 h-0.5 w-full -translate-y-1/2",
-                  done ? "bg-accent" : "bg-line",
-                )}
+                className="absolute left-1/2 top-3.5 h-0.5 w-full -translate-y-1/2 bg-line"
               />
             )}
             {done && onSelect ? (
