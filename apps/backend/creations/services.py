@@ -258,10 +258,11 @@ def apply_version(*, actor, creation: Creation, version_id, request_id: str = ""
     return creation
 
 
-def join_waitlist(*, actor, creation: Creation, email: str, consent: bool) -> WaitlistEntry:
-    """Lista de espera de quem foi recusado por ter gente ou pets demais na foto (RN-37)."""
-    if not consent:
-        raise GuardFailed("Aceite receber o aviso por e-mail.", code="consent_required")
+def join_waitlist(*, actor, creation: Creation, email: str) -> WaitlistEntry:
+    """Lista de espera de quem foi recusado por ter gente ou pets demais na foto (RN-37).
+
+    Enviar o e-mail no formulário, que diz para que ele serve, é o consentimento.
+    """
     if (
         creation.status != Creation.Status.REJECTED
         or creation.rejection_reason not in GROUP_REASONS

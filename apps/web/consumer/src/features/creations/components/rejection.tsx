@@ -2,7 +2,6 @@
 
 import { Button } from "@kubo/ui/button";
 import { Callout } from "@kubo/ui/callout";
-import { Checkbox } from "@kubo/ui/checkbox";
 import { Input } from "@kubo/ui/input";
 import { Label } from "@kubo/ui/label";
 import { ImagePlus, Scissors } from "lucide-react";
@@ -54,16 +53,14 @@ export function RejectionMessage({ creation }: { creation: Creation }) {
           {group ? "Enviar foto recortada" : "Escolher outra foto"}
         </Link>
       </Button>
-      <p className="text-xs text-muted">A foto recusada não conta no seu limite de imagens.</p>
     </div>
   );
 }
 
-/** Para fotos com gente ou pets demais: avisamos quando essa miniatura existir (RN-37). */
+/** Para fotos com gente ou pets demais: enviar o e-mail é o consentimento para o aviso (RN-37). */
 export function WaitlistForm({ creation }: { creation: Creation }) {
   const join = useJoinWaitlist();
   const [email, setEmail] = useState("");
-  const [consent, setConsent] = useState(false);
   const [joined, setJoined] = useState(false);
 
   if (joined) {
@@ -79,9 +76,9 @@ export function WaitlistForm({ creation }: { creation: Creation }) {
       className="space-y-4 lg:animate-fade-in"
       onSubmit={(event) => {
         event.preventDefault();
-        if (!consent || !email.trim()) return;
+        if (!email.trim()) return;
         join.mutate(
-          { creation_id: creation.id, email: email.trim(), consent },
+          { creation_id: creation.id, email: email.trim() },
           {
             onSuccess: () => setJoined(true),
             onError: (error) => toast.error(messageOf(error)),
@@ -91,7 +88,7 @@ export function WaitlistForm({ creation }: { creation: Creation }) {
     >
       <div className="space-y-2">
         <h2 className="font-display text-2xl font-semibold tracking-tight">
-          Me avise quando estiver pronto
+          Me avise quando for possível
         </h2>
         <p className="text-sm text-muted">
           Ainda não fazemos miniaturas com mais pessoas ou pets. Deixe seu e-mail e avisamos quando
@@ -109,10 +106,7 @@ export function WaitlistForm({ creation }: { creation: Creation }) {
           onChange={(event) => setEmail(event.target.value)}
         />
       </div>
-      <Checkbox checked={consent} onChange={(event) => setConsent(event.target.checked)}>
-        Quero receber um e-mail da Kubo só para avisar quando essa miniatura existir.
-      </Checkbox>
-      <Button type="submit" disabled={!consent || !email.trim()} pending={join.isPending}>
+      <Button type="submit" disabled={!email.trim()} pending={join.isPending}>
         Me avise
       </Button>
     </form>

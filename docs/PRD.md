@@ -142,7 +142,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | Situação | O que o cliente vê | O que acontece |
 |---|---|---|
 | Foto sem pessoa nem pet, personagem ou marca | "Precisamos de uma pessoa ou um pet na foto", com **Escolher outra foto** | Nada é gerado, a cota de geração não é tocada, a recusa é registrada |
-| Foto com 3 ou mais pessoas, 2 ou mais pets, ou grupo com pets | "Recorte e nós fazemos": explica as combinações aceitas, com **Enviar foto recortada** e **Me avise quando estiver pronto** | Igual à linha acima. O e-mail entra na lista de espera, com consentimento |
+| Foto com 3 ou mais pessoas, 2 ou mais pets, ou grupo com pets | "Recorte e nós fazemos": explica as combinações aceitas, com **Enviar foto recortada** e **Me avise quando for possível** | Igual à linha acima. O e-mail entra na lista de espera; enviá-lo é o consentimento |
 | Categoria detectada diferente da página | Aviso com a categoria detectada e o novo preço "a partir de" | A geração segue na categoria detectada. O cliente pode cancelar e trocar a foto |
 | Edição muda quem aparece na imagem | A versão mostra a nova categoria e o novo preço. Se a nova categoria não for vendida, a versão não pode ser comprada, e o cliente vê o motivo | As outras versões continuam disponíveis |
 | Falha na geração | Mensagem clara e **Tentar de novo** | Cota devolvida |
@@ -267,7 +267,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RN-34 | **Toda versão gerada ou editada também é classificada.** A categoria e o preço da versão vêm dessa classificação. Se ela cair numa categoria recusada, a versão não pode ser comprada. Isso fecha a brecha de pedir, por edição, uma figura que custaria mais. |
 | RN-35 | **Casal e Pessoa + Pet são uma peça única**, com as figuras encostadas: abraçadas, de mãos dadas, ou o pet no colo ou junto à pessoa. É assim nos concorrentes, mantém a altura como a maior dimensão (RN-12) e permite imprimir numa peça só. Toda peça tem uma **base redonda na cor escura da figura**, que a mantém em pé e não acrescenta cor ([teste de prompts](prompts/README.md)). |
 | RN-36 | **Toda classificação fica registrada:** quem pediu (sessão ou conta, e hash do IP), a foto ou a versão, a categoria pedida, a detectada, a confiança, a decisão, o modelo, a versão do conjunto de perguntas, o custo e a data. Mudar o texto de uma pergunta cria uma nova versão do conjunto, e só entra em uso depois de passar pelo [teste do classificador](classificador/README.md). |
-| RN-37 | **Lista de espera:** o e-mail só entra com consentimento explícito, registrado com a versão do texto e a data, e só é usado para avisar sobre a categoria pedida. |
+| RN-37 | **Lista de espera:** o consentimento é o próprio envio do e-mail no formulário, que diz para que ele serve. Ele fica registrado com a versão do texto e a data, e o e-mail só é usado para avisar sobre a categoria pedida. |
 | RN-38 | O classificador é o **Jev 1.14** (TypeSafe) [Proposta]. No [teste de 19/11](classificador/README.md), ele acertou 46 de 47 casos, inclusive os que a Pockella errou, em 0,22 s e por cerca de US$ 0,0001 por imagem. A comparação com a OpenAI e o Google, feita quando houver chaves, define o modelo de reserva. |
 
 ### Preço, frete e pagamento
@@ -326,7 +326,7 @@ Mesmo sem o app de parceiros, o MVP guarda desde o primeiro dia:
 | Texto do cliente, categoria, foto enviada e prompt final enviado ao modelo | Reproduzir, ajustar prompts e investigar problemas |
 | Todas as versões de imagem, com origem, instrução de edição e categoria | Histórico e base para gerar o 3D na produção |
 | Cada classificação, com categoria pedida, detectada, confiança e decisão (RN-36) | Medir o classificador, achar erros e brechas de preço |
-| Lista de espera, com consentimento | Decidir quais categorias abrir depois |
+| Lista de espera | Decidir quais categorias abrir depois |
 | Modelo de IA, versão do prompt, custo, tempo e erro de cada tarefa | Custo por venda e confiabilidade |
 | Pedidos com tudo congelado no momento da compra | Produção, atendimento e contabilidade |
 | Evento imutável a cada mudança de status | Auditoria e métricas de funil |

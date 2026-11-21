@@ -164,7 +164,6 @@ class CreationCreateSerializer(serializers.Serializer):
 class WaitlistCreateSerializer(serializers.Serializer):
     creation_id = serializers.UUIDField()
     email = serializers.EmailField()
-    consent = serializers.BooleanField()
 
 
 class EditRequestSerializer(serializers.Serializer):

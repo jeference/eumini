@@ -2248,10 +2248,7 @@ components:
           type: string
           format: email
           minLength: 1
-        consent:
-          type: boolean
       required:
-      - consent
       - creation_id
       - email
   securitySchemes:

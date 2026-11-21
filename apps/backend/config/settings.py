@@ -186,7 +186,7 @@ BUSINESS = {
     "PRODUCTION_DAYS": 7,  # RN-16
     "TERMS_VERSION": "2026-11",
     # RN-37: versão do texto de consentimento da lista de espera.
-    "WAITLIST_CONSENT_VERSION": "2026-11",
+    "WAITLIST_CONSENT_VERSION": "2026-11-20",
     # URLs e retenção.
     "SIGNED_URL_TTL_SECONDS": 300,
     "PHOTO_RETENTION_DAYS": 90,

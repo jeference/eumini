@@ -194,15 +194,12 @@ def _rejected(client, settings, reason="three_or_more_people"):
     return creation_id
 
 
-def test_waitlist_requires_consent_and_a_group_photo(visitor_client, settings):
+def test_waitlist_records_the_consent_of_sending_the_email(visitor_client, settings):
     creation_id = _rejected(visitor_client, settings)
     url = "/api/waitlist/"
     body = {"creation_id": creation_id, "email": "Ana@Exemplo.com"}
-    no_consent = visitor_client.post(url, {**body, "consent": False})
-    assert no_consent.status_code == 422
-    assert no_consent.data["code"] == "consent_required"
-    assert visitor_client.post(url, {**body, "consent": True}).status_code == 201
-    assert visitor_client.post(url, {**body, "consent": True}).status_code == 201
+    assert visitor_client.post(url, body).status_code == 201
+    assert visitor_client.post(url, body).status_code == 201
     entry = WaitlistEntry.objects.get()
     assert (entry.email, entry.reason) == ("ana@exemplo.com", "three_or_more_people")
     assert entry.consent_version and entry.consented_at
@@ -212,7 +209,7 @@ def test_waitlist_requires_consent_and_a_group_photo(visitor_client, settings):
 def test_waitlist_is_not_for_other_refusals(visitor_client, settings):
     creation_id = _rejected(visitor_client, settings, "no_subject")
     response = visitor_client.post(
-        "/api/waitlist/", {"creation_id": creation_id, "email": "a@b.com", "consent": True}
+        "/api/waitlist/", {"creation_id": creation_id, "email": "a@b.com"}
     )
     assert response.status_code == 422
     assert response.data["code"] == "not_waitlistable"
@@ -221,6 +218,6 @@ def test_waitlist_is_not_for_other_refusals(visitor_client, settings):
 def test_waitlist_is_scoped_to_the_owner(visitor_client, other_visitor_client, settings):
     creation_id = _rejected(visitor_client, settings)
     response = other_visitor_client.post(
-        "/api/waitlist/", {"creation_id": creation_id, "email": "a@b.com", "consent": True}
+        "/api/waitlist/", {"creation_id": creation_id, "email": "a@b.com"}
     )
     assert response.status_code == 404

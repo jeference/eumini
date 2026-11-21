@@ -659,7 +659,7 @@ Valores vêm do protótipo: `accent #7C3AED`, `accent-soft #F0E9FF`, `highlight 
 | `GET /api/quota/` | Ator | Cota restante |
 | `GET /api/catalog/products/` | Público | Categorias, com tamanhos ativos e preços |
 | `GET, POST /api/creations/` | Ator | Listar e criar (foto e categoria pedida obrigatórias, pedido de alteração opcional) |
-| `POST /api/waitlist/` | Ator | Entrar na lista de espera a partir de uma criação recusada, com consentimento |
+| `POST /api/waitlist/` | Ator | Entrar na lista de espera a partir de uma criação recusada; o envio é o consentimento |
 | `GET, DELETE /api/creations/{id}/` | Dono | Detalhe (status, versões, edições) e exclusão |
 | `POST /api/creations/{id}/retry/` | Dono | Tentar de novo |
 | `POST /api/creations/{id}/edits/` | Dono | Pedir edição a partir de uma versão |
@@ -720,7 +720,7 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 - Exclusão de conta: anonimiza o usuário, aplica a retenção a criações sem pedido e preserva o que a obrigação fiscal exige.
 - Aceites de termos ficam registrados com versão e data.
 - Fotos seguem para provedores no exterior, inclusive o classificador, o que deve constar da política de privacidade.
-- O e-mail da lista de espera só é gravado com consentimento explícito e só serve para o aviso da categoria.
+- O e-mail da lista de espera só é gravado quando a pessoa o envia no formulário do aviso, que diz a finalidade, e só serve para o aviso da categoria.
 - **Parceiros futuros:** veem apenas nome e endereço para envio, por meio de serializers próprios.
 
 ### Observabilidade

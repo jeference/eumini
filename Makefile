@@ -9,7 +9,7 @@ PY := .venv/bin/python
 endif
 PNPM ?= npx --yes pnpm@9.15.9
 
-.PHONY: install db backend backend-tunnel simulate-pix worker scheduler frontend types migrate makemigrations test test-backend test-web lint fmt build
+.PHONY: install db backend backend-tunnel simulate-pix verification-code worker scheduler frontend types migrate makemigrations test test-backend test-web lint fmt build
 
 install:
 	cd $(BACKEND) && uv venv --python 3.12 .venv && uv pip install --python $(PY) -e ".[dev]"
@@ -39,6 +39,13 @@ backend-tunnel:
 simulate-pix:
 	$(if $(ORDER),,$(error Informe o pedido: make simulate-pix ORDER=KB...))
 	cd $(BACKEND) && $(PY) manage.py simulate_pix_payment $(ORDER) $(if $(TIMEOUT),--timeout $(TIMEOUT),)
+
+# Emite um código de verificação de e-mail novo e imprime no terminal, já que em dev não há
+# e-mail real. Invalida o código anterior. Só roda com DEBUG=True.
+#   make verification-code EMAIL=fulano@kubo.com
+verification-code:
+	$(if $(EMAIL),,$(error Informe o e-mail: make verification-code EMAIL=fulano@kubo.com))
+	cd $(BACKEND) && $(PY) manage.py dev_tool_get_verification_code $(EMAIL)
 
 worker:
 	cd $(BACKEND) && $(PY) manage.py run_generation_worker

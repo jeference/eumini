@@ -1107,7 +1107,6 @@ export interface components {
             creation_id: string;
             /** Format: email */
             email: string;
-            consent: boolean;
         };
     };
     responses: never;

@@ -132,7 +132,7 @@ export function useCreationAction(id: string) {
 export function useJoinWaitlist() {
   const api = useApiClient();
   return useMutation({
-    mutationFn: async (body: { creation_id: string; email: string; consent: boolean }) => {
+    mutationFn: async (body: { creation_id: string; email: string }) => {
       const result = await api.POST("/api/waitlist/", { body });
       if (!result.response.ok) unwrap(result);
     },

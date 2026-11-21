@@ -166,6 +166,5 @@ class WaitlistView(APIView):
             actor=actor,
             creation=creation,
             email=data.validated_data["email"],
-            consent=data.validated_data["consent"],
         )
         return Response(status=status.HTTP_201_CREATED)
