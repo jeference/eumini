@@ -19,12 +19,15 @@ from django.core.cache import cache
 from django.utils import timezone
 from PIL import Image, ImageDraw
 
+from common.exceptions import PaymentDeclined
 from integrations.ports import (
+    CARD,
     AddressLookupPort,
     AddressResult,
     ClassificationResult,
     ContentRefused,
     GatewayCharge,
+    GatewayCustomer,
     GeneratedImage,
     ImageClassificationPort,
     ImageGenerationPort,
@@ -121,12 +124,27 @@ def stub_set_charge_status(external_id: str, status: str) -> None:
     cache.set(_stub_key(external_id), status, timeout=7 * 24 * 3600)
 
 
+# Tokens de cartão especiais do stub. Qualquer outro `ctok_` é aprovado na hora.
+STUB_CARD_DECLINED = "ctok_recusado"
+STUB_CARD_IN_REVIEW = "ctok_analise"
+
+
 class StubPaymentGatewayAdapter(PaymentGatewayPort):
     provider = "stub"
 
     def create_charge(
-        self, *, amount: int, reference: str, description: str, expires_in_seconds: int
+        self,
+        *,
+        method: str,
+        amount: int,
+        reference: str,
+        description: str,
+        expires_in_seconds: int | None = None,
+        card_token: str = "",
+        customer: GatewayCustomer | None = None,
     ) -> GatewayCharge:
+        if method == CARD:
+            return self._create_card_charge(amount=amount, card_token=card_token)
         external_id = f"pix_stub_{uuid.uuid4().hex}"
         stub_set_charge_status(external_id, "pending")
         qr = Image.new("RGB", (240, 240), "white")
@@ -142,10 +160,24 @@ class StubPaymentGatewayAdapter(PaymentGatewayPort):
             amount=amount,
             pix_br_code=f"00020126STUB{external_id}",
             pix_qr_base64="data:image/png;base64," + base64.b64encode(_png(qr)).decode(),
-            expires_at=timezone.now() + timedelta(seconds=expires_in_seconds),
+            expires_at=timezone.now() + timedelta(seconds=expires_in_seconds or 1800),
         )
 
-    def get_charge_status(self, *, external_id: str) -> str:
+    def _create_card_charge(self, *, amount: int, card_token: str) -> GatewayCharge:
+        if card_token == STUB_CARD_DECLINED:
+            raise PaymentDeclined()
+        external_id = f"card_stub_{uuid.uuid4().hex}"
+        status = "pending" if card_token == STUB_CARD_IN_REVIEW else "paid"
+        stub_set_charge_status(external_id, status)
+        return GatewayCharge(
+            external_id=external_id,
+            status=status,
+            amount=amount,
+            card_brand="VISA",
+            card_last_four="4242",
+        )
+
+    def get_charge_status(self, *, external_id: str, method: str) -> str:
         return cache.get(_stub_key(external_id), "pending")
 
 

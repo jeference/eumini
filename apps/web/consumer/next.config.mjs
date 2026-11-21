@@ -1,13 +1,21 @@
 const isProduction = process.env.NODE_ENV === "production";
 
+// Cartão: o abacatepay.js carrega o provedor dele (Rinne), que carrega o Evervault. O Evervault
+// desenha os campos do cartão em iframes e cada um fala com a própria API.
+const cardScripts = "https://abacatepay.com https://pkgs.rinne.com.br https://*.evervault.com";
+const cardApis = "https://api.abacatepay.com https://*.rinne.com.br https://*.evervault.com";
+
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline' ${cardScripts}`,
   "style-src 'self' 'unsafe-inline'",
   // As imagens vêm do storage por URL assinada.
   "img-src 'self' data: blob: https:",
   "font-src 'self'",
-  "connect-src 'self'",
+  `connect-src 'self' ${cardApis}`,
+  // Campos do cartão (Evervault) e o 3DS, que abre a página do banco do cliente: qualquer
+  // domínio do banco, então só exigimos https.
+  "frame-src https:",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

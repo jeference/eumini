@@ -13,14 +13,23 @@ class Charge(BaseModel):
         FAILED = "failed", "Falhou"
         REFUNDED = "refunded", "Reembolsada"
 
+    class Method(models.TextChoices):
+        PIX = "PIX", "Pix"
+        CARD = "CARD", "Cartão de crédito"
+
     order = models.ForeignKey("orders.Order", on_delete=models.PROTECT, related_name="charges")
     provider = models.CharField(max_length=32)
     external_id = models.CharField(max_length=128, unique=True)
+    method = models.CharField(max_length=8, choices=Method.choices)
     status = models.CharField(max_length=12, choices=Status.choices, default=Status.PENDING)
     amount_cents = models.PositiveIntegerField()
     pix_br_code = models.TextField(blank=True)
     pix_qr_base64 = models.TextField(blank=True)
-    expires_at = models.DateTimeField()
+    # Só para exibir ("Visa •••• 4242"). O token do cartão não é guardado.
+    card_brand = models.CharField(max_length=24, blank=True)
+    card_last_four = models.CharField(max_length=4, blank=True)
+    # Só o PIX vence; cartão fica sem prazo.
+    expires_at = models.DateTimeField(null=True, blank=True)
     paid_at = models.DateTimeField(null=True, blank=True)
     disputed_at = models.DateTimeField(null=True, blank=True)
 

@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { useCart } from "@/features/cart/hooks";
+import { CardError, useCardForm } from "@/features/checkout/abacatepay";
 import {
   CHECKOUT_FORM_ID,
   CheckoutAction,
@@ -29,8 +30,12 @@ import {
 import { CheckoutSummary } from "@/features/checkout/components/checkout-summary";
 import { ContactStep } from "@/features/checkout/components/contact-step";
 import { DeliveryStep } from "@/features/checkout/components/delivery-step";
-
-import { PaymentMethodPicker } from "@/features/checkout/components/payment-method";
+import {
+  CARD_CONTAINER_ID,
+  CardPayment,
+  type PaymentMethod,
+  PaymentMethodPicker,
+} from "@/features/checkout/components/payment-method";
 import { PixScreen } from "@/features/checkout/components/pix-screen";
 import {
   type CheckoutValues,
@@ -100,9 +105,16 @@ export function CheckoutForm() {
   const addressCep = useRef<string | null>(null);
   // A mesma chave em toda tentativa: um clique duplo nunca cria dois pedidos.
   const idempotencyKey = useRef(crypto.randomUUID());
-  // Pedido criado no "Concluir pagamento". O PIX aparece em tela cheia por cima do Pagar.
+  // Já criou um pedido com esta chave (Pix gerado ou cartão tentado).
+  const orderCreated = useRef(false);
+  // Pedido do Pix gerado no "Concluir pagamento". O PIX aparece em tela cheia por cima do Pagar.
   const [orderId, setOrderId] = useState<string | null>(null);
   const [pixOpen, setPixOpen] = useState(false);
+  const [method, setMethod] = useState<PaymentMethod>("pix");
+  // O cartão exige celular. Só vai para o gateway; não fica no pedido.
+  const [cellphone, setCellphone] = useState("");
+  const [cellphoneError, setCellphoneError] = useState<string | null>(null);
+  const [cardError, setCardError] = useState<string | null>(null);
 
   // A etapa mora na URL para o voltar do navegador voltar uma etapa. Nunca passa da
   // mais avançada já liberada (recarregar a página recomeça do início).
@@ -114,9 +126,10 @@ export function CheckoutForm() {
   // Saiu do Pagar depois de criar o pedido: os dados podem mudar, então o próximo
   // "Concluir pagamento" cria outro pedido (chave nova). O anterior expira sozinho.
   useEffect(() => {
-    if (step !== "pagar" && orderId) {
+    if (step !== "pagar" && (orderId || orderCreated.current)) {
       setOrderId(null);
       setPixOpen(false);
+      orderCreated.current = false;
       idempotencyKey.current = crypto.randomUUID();
     }
   }, [step, orderId]);
@@ -128,6 +141,18 @@ export function CheckoutForm() {
   const itemKey = itemIds.join(",");
   const subtotal = items.reduce((total, item) => total + item.line_total_cents, 0);
   const selectedQuote = quotes.find((quote) => quote.id === selectedQuoteId) ?? null;
+  const totalCents = subtotal + (selectedQuote?.price_cents ?? 0);
+
+  // O token do cartão fica preso ao valor: o formulário é montado com o total do resumo.
+  const card = useCardForm({
+    containerId: CARD_CONTAINER_ID,
+    amount: totalCents,
+    enabled: step === "pagar" && method === "card",
+  });
+  // Mexeu no cartão e ele ficou completo: o aviso anterior não vale mais.
+  useEffect(() => {
+    if (card.canTokenize) setCardError(null);
+  }, [card.canTokenize]);
 
   function stepUrl(next: Step) {
     const search = new URLSearchParams(params.toString());
@@ -262,10 +287,17 @@ export function CheckoutForm() {
     };
   }, [cepDigits, itemKey, api, form, quoteMutate]);
 
-  // "Concluir pagamento" no Pix: cria o pedido e já gera o PIX. Se o PIX falhar, a tela do PIX
-  // tenta de novo sozinha e oferece "Tentar de novo".
+  // "Concluir pagamento": cria o pedido (sempre o mesmo, pela chave) e paga.
+  // Pix: gera o PIX; se falhar, a tela do PIX tenta de novo sozinha e oferece "Tentar de novo".
+  // Cartão: gera o token (com 3DS, se o banco pedir) e cobra. Recusa fica no mesmo pedido.
   const placeOrder = useMutation({
-    mutationFn: async (values: CheckoutValues) => {
+    mutationFn: async (variables: {
+      values: CheckoutValues;
+      method: PaymentMethod;
+      cellphone: string;
+      amount: number;
+    }) => {
+      const { values } = variables;
       const order = unwrap(
         await api.POST("/api/orders/", {
           params: { header: { "Idempotency-Key": idempotencyKey.current } },
@@ -277,6 +309,34 @@ export function CheckoutForm() {
           },
         }),
       );
+      orderCreated.current = true;
+
+      if (variables.method === "card") {
+        if (order.total_cents !== variables.amount) {
+          void queryClient.invalidateQueries({ queryKey: qk.cart() });
+          throw new CardError(
+            "AMOUNT_CHANGED",
+            "O valor do pedido mudou. Confira o resumo e tente de novo.",
+          );
+        }
+        track("card_submitted");
+        const cellphoneDigits = variables.cellphone.replace(/\D/g, "");
+        const token = await card.tokenize({
+          name: values.name,
+          email: values.email,
+          taxId: values.cpf.replace(/\D/g, ""),
+          cellphone: cellphoneDigits,
+        });
+        const paid = unwrap(
+          await api.POST("/api/orders/{order_id}/pay/", {
+            params: { path: { order_id: order.id } },
+            body: { method: "CARD", card_token: token, cellphone: cellphoneDigits },
+          }),
+        );
+        queryClient.setQueryData(qk.order(order.id), paid);
+        return { orderId: order.id, method: variables.method };
+      }
+
       const charged = await api.POST("/api/orders/{order_id}/pay/", {
         params: { path: { order_id: order.id } },
       });
@@ -284,14 +344,37 @@ export function CheckoutForm() {
         track("pix_generated");
         queryClient.setQueryData(qk.order(order.id), charged.data);
       }
-      return order;
+      return { orderId: order.id, method: variables.method };
     },
-    onSuccess: (order) => {
+    onSuccess: (result) => {
       void queryClient.invalidateQueries({ queryKey: qk.orders() });
-      setOrderId(order.id);
+      if (result.method === "card") {
+        // Aprovado ou em análise: a página do pedido mostra o resultado.
+        void queryClient.invalidateQueries({ queryKey: qk.cart() });
+        router.replace(`/pedidos/${result.orderId}`);
+        return;
+      }
+      setOrderId(result.orderId);
       setPixOpen(true);
     },
     onError: (error) => {
+      if (error instanceof CardError) {
+        setCardError(error.message);
+        return;
+      }
+      if (error instanceof ApiError && error.code === "card_declined") {
+        track("card_declined");
+        setCardError(error.message);
+        return;
+      }
+      if (error instanceof ApiError && error.code === "payment_in_review") {
+        setCardError(error.message);
+        return;
+      }
+      if (error instanceof ApiError && error.fieldErrors?.cellphone) {
+        setCellphoneError(error.fieldErrors.cellphone[0] ?? "Informe um celular com DDD.");
+        return;
+      }
       if (error instanceof ApiError && error.code === "shipping_changed") {
         const raw = error.raw as {
           new_quote_id?: string;
@@ -366,20 +449,45 @@ export function CheckoutForm() {
     complete("entrega", "pagar");
   }
 
+  // O botão nunca fica desativado: o que faltar aparece embaixo do cartão.
+  function cardProblem(): string | null {
+    if (card.status === "loading") return "Aguarde o formulário do cartão carregar.";
+    if (card.status === "error") {
+      return "Não conseguimos carregar o formulário do cartão. Recarregue a página ou pague com Pix.";
+    }
+    if (!card.canTokenize) return "Preencha os dados do cartão.";
+    return null;
+  }
+
   function pay() {
     if (!selectedQuote) {
       goTo("entrega");
       return;
     }
-    // Já criou o pedido e voltou da tela do PIX: reabre o mesmo PIX.
-    if (orderId) {
+    if (method === "pix" && orderId) {
+      // Já gerou o PIX e voltou da tela dele: reabre o mesmo PIX.
       setPixOpen(true);
       return;
     }
+    if (method === "card") {
+      const digits = cellphone.replace(/\D/g, "");
+      const phoneOk = digits.length >= 10 && digits[0] !== "0";
+      setCellphoneError(phoneOk ? null : "Informe um celular com DDD.");
+      const problem = cardProblem();
+      setCardError(problem);
+      if (!phoneOk || problem) return;
+    }
     void form.handleSubmit(
-      (values) => placeOrder.mutate(values),
+      (values) => placeOrder.mutate({ values, method, cellphone, amount: totalCents }),
       () => goTo(firstIncompleteStep(form.getValues())),
     )();
+  }
+
+  function chooseMethod(next: PaymentMethod) {
+    if (next === method) return;
+    track("payment_method_selected", { method: next });
+    setMethod(next);
+    setCardError(null);
   }
 
   if (isLoading || !cart) {
@@ -438,7 +546,19 @@ export function CheckoutForm() {
               className="space-y-4"
             >
               {step === "pagar" ? (
-                <PaymentMethodPicker>
+                <PaymentMethodPicker value={method} onChange={chooseMethod}>
+                  {method === "card" && (
+                    <CardPayment
+                      status={card.status}
+                      cellphone={cellphone}
+                      onCellphoneChange={(value) => {
+                        setCellphone(value);
+                        setCellphoneError(null);
+                      }}
+                      cellphoneError={cellphoneError}
+                      error={cardError}
+                    />
+                  )}
                   {shippingNotice && (
                     <Callout tone="accent" role="alert">
                       {shippingNotice}
@@ -487,7 +607,11 @@ export function CheckoutForm() {
             subtotal={subtotal}
             shippingCents={shippingCents}
           />
-          <CheckoutAction finish={step === "pagar"} pending={placeOrder.isPending} />
+          <CheckoutAction
+            finish={step === "pagar"}
+            finishLabel={method === "card" ? `Pagar ${formatBRL(totalCents)}` : undefined}
+            pending={placeOrder.isPending}
+          />
         </div>
       </div>
 

@@ -26,7 +26,7 @@ flowchart LR
     K --> CL[Classificador<br/>a definir no teste comparativo]
     K --> ST[(Storage S3)]
     A --> ST
-    A --> P[Gateway PIX]
+    A --> P[Gateway PIX e cartão]
     P -->|webhook| A
     A --> F[Cotação de frete]
     A --> E[E-mail]
@@ -71,7 +71,7 @@ Cada app web tem domínio próprio, portanto cookies e sessões são independent
 | **Frontend** | Next.js 15 (App Router), React 19, TypeScript estrito, Tailwind 3, componentes Radix no padrão shadcn, TanStack Query 5, Zustand 5, React Hook Form + Zod, sonner, lucide |
 | **Contrato** | drf-spectacular → openapi-typescript → openapi-fetch |
 | **Ferramentas** | pnpm (workspace, via `npx`), uv, Makefile, ruff, pytest + factory_boy + freezegun + responses, ESLint, Vitest + Testing Library, GitHub Actions |
-| **Serviços externos** | Runware (IA), TypeSafe (classificador Jev 1.14) [Proposta], AbacatePay (PIX), Melhor Envio (frete) [Proposta], storage compatível com S3, SMTP transacional |
+| **Serviços externos** | Runware (IA), TypeSafe (classificador Jev 1.14) [Proposta], AbacatePay (PIX e cartão), Melhor Envio (frete) [Proposta], storage compatível com S3, SMTP transacional |
 
 As versões exatas ficam nos arquivos de lock. PostGIS não é necessário, porque nenhuma regra do MVP depende de geolocalização.
 
@@ -245,7 +245,7 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 
 | Entidade | Campos principais | Uso |
 |---|---|---|
-| `Charge` | order, gateway, id externo, status, valor, código PIX, QR Code, expira em, pago em | ● |
+| `Charge` | order, gateway, id externo, método (PIX ou cartão), status, valor, código PIX, QR Code, expira em (só PIX), bandeira e 4 últimos dígitos (só cartão), pago em | ● |
 | `WebhookEvent` | provedor, id do evento, único por par; tipo, carga, status de processamento | ● |
 | `LedgerEntry` | order, charge, tipo, conta de débito, conta de crédito, valor, referência. Append-only | ● |
 
@@ -423,7 +423,7 @@ Os ports ficam em `integrations/ports/`, e cada adapter é escolhido por um cami
 |---|---|---|---|
 | `ImageGenerationPort` | gerar de foto, editar; recebe o modelo de cada chamada | Runware (`openai:gpt-image@2`, reserva `google:4@2`) | Sim |
 | `ImageClassificationPort` | classificar foto, classificar versão; devolve resultado, confiança, probabilidades e a versão do conjunto de perguntas | Jev 1.14 (TypeSafe); reserva de outro provedor a definir | Sim |
-| `PaymentGatewayPort` | criar cobrança, consultar; reembolsar com o app de parceiros | AbacatePay | Sim |
+| `PaymentGatewayPort` | criar cobrança (PIX ou cartão), consultar; reembolsar com o app de parceiros | AbacatePay | Sim |
 | `ShippingPort` | cotar | Melhor Envio | Sim |
 | `MediaStoragePort` | URL de upload, URL de download, gravar, apagar | S3 | Disco local |
 | `EmailPort` | enviar | SMTP | Console |
@@ -439,16 +439,27 @@ Os ports ficam em `integrations/ports/`, e cada adapter é escolhido por um cami
 ### Fluxo do PIX
 
 1. `POST /api/orders/` com `Idempotency-Key` valida carrinho, tamanhos ativos e frete. Cria o `Order` em `pending_payment` e os itens congelados. A mesma chave retorna o mesmo pedido.
-2. `POST /api/orders/{id}/pay/` cria a `Charge` via `POST /v2/transparents/create` (`method: "PIX"`, 30 min). Se já houver uma pendente, reaproveita.
+2. `POST /api/orders/{id}/pay/` sem corpo (ou `method: "PIX"`) cria a `Charge` via `POST /v2/transparents/create` (`method: "PIX"`, 30 min). Se já houver um PIX pendente, reaproveita.
 3. O frontend mostra QR Code e copia e cola, e consulta o pedido a cada 3 s.
 4. O webhook confirma, e o pedido vira `paid`.
+
+### Fluxo do cartão
+
+1. Na etapa Pagar, com Crédito escolhido, o `abacatepay.js` (`https://abacatepay.com/abacatepay.js`, chave pública `NEXT_PUBLIC_ABACATEPAY_PUBLIC_KEY`) desenha os campos do cartão num iframe dele. Número e CVV nunca passam pelo nosso frontend nem pelo backend. O formulário é montado com o total do resumo e recriado se o total mudar.
+2. Ao concluir, o frontend cria o pedido (mesma `Idempotency-Key`), confere que o total do pedido é o valor montado e chama `tokenize()`. O token `ctok_` vale 60 s, serve para uma cobrança e fica preso ao valor. Se o banco pedir 3DS, o modal é do SDK.
+3. `POST /api/orders/{id}/pay/` com `{method: "CARD", card_token, cellphone}` cria a cobrança com `method: "CARD"` e `customer` completo (nome, e-mail, CPF e celular, que o cartão exige). O celular só vai para o gateway e não é salvo. Não guardamos o `cardToken` devolvido.
+4. **Aprovado na hora** (`APPROVED`): o pedido vira `paid` na mesma requisição, porque o gateway não manda webhook para isso. O frontend vai para `/pedidos/{id}`.
+5. **Em análise** (`PENDING`): a cobrança fica pendente, sem prazo. O pedido mostra "Pagamento em análise" e novas cobranças são recusadas (`409 payment_in_review`) até o gateway decidir. O webhook ou o `reconcile_pending_charges` liquidam ou marcam a cobrança como `failed`, liberando o cliente para pagar de outro jeito.
+6. **Recusado** (HTTP 4xx com `success: false`): `422 card_declined`, sem cobrança criada. O cliente corrige o cartão ou troca para Pix no mesmo pedido.
+
+Só à vista e só Visa e Mastercard. O cartão precisa estar ativo na loja (sem isso a API responde "CARD_TRANSPARENTS is not available"), e a chave pública e a API key do backend precisam ser do mesmo ambiente.
 
 ### Webhook (`/api/webhooks/abacatepay/`)
 
 1. **Autenticar:** conferir o `webhookSecret` da query, em comparação de tempo constante. **[Verificar]** A assinatura `X-Webhook-Signature` não é conferida: a documentação usa uma chave pública fixa no exemplo, então ela não prova nada além do segredo. Confirmar com o suporte antes de produção.
 2. **Registrar:** inserir `WebhookEvent`, único por (provedor, id do evento). Evento repetido retorna 200 sem efeito.
 3. **Localizar** a `Charge` pelo id externo. Sem correspondência: registra, gera alerta interno e retorna 200.
-4. **Reconsultar** o status no gateway antes de liquidar.
+4. **Reconsultar** o status no gateway antes de liquidar: `/v2/transparents/check` no PIX, `/v2/transparents/get` no cartão.
 5. **Liquidar em uma transação:** `Charge` paga, lançamentos no ledger, `Order` em `paid` e `ProductionJob` criado para cada item.
 
 **Regras práticas, conforme a documentação do gateway:**
@@ -459,16 +470,16 @@ Os ports ficam em `integrations/ports/`, e cada adapter é escolhido por um cami
 - **O reenvio manual pelo painel usa um novo `id`.** O status da `Charge` e a existência do lançamento também funcionam como proteção contra duplicidade.
 - Eventos tratados: `transparent.completed`, `transparent.refunded`, `transparent.disputed`. Eventos desconhecidos retornam 200 e geram log.
 
-**Status do gateway:** somente `PAID` e `REDEEMED` liquidam. `APPROVED`, `UNDER_DISPUTE` e status desconhecidos nunca liquidam.
+**Status do gateway:** no PIX, somente `PAID` e `REDEEMED` liquidam; `APPROVED`, `UNDER_DISPUTE` e status desconhecidos nunca liquidam. No cartão, `APPROVED` também liquida (é o cartão aprovado), e `FAILED` ou `CANCELLED` marcam a cobrança como `failed`.
 
 ### Casos especiais
 
 | Caso | Tratamento |
 |---|---|
-| PIX não pago | `expire_pending_charges` marca cobrança e pedido como expirados. O carrinho é mantido |
+| PIX não pago | `expire_pending_charges` marca cobrança e pedido como expirados. O carrinho é mantido. Cartão não expira |
 | Webhook perdido | `reconcile_pending_charges` consulta periodicamente cobranças pendentes |
 | Pagamento depois de expirar | `expired → paid`, com alerta |
-| Segundo PIX pago no mesmo pedido | Cobrança marcada como paga, **sem novo lançamento de receita**, com alerta para devolução |
+| Segundo pagamento no mesmo pedido (dois PIX, ou PIX e cartão) | Cobrança marcada como paga, **sem novo lançamento de receita**, com alerta para devolução |
 
 ### Reembolso
 
@@ -481,7 +492,7 @@ Quando o app de parceiros existir, ele chamará `POST /v2/transparents/refund`, 
 
 **[Verificar]** Taxas por transação, prazo máximo para reembolso e limites de valor por PIX não constam nas páginas consultadas. Confirmar com a AbacatePay.
 
-**Dados enviados ao gateway:** `customer` é opcional na cobrança PIX. Não enviamos CPF nem dados do cliente, salvo se a conta ou a nota fiscal exigir [Verificar].
+**Dados enviados ao gateway:** no PIX, `customer` é opcional e não enviamos CPF nem dados do cliente, salvo se a conta ou a nota fiscal exigir [Verificar]. No cartão, `customer` é obrigatório: nome, e-mail e CPF do pedido, mais o celular pedido na etapa Pagar.
 
 ---
 
@@ -574,7 +585,7 @@ apps/web/consumer/src/
 | `/criacoes` | Minhas criações |
 | `/criacoes/[id]` | **Hub:** mostra a geração ou, com a imagem pronta, a compra ao lado dela |
 | `/carrinho`, `/checkout` | Carrinho e checkout. `?item=` limita o checkout a um item (Comprar agora). `?etapa=` guarda a etapa (dados, entrega, pagar) |
-| `/pedidos`, `/pedidos/[id]` | Pedidos da conta ou da sessão. O hub muda conforme o status, inclusive o pagamento PIX |
+| `/pedidos`, `/pedidos/[id]` | Pedidos da conta ou da sessão. O hub muda conforme o status, inclusive o pagamento PIX e o cartão em análise |
 | `/acompanhar/[token]` | Acompanhamento do convidado |
 | `/entrar`, `/cadastro`, `/verificar-email`, `/recuperar-senha` | Conta |
 | `/conta` | Perfil e exclusão |
@@ -660,7 +671,7 @@ Valores vêm do protótipo: `accent #7C3AED`, `accent-soft #F0E9FF`, `highlight 
 | `GET /api/shipping/address/{cep}/` | Público | Preencher o endereço pelo CEP |
 | `GET, POST /api/orders/` | Ator | Listar e criar, com `Idempotency-Key` |
 | `GET /api/orders/{id}/` | Dono | Detalhe |
-| `POST /api/orders/{id}/pay/` | Dono | Criar ou reaproveitar o PIX. Em pedido expirado há menos de 24 horas, gera um novo |
+| `POST /api/orders/{id}/pay/` | Dono | Sem corpo: criar ou reaproveitar o PIX; em pedido expirado há menos de 24 horas, gera um novo. Com `method: "CARD"`, `card_token` e `cellphone`: cobra no cartão (seção 12) |
 | `GET /api/orders/track/{token}/` | Token | Leitura do convidado |
 | `POST /api/orders/track/resend/` | Público | Reenviar link |
 | `POST /api/webhooks/abacatepay/` | Gateway | Webhook |

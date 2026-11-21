@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
@@ -7,6 +9,7 @@ from common.serializers import GlobalIdSerializer
 from media import services as media
 from orders import services
 from orders.models import Address, CartItem, Order, OrderItem
+from payments.models import Charge
 from payments.serializers import ChargeSerializer
 
 
@@ -63,6 +66,26 @@ class CartItemCreateSerializer(serializers.Serializer):
 
 class CartItemUpdateSerializer(serializers.Serializer):
     quantity = serializers.IntegerField(min_value=1, max_value=10)
+
+
+class OrderPaySerializer(serializers.Serializer):
+    """Sem corpo, gera o PIX. Cartão traz o token do abacatepay.js e o celular, que o
+    gateway exige no cartão e que não guardamos."""
+
+    method = serializers.ChoiceField(choices=Charge.Method.choices, default=Charge.Method.PIX)
+    card_token = serializers.CharField(max_length=128, required=False, allow_blank=True)
+    cellphone = serializers.CharField(max_length=20, required=False, allow_blank=True)
+
+    def validate(self, attrs):
+        if attrs["method"] != Charge.Method.CARD:
+            return {"method": attrs["method"]}
+        token = attrs.get("card_token", "")
+        if not token.startswith("ctok_"):
+            raise serializers.ValidationError({"card_token": "Token do cartão inválido."})
+        digits = re.sub(r"\D", "", attrs.get("cellphone", ""))
+        if len(digits) not in (10, 11) or digits[0] == "0":
+            raise serializers.ValidationError({"cellphone": "Informe um celular com DDD."})
+        return {"method": Charge.Method.CARD, "card_token": token, "cellphone": digits}
 
 
 class OrderCreateSerializer(serializers.Serializer):

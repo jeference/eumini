@@ -68,6 +68,12 @@ class ServiceBusy(DomainError):
     default_detail = "Serviço temporariamente indisponível. Tente de novo em instantes."
 
 
+class PaymentDeclined(DomainError):
+    status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+    default_code = "card_declined"
+    default_detail = "O cartão foi recusado. Confira os dados ou use outro cartão."
+
+
 class UpstreamUnavailable(DomainError):
     status_code = status.HTTP_502_BAD_GATEWAY
     default_code = "upstream_unavailable"

@@ -11,7 +11,7 @@ const STEPS = [
   },
   {
     title: "Receba em casa",
-    text: "Escolha o tamanho, pague com PIX, e a gente imprime e envia a sua peça.",
+    text: "Escolha o tamanho, pague com Pix ou cartão, e a gente imprime e envia a sua peça.",
   },
 ];
 
@@ -34,7 +34,7 @@ const QUESTIONS = [
   {
     question: "Quais são as formas de pagamento?",
     answer:
-      "No momento, aceitamos PIX. O pedido é confirmado assim que o pagamento é identificado.",
+      "Pix ou cartão de crédito, à vista. O pedido é confirmado assim que o pagamento é aprovado.",
   },
   {
     question: "Quanto tempo leva?",

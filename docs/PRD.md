@@ -82,7 +82,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 |---|---|---|
 | **Criação** | Entrada por categoria, foto com pedido de alteração opcional, classificação da foto, estilo único, imagem 2D, edição por chat com versões | Criar só a partir de texto, escolha de estilo, categorias além das quatro, modelo e visualizador 3D, 4 opções por geração, desenho livre |
 | **Continuidade** | Retomar criação ao recarregar, "Minhas criações", excluir | Galeria pública, Remix, templates |
-| **Compra** | Tamanho, quantidade, carrinho, Comprar agora, cotação de frete, PIX, acompanhamento do pedido | Cartão, cupons, assinatura, venda de arquivo, realidade aumentada |
+| **Compra** | Tamanho, quantidade, carrinho, Comprar agora, cotação de frete, PIX, cartão de crédito à vista, acompanhamento do pedido | Parcelamento, cartão salvo, cupons, assinatura, venda de arquivo, realidade aumentada |
 | **Conta** | Opcional, com transferência de criações e pedidos ao entrar | Login social |
 | **Operação** | Nada neste app | Pedidos, arquivos, status, rastreio, cancelamento, reembolso, preços, atribuição e arquivo de impressão: tudo no app de parceiros |
 
@@ -132,8 +132,8 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | 5 | **Comprar** | Vê a imagem e, ao lado, escolhe tamanho e quantidade. Pode **Editar** a imagem antes | Mostra os tamanhos e preços da categoria e informa que a peça pode diferir da imagem. Mantém a criação salva |
 | 6 | **Editar** (opcional) | Pede ajustes pelo chat, compara versões, cancela ou conclui | Gera uma nova versão a partir da escolhida e a reclassifica. A versão concluída passa a ser a imagem da compra |
 | 7 | **Carrinho** | Revê itens ou segue direto com **Comprar agora** | Mantém o carrinho entre visitas |
-| 8 | **Checkout** | Em 3 etapas, uma por vez: **Seus dados** (e-mail, nome e CPF), **Entrega** (CEP, número e frete) e **Pagar** (forma de pagamento, com o Pix já marcado). O botão de ação (**Continuar**, e **Concluir pagamento** no Pagar) fica fixo no rodapé do celular e abaixo do resumo no desktop. Cada etapa mostra só o que é dela; para voltar, o cliente clica na etapa no indicador, inclusive na tela de pagamento | Preenche rua, bairro, cidade e UF pelo CEP, cota o frete e mostra o total sempre visível. Botões nunca ficam bloqueados: ao avançar, aponta o campo que falta |
-| 9 | **Pagamento** | Com Pix escolhido, **Concluir pagamento** cria o pedido e abre, em tela cheia por cima do checkout, o QR Code e o copia e cola; **Voltar** fecha e volta ao Pagar, reabrindo o mesmo PIX. Cartão de crédito aparece como "Em breve", sem funcionar | Aguarda a confirmação. QR Code, passo a passo numerado e "Copiar código Pix" (no computador, o passo a passo fica ao lado do QR). Confirmado o pagamento, leva à página do pedido |
+| 8 | **Checkout** | Em 3 etapas, uma por vez: **Seus dados** (e-mail, nome e CPF), **Entrega** (CEP, número e frete) e **Pagar** (forma de pagamento: Pix, já marcado, ou Crédito). O botão de ação (**Continuar**, e **Concluir pagamento** no Pagar) fica fixo no rodapé do celular e abaixo do resumo no desktop. Cada etapa mostra só o que é dela; para voltar, o cliente clica na etapa no indicador, inclusive na tela de pagamento | Preenche rua, bairro, cidade e UF pelo CEP, cota o frete e mostra o total sempre visível. Botões nunca ficam bloqueados: ao avançar, aponta o campo que falta |
+| 9 | **Pagamento** | Com Pix escolhido, **Concluir pagamento** cria o pedido e abre, em tela cheia por cima do checkout, o QR Code e o copia e cola; **Voltar** fecha e volta ao Pagar, reabrindo o mesmo PIX. Com Crédito, o cliente preenche o cartão e o celular ali mesmo e toca **Pagar R$ X** (à vista) | Pix: aguarda a confirmação, com QR Code, passo a passo numerado e "Copiar código Pix" (no computador, o passo a passo fica ao lado do QR); confirmado o pagamento, leva à página do pedido. Cartão: aprovado leva direto à página do pedido; em análise, a página do pedido mostra o aviso até o gateway decidir; recusado mostra o erro embaixo do cartão, para corrigir ou trocar para Pix |
 | 10 | **Pedido confirmado** | Vê o número e o prazo | Envia e-mail com link de acompanhamento |
 | 11 | **Acompanhar** | Consulta o status e o rastreio | Mostra Confirmado → Em produção → Enviado → Entregue |
 
@@ -155,7 +155,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | Tamanho desativado entre o carrinho e o fechamento | Aviso para escolher outro tamanho | Pedido não é criado |
 | PIX expirado | Aviso e botão para gerar um novo PIX, por até 24 horas. Depois disso, volta ao carrinho | Pedido expira, o carrinho permanece |
 | Pagamento em atraso, após a expiração | Pedido confirmado normalmente | Alerta interno é gerado para conferência |
-| PIX pago em duplicidade | Pedido confirmado normalmente | Alerta interno é gerado para devolver o valor excedente |
+| Pago em duplicidade (dois PIX, ou PIX e cartão) | Pedido confirmado normalmente | Alerta interno é gerado para devolver o valor excedente |
 
 ### 5.3 Depois do pagamento
 
@@ -205,6 +205,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RF-COM-07 | Cotar o frete por CEP, com valor e prazo por serviço | P0 |
 | RF-COM-08 | Somar ao prazo de entrega o prazo de produção da Kubo | P0 |
 | RF-COM-09 | Pagar com PIX, com QR Code, copia e cola e prazo visível | P0 |
+| RF-COM-13 | Pagar com cartão de crédito à vista (Visa e Mastercard), com os dados do cartão no formulário do gateway e o celular que ele exige | P0 |
 | RF-COM-10 | Confirmar o pagamento sem o cliente precisar recarregar a página | P0 |
 | RF-COM-12 | Preencher o endereço pelo CEP | P1 |
 
@@ -282,7 +283,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RN-16 | O prazo mostrado é a soma do prazo de produção com o do frete. Prazo de produção inicial de 7 dias úteis [Proposta]. |
 | RN-17 | Categoria, preço, frete, imagem, prompt e endereço ficam congelados no pedido. Mudanças posteriores não os alteram. |
 | RN-18 | O PIX expira em 30 minutos. Sem pagamento, o pedido expira e o carrinho permanece. |
-| RN-19 | No lançamento, o único meio de pagamento é o PIX. |
+| RN-19 | No lançamento, os meios de pagamento são PIX e cartão de crédito à vista. Não guardamos o cartão nem o celular. |
 | RN-20 | O pedido só é confirmado por notificação do gateway, conferida junto a ele. Nada informado pelo navegador confirma pagamento. |
 
 **Tabela de preços sugerida (RN-11).** A base é a tabela de Pessoa, multiplicada por um fator por categoria e arredondada para ",90". Os tamanhos de cada categoria são os da Pockella.
@@ -342,7 +343,7 @@ A retenção de arquivos tem prazos próprios, porque fotos e rostos são dados 
 
 | Grupo | Métrica |
 |---|---|
-| **Funil** | Foto enviada → foto aceita → 2D gerado → tamanho escolhido → item no carrinho → checkout iniciado → dados concluídos → entrega concluída → PIX gerado → pago, por categoria |
+| **Funil** | Foto enviada → foto aceita → 2D gerado → tamanho escolhido → item no carrinho → checkout iniciado → dados concluídos → entrega concluída → PIX gerado ou cartão enviado → pago, por categoria e por forma de pagamento |
 | **Classificação** | Recusas por motivo; categoria pedida × detectada; versões que mudaram de categoria na edição; inscrições na lista de espera por categoria |
 | **Custo** | Custo de IA por criação e por venda; custo total por dia |
 | **Confiabilidade** | Taxa de falha e de recusa por etapa; tarefas presas |
@@ -368,7 +369,7 @@ Não há metas numéricas ainda: as primeiras semanas servem para formar a linha
 | **Margem incorreta.** O preço é fixo por categoria e tamanho, e nenhuma peça é medida antes da compra. Uma peça maciça, ou a purga das 4 cores, pode custar mais que o previsto | Alto: venda com prejuízo, sem ninguém perceber | Calibrar a tabela com impressões reais e acompanhar o custo de cada pedido |
 | **Peça muito pequena.** 4 cm em FDM com várias cores pode não ser viável | Médio | Testar antes de lançar. Tamanhos inviáveis ficam inativos |
 | **Pedido pago sem tratamento.** Este app não tem operação: sem o app de parceiros, nenhuma tela do sistema mostra pedidos, entrega os arquivos ou registra o rastreio, e o cliente fica parado em "Confirmado" | **Crítico** | O app de parceiros é o próximo passo depois do app do cliente, e vendas reais só começam com a operação pronta |
-| **Só PIX reduz a conversão** em compras de maior valor | Médio | Medir o abandono no pagamento. O gateway também oferece cartão |
+| **Sem parcelamento, a conversão cai** em compras de maior valor | Médio | Medir o abandono no pagamento. O gateway parcela em até 12x |
 | **Provedor único de IA** na geração e na classificação | Médio | Toda integração fica isolada, permitindo trocar de provedor, e cada uma tem um modelo de reserva |
 
 ### Pontos jurídicos (validar com advogado)

@@ -1,4 +1,5 @@
-"""Cobrança PIX, liquidação e reembolso. O pedido só é confirmado pelo gateway (RN-20)."""
+"""Cobrança (PIX ou cartão), liquidação e reembolso. O pedido só é confirmado pelo gateway
+(RN-20)."""
 
 from __future__ import annotations
 
@@ -11,10 +12,11 @@ from django.utils import timezone
 
 from audit.services import record_event
 from common.alerts import alert
+from common.crypto import decrypt
 from common.exceptions import Conflict, DomainError
 from common.fsm import apply_transition
 from fulfillment import services as fulfillment
-from integrations.ports import get_payment_gateway_port
+from integrations.ports import GatewayCustomer, get_payment_gateway_port
 from orders import services as orders
 from orders.models import Order
 from payments.fsm import CHARGE_FSM
@@ -38,8 +40,17 @@ def can_renew_payment(order: Order) -> bool:
     return timezone.now() - order.expired_at <= window
 
 
-def pay_order(*, order: Order, actor=None, request_id: str = "") -> Charge:
-    """Reaproveita o PIX pendente ou cria um novo. Bloqueia o pedido para não duplicar."""
+def pay_order(
+    *,
+    order: Order,
+    method: str = Charge.Method.PIX,
+    card_token: str = "",
+    cellphone: str = "",
+    actor=None,
+    request_id: str = "",
+) -> Charge:
+    """PIX: reaproveita o pendente ou cria um novo. Cartão: cobra com o token do navegador e,
+    se aprovado na hora, já confirma o pedido. Bloqueia o pedido para não duplicar."""
     with transaction.atomic():
         locked = Order.objects.select_for_update().get(pk=order.pk)
         if locked.status == Order.Status.EXPIRED:
@@ -56,8 +67,24 @@ def pay_order(*, order: Order, actor=None, request_id: str = "") -> Charge:
         elif locked.status != Order.Status.PENDING_PAYMENT:
             raise Conflict("Este pedido já foi pago.", code="order_not_payable")
 
+        # Cartão em análise: não cobramos de novo, nem geramos PIX, até o gateway decidir.
+        if locked.charges.filter(method=Charge.Method.CARD, status=Charge.Status.PENDING).exists():
+            raise Conflict(
+                "O pagamento com cartão está em análise. Avisamos por e-mail.",
+                code="payment_in_review",
+            )
+
+        if method == Charge.Method.CARD:
+            return _create_card_charge(
+                order=locked, card_token=card_token, cellphone=cellphone, request_id=request_id
+            )
+
         pending = (
-            locked.charges.filter(status=Charge.Status.PENDING, expires_at__gt=timezone.now())
+            locked.charges.filter(
+                method=Charge.Method.PIX,
+                status=Charge.Status.PENDING,
+                expires_at__gt=timezone.now(),
+            )
             .order_by("-created_at")
             .first()
         )
@@ -67,6 +94,7 @@ def pay_order(*, order: Order, actor=None, request_id: str = "") -> Charge:
         port = get_payment_gateway_port()
         seconds = settings.BUSINESS["PIX_EXPIRES_SECONDS"]
         gateway = port.create_charge(
+            method=Charge.Method.PIX,
             amount=locked.total_cents,
             reference=str(locked.globalid),
             description=f"Pedido Kubo {locked.number}",
@@ -76,6 +104,7 @@ def pay_order(*, order: Order, actor=None, request_id: str = "") -> Charge:
             order=locked,
             provider=port.provider,
             external_id=gateway.external_id,
+            method=Charge.Method.PIX,
             amount_cents=locked.total_cents,
             pix_br_code=gateway.pix_br_code,
             pix_qr_base64=gateway.pix_qr_base64,
@@ -84,6 +113,43 @@ def pay_order(*, order: Order, actor=None, request_id: str = "") -> Charge:
         record_event(
             instance=charge, event="created", to_state=charge.status, request_id=request_id
         )
+    return charge
+
+
+def _create_card_charge(
+    *, order: Order, card_token: str, cellphone: str, request_id: str
+) -> Charge:
+    """Roda dentro da transação do `pay_order`, com o pedido travado. Recusa levanta
+    `PaymentDeclined` e não deixa cobrança: o cliente tenta de novo no mesmo pedido."""
+    port = get_payment_gateway_port()
+    customer = GatewayCustomer(
+        name=order.customer_name,
+        email=order.customer_email,
+        tax_id=decrypt(order.cpf_encrypted),
+        cellphone=cellphone,
+    )
+    gateway = port.create_charge(
+        method=Charge.Method.CARD,
+        amount=order.total_cents,
+        reference=str(order.globalid),
+        description=f"Pedido Kubo {order.number}",
+        card_token=card_token,
+        customer=customer,
+    )
+    charge = Charge.objects.create(
+        order=order,
+        provider=port.provider,
+        external_id=gateway.external_id,
+        method=Charge.Method.CARD,
+        amount_cents=order.total_cents,
+        card_brand=gateway.card_brand,
+        card_last_four=gateway.card_last_four,
+    )
+    record_event(instance=charge, event="created", to_state=charge.status, request_id=request_id)
+    if gateway.status == "paid":
+        # Aprovado na hora: o gateway não manda webhook para isso.
+        on_charge_paid(charge=charge, request_id=request_id)
+        charge.refresh_from_db()
     return charge
 
 
@@ -202,7 +268,7 @@ def expire_pending_charges() -> int:
     port = get_payment_gateway_port()
     for charge in Charge.objects.filter(status=Charge.Status.PENDING, expires_at__lte=now):
         try:
-            status = port.get_charge_status(external_id=charge.external_id)
+            status = port.get_charge_status(external_id=charge.external_id, method=charge.method)
         except DomainError:
             continue  # Gateway fora: tenta na próxima rodada.
         if status == "paid":
@@ -224,17 +290,21 @@ def expire_pending_charges() -> int:
 
 
 def reconcile_pending_charges() -> int:
-    """Cobre webhooks perdidos."""
+    """Cobre webhooks perdidos. Também resolve o cartão em análise: aprovado confirma o
+    pedido, recusado libera o cliente para pagar de outro jeito."""
     port = get_payment_gateway_port()
     cutoff = timezone.now() - _RECONCILE_MIN_AGE
     count = 0
     for charge in Charge.objects.filter(status=Charge.Status.PENDING, created_at__lte=cutoff):
         try:
-            status = port.get_charge_status(external_id=charge.external_id)
+            status = port.get_charge_status(external_id=charge.external_id, method=charge.method)
         except DomainError:
             continue
         if status == "paid":
             on_charge_paid(charge=charge)
+            count += 1
+        elif status == "failed" and charge.method == Charge.Method.CARD:
+            apply_transition(instance=charge, fsm=CHARGE_FSM, event="fail")
             count += 1
     return count
 
@@ -295,7 +365,9 @@ def _process(*, event: WebhookEvent, kind: str, refs: list[str], request_id: str
     try:
         if kind in _PAID_EVENTS:
             # Nunca liquida só pelo nome do evento: confere no gateway. Gateway fora vira 502.
-            status = get_payment_gateway_port().get_charge_status(external_id=charge.external_id)
+            status = get_payment_gateway_port().get_charge_status(
+                external_id=charge.external_id, method=charge.method
+            )
             if status != "paid":
                 _mark(event, WebhookEvent.Status.FAILED, f"gateway informou {status}")
                 return

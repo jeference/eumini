@@ -72,6 +72,20 @@ class ImageClassificationPort(ABC):
 # --- Pagamento ---
 
 
+PIX = "PIX"
+CARD = "CARD"
+
+
+@dataclass(frozen=True)
+class GatewayCustomer:
+    """Exigido pelo cartão. O PIX vai sem dados do cliente."""
+
+    name: str
+    email: str
+    tax_id: str  # só dígitos
+    cellphone: str  # só dígitos, com DDD
+
+
 @dataclass(frozen=True)
 class GatewayCharge:
     external_id: str
@@ -80,6 +94,8 @@ class GatewayCharge:
     pix_br_code: str = ""
     pix_qr_base64: str = ""
     expires_at: datetime | None = None
+    card_brand: str = ""
+    card_last_four: str = ""
 
 
 class PaymentGatewayPort(ABC):
@@ -87,11 +103,21 @@ class PaymentGatewayPort(ABC):
 
     @abstractmethod
     def create_charge(
-        self, *, amount: int, reference: str, description: str, expires_in_seconds: int
-    ) -> GatewayCharge: ...
+        self,
+        *,
+        method: str,
+        amount: int,
+        reference: str,
+        description: str,
+        expires_in_seconds: int | None = None,
+        card_token: str = "",
+        customer: GatewayCustomer | None = None,
+    ) -> GatewayCharge:
+        """PIX usa `expires_in_seconds`; cartão usa `card_token` e `customer`. Cartão recusado
+        levanta `PaymentDeclined`."""
 
     @abstractmethod
-    def get_charge_status(self, *, external_id: str) -> str: ...
+    def get_charge_status(self, *, external_id: str, method: str) -> str: ...
 
 
 # --- Frete ---

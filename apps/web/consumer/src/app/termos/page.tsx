@@ -38,8 +38,8 @@ export default function TermsPage() {
       </p>
       <h2>Pagamento e entrega</h2>
       <p>
-        O pagamento é feito por PIX, e o pedido é confirmado quando o pagamento é identificado. O
-        prazo informado antes do pagamento soma a produção e o frete.
+        O pagamento é feito por Pix ou cartão de crédito (à vista), e o pedido é confirmado quando o
+        pagamento é aprovado. O prazo informado antes do pagamento soma a produção e o frete.
       </p>
     </LegalPage>
   );

@@ -8,6 +8,7 @@ import { formatDate } from "@kubo/ui/lib/format";
 import { ORDER_STATUS } from "@kubo/ui/lib/status";
 import { Skeleton } from "@kubo/ui/skeleton";
 import { StatusBadge } from "@kubo/ui/status-badge";
+import type { Schemas } from "@kubo/api-client";
 import Link from "next/link";
 
 import { OrderPayment } from "@/features/orders/components/order-payment";
@@ -15,7 +16,17 @@ import { OrderSummary } from "@/features/orders/components/order-summary";
 import { OrderTimeline } from "@/features/orders/components/order-timeline";
 import { useOrder } from "@/features/orders/hooks";
 
-/** Hub do pedido: o status decide o que aparece, inclusive o pagamento PIX. */
+/** "Pix" ou "Cartão Visa •••• 4242". */
+function paymentLabel(charge: Schemas["Charge"]): string {
+  if (charge.method !== "CARD") return "Pix";
+  const brand = charge.card_brand
+    ? ` ${charge.card_brand.charAt(0)}${charge.card_brand.slice(1).toLowerCase()}`
+    : "";
+  const lastFour = charge.card_last_four ? ` •••• ${charge.card_last_four}` : "";
+  return `Cartão${brand}${lastFour}`;
+}
+
+/** Hub do pedido: o status decide o que aparece, inclusive o pagamento. */
 export function OrderDetail({ id }: { id: string }) {
   const { data: order, isLoading, isError } = useOrder(id);
 
@@ -48,7 +59,7 @@ export function OrderDetail({ id }: { id: string }) {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      {/* Esperando o PIX, a tela é só o pagamento: número, status e data vêm depois. */}
+      {/* Esperando o pagamento, a tela é só ele: número, status e data vêm depois. */}
       {order.status === "pending_payment" ? (
         <h1 className="sr-only">Pagamento do pedido</h1>
       ) : (
@@ -74,7 +85,7 @@ export function OrderDetail({ id }: { id: string }) {
 
       {order.status === "refunded" && (
         <Callout role="status" className="p-4 text-base text-ink">
-          Este pedido foi reembolsado. O valor volta para a conta usada no PIX.
+          Este pedido foi reembolsado. O valor volta para a forma de pagamento usada.
         </Callout>
       )}
 
@@ -102,6 +113,9 @@ export function OrderDetail({ id }: { id: string }) {
           CEP {order.postal_code.slice(0, 5)}-{order.postal_code.slice(5)}
         </p>
         <p className="mt-2 text-muted">CPF {order.cpf_masked}</p>
+        {isPaidOrLater && order.charge && (
+          <p className="mt-2 text-muted">Pago com {paymentLabel(order.charge)}</p>
+        )}
       </Card>
     </div>
   );

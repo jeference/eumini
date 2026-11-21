@@ -668,12 +668,15 @@ export interface components {
         Charge: {
             /** Format: uuid */
             readonly id: string;
+            readonly method: components["schemas"]["MethodEnum"];
             readonly status: components["schemas"]["ChargeStatusEnum"];
             readonly amount_cents: number;
             readonly pix_br_code: string;
             readonly pix_qr_base64: string;
+            readonly card_brand: string;
+            readonly card_last_four: string;
             /** Format: date-time */
-            readonly expires_at: string;
+            readonly expires_at: string | null;
             /** Format: date-time */
             readonly paid_at: string | null;
         };
@@ -779,13 +782,22 @@ export interface components {
             password: string;
         };
         /**
+         * @description * `PIX` - Pix
+         *     * `CARD` - Cartão de crédito
+         * @enum {string}
+         */
+        MethodEnum: "PIX" | "CARD";
+        /**
          * @description * `buy_now_clicked` - buy_now_clicked
+         *     * `card_declined` - card_declined
+         *     * `card_submitted` - card_submitted
          *     * `category_selected` - category_selected
          *     * `checkout_started` - checkout_started
          *     * `checkout_step_completed` - checkout_step_completed
          *     * `edit_requested` - edit_requested
          *     * `item_added_to_cart` - item_added_to_cart
          *     * `page_viewed` - page_viewed
+         *     * `payment_method_selected` - payment_method_selected
          *     * `pix_copied` - pix_copied
          *     * `pix_generated` - pix_generated
          *     * `prompt_submitted` - prompt_submitted
@@ -794,7 +806,7 @@ export interface components {
          *     * `waitlist_joined` - waitlist_joined
          * @enum {string}
          */
-        NameEnum: "buy_now_clicked" | "category_selected" | "checkout_started" | "checkout_step_completed" | "edit_requested" | "item_added_to_cart" | "page_viewed" | "pix_copied" | "pix_generated" | "prompt_submitted" | "shipping_quoted" | "size_selected" | "waitlist_joined";
+        NameEnum: "buy_now_clicked" | "card_declined" | "card_submitted" | "category_selected" | "checkout_started" | "checkout_step_completed" | "edit_requested" | "item_added_to_cart" | "page_viewed" | "payment_method_selected" | "pix_copied" | "pix_generated" | "prompt_submitted" | "shipping_quoted" | "size_selected" | "waitlist_joined";
         OrderCreateRequest: {
             item_ids: string[];
             /** Format: uuid */
@@ -865,6 +877,16 @@ export interface components {
             readonly item_count: number;
             /** Format: date-time */
             readonly created_at: string;
+        };
+        /**
+         * @description Sem corpo, gera o PIX. Cartão traz o token do abacatepay.js e o celular, que o
+         *     gateway exige no cartão e que não guardamos.
+         */
+        OrderPayRequest: {
+            /** @default PIX */
+            method: components["schemas"]["MethodEnum"];
+            card_token?: string;
+            cellphone?: string;
         };
         /**
          * @description * `pending_payment` - Aguardando pagamento
@@ -1838,7 +1860,12 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["OrderPayRequest"];
+                "multipart/form-data": components["schemas"]["OrderPayRequest"];
+            };
+        };
         responses: {
             200: {
                 headers: {

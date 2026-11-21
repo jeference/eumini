@@ -7,10 +7,18 @@ import type { ReactNode } from "react";
 export const CHECKOUT_FORM_ID = "checkout-form";
 
 /**
- * Ação da etapa: "Continuar" nas etapas de dados e entrega, "Concluir pagamento" no Pagar.
+ * Ação da etapa: "Continuar" nas etapas de dados e entrega, `finishLabel` no Pagar.
  * Fixo no rodapé do celular; no desktop, logo abaixo do resumo do pedido.
  */
-export function CheckoutAction({ finish, pending }: { finish: boolean; pending: boolean }) {
+export function CheckoutAction({
+  finish,
+  finishLabel = "Concluir pagamento",
+  pending,
+}: {
+  finish: boolean;
+  finishLabel?: string;
+  pending: boolean;
+}) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] lg:static lg:border-0 lg:bg-transparent lg:p-0">
       <Button
@@ -24,7 +32,7 @@ export function CheckoutAction({ finish, pending }: { finish: boolean; pending: 
         {finish ? (
           <>
             <Lock aria-hidden />
-            Concluir pagamento
+            {finishLabel}
           </>
         ) : (
           <>

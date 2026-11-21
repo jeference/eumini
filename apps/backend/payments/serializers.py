@@ -7,10 +7,13 @@ class ChargeSerializer(GlobalIdSerializer):
         model = Charge
         fields = [
             "id",
+            "method",
             "status",
             "amount_cents",
             "pix_br_code",
             "pix_qr_base64",
+            "card_brand",
+            "card_last_four",
             "expires_at",
             "paid_at",
         ]

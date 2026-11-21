@@ -4,6 +4,7 @@ import { ApiError, type Schemas } from "@kubo/api-client";
 import { Button } from "@kubo/ui/button";
 import { Card } from "@kubo/ui/card";
 import { Skeleton } from "@kubo/ui/skeleton";
+import { Hourglass } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
@@ -13,17 +14,21 @@ import { usePayOrder } from "@/features/orders/hooks";
 import { messageOf } from "@/lib/errors";
 
 /**
- * Pagamento de um pedido aguardando PIX: mostra o PIX válido, gera um se faltar
- * (uma tentativa automática) e oferece um novo quando o prazo termina.
+ * Pagamento de um pedido aguardando pagamento:
+ * - cartão em análise: só avisa (o polling do pedido mostra quando decidir);
+ * - PIX válido: mostra o PIX;
+ * - sem cobrança válida (ou cartão recusado): gera um PIX (uma tentativa automática);
+ * - expirado: oferece um novo PIX.
  * Fora de `pending_payment` e `expired`, não mostra nada.
  */
 export function OrderPayment({ order }: { order: Schemas["OrderDetail"] }) {
   const pay = usePayOrder(order.id);
   const triedPay = useRef(false);
   const payMutate = pay.mutate;
+  const charge = order.charge;
+  const pendingCharge = order.status === "pending_payment" && charge?.status === "pending";
 
-  const needsCharge =
-    order.status === "pending_payment" && (!order.charge || order.charge.status !== "pending");
+  const needsCharge = order.status === "pending_payment" && !pendingCharge;
   useEffect(() => {
     if (needsCharge && !triedPay.current) {
       triedPay.current = true;
@@ -31,8 +36,23 @@ export function OrderPayment({ order }: { order: Schemas["OrderDetail"] }) {
     }
   }, [needsCharge, payMutate]);
 
-  if (order.status === "pending_payment" && order.charge?.status === "pending") {
-    return <PixPayment charge={order.charge} />;
+  if (pendingCharge && charge.method === "CARD") {
+    return (
+      <Card className="flex items-start gap-3 p-5" role="status">
+        <Hourglass aria-hidden className="mt-0.5 size-5 shrink-0 text-accent" />
+        <div className="space-y-1">
+          <p className="font-semibold">Pagamento em análise</p>
+          <p className="text-sm text-muted">
+            O pagamento com cartão está sendo confirmado. Esta página atualiza sozinha, e avisamos
+            por e-mail assim que for aprovado.
+          </p>
+        </div>
+      </Card>
+    );
+  }
+
+  if (pendingCharge) {
+    return <PixPayment charge={charge} />;
   }
 
   if (needsCharge) {

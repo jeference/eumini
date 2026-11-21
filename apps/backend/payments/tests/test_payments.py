@@ -115,7 +115,7 @@ def test_gateway_down_returns_502_for_redelivery(visitor_client, anon, monkeypat
     external = Charge.objects.get(globalid=charge["id"]).external_id
 
     class Down:
-        def get_charge_status(self, *, external_id):
+        def get_charge_status(self, *, external_id, method):
             raise UpstreamUnavailable()
 
     monkeypatch.setattr("payments.services.get_payment_gateway_port", lambda: Down())
@@ -186,6 +186,7 @@ def test_duplicate_pix_has_no_second_revenue(
         order=order,
         provider="stub",
         external_id="pix_stub_segundo",
+        method=Charge.Method.PIX,
         amount_cents=order.total_cents,
         expires_at=timezone.now() + timedelta(minutes=30),
     )
@@ -255,3 +256,85 @@ def test_reconcile_covers_lost_webhook(visitor_client):
     stub_set_charge_status(db_charge.external_id, "paid")
     assert services.reconcile_pending_charges() == 1
     assert Order.objects.get(globalid=order["id"]).status == Order.Status.PAID
+
+
+# --- Cartão ---
+
+PHONE = "(11) 99999-8888"
+
+
+def _pay_card(client, order, token="ctok_teste", cellphone=PHONE):
+    return client.post(
+        f"/api/orders/{order['id']}/pay/",
+        {"method": "CARD", "card_token": token, "cellphone": cellphone},
+        format="json",
+    )
+
+
+def test_card_approved_confirms_order_now(visitor_client, django_capture_on_commit_callbacks):
+    order = place_order(visitor_client)
+    with django_capture_on_commit_callbacks(execute=True):
+        response = _pay_card(visitor_client, order)
+    assert response.status_code == 200, response.data
+    assert response.data["status"] == "paid"
+    charge = response.data["charge"]
+    assert charge["method"] == "CARD"
+    assert charge["status"] == "paid"
+    assert (charge["card_brand"], charge["card_last_four"]) == ("VISA", "4242")
+    assert charge["expires_at"] is None
+    assert ProductionJob.objects.filter(order_item__order__globalid=order["id"]).exists()
+    assert visitor_client.get("/api/cart/").data["item_count"] == 0
+    assert any("Recebemos seu pagamento" in mail["body"] for mail in outbox)
+
+
+def test_card_declined_keeps_order_payable(visitor_client):
+    order = place_order(visitor_client)
+    response = _pay_card(visitor_client, order, token="ctok_recusado")
+    assert response.status_code == 422
+    assert response.data["code"] == "card_declined"
+    assert not Charge.objects.filter(order__globalid=order["id"]).exists()
+    # Nova tentativa no mesmo pedido.
+    assert _pay_card(visitor_client, order).data["status"] == "paid"
+
+
+def test_card_in_review_blocks_new_charges(visitor_client, anon):
+    order = place_order(visitor_client)
+    response = _pay_card(visitor_client, order, token="ctok_analise")
+    assert response.status_code == 200
+    assert response.data["status"] == "pending_payment"
+    assert response.data["charge"]["status"] == "pending"
+    for retry in (
+        _pay_card(visitor_client, order),
+        visitor_client.post(f"/api/orders/{order['id']}/pay/"),
+    ):
+        assert retry.status_code == 409
+        assert retry.data["code"] == "payment_in_review"
+    # O expire não toca no cartão (não vence).
+    call_command("expire_pending_charges")
+    external = Charge.objects.get(order__globalid=order["id"]).external_id
+    stub_set_charge_status(external, "paid")
+    assert _webhook(anon, external).status_code == 200
+    assert Order.objects.get(globalid=order["id"]).status == Order.Status.PAID
+
+
+def test_reconcile_fails_rejected_card(visitor_client):
+    order = place_order(visitor_client)
+    _pay_card(visitor_client, order, token="ctok_analise")
+    charge = Charge.objects.get(order__globalid=order["id"])
+    Charge.objects.filter(pk=charge.pk).update(created_at=timezone.now() - timedelta(minutes=5))
+    stub_set_charge_status(charge.external_id, "failed")
+    call_command("reconcile_pending_charges")
+    charge.refresh_from_db()
+    assert charge.status == Charge.Status.FAILED
+    # Liberado para pagar de outro jeito.
+    assert _pay(visitor_client, order)["method"] == "PIX"
+
+
+def test_card_requires_token_and_cellphone(visitor_client):
+    order = place_order(visitor_client)
+    bad_token = _pay_card(visitor_client, order, token="abc")
+    assert bad_token.status_code == 400
+    assert "card_token" in bad_token.data
+    bad_phone = _pay_card(visitor_client, order, cellphone="123")
+    assert bad_phone.status_code == 400
+    assert "cellphone" in bad_phone.data

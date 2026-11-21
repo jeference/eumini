@@ -14,8 +14,8 @@ export default function ReturnsPage() {
       </p>
       <h2>Defeito ou dano</h2>
       <p>
-        Se a peça chegar com defeito ou danificada, avise em até 7 dias depois da entrega, com fotos.
-        Fazemos a reposição ou devolvemos o valor pago.
+        Se a peça chegar com defeito ou danificada, avise em até 7 dias depois da entrega, com
+        fotos. Fazemos a reposição ou devolvemos o valor pago.
       </p>
       <h2>Diferenças em relação à prévia</h2>
       <p>
@@ -23,7 +23,10 @@ export default function ReturnsPage() {
         diferenças de cor e detalhe são esperadas.
       </p>
       <h2>Reembolso</h2>
-      <p>O reembolso é feito por PIX, na conta usada no pagamento, sempre do valor total do pedido.</p>
+      <p>
+        O reembolso volta para a forma de pagamento usada (a conta do Pix ou a fatura do cartão),
+        sempre do valor total do pedido.
+      </p>
     </LegalPage>
   );
 }

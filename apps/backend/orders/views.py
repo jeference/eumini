@@ -123,11 +123,15 @@ class OrderPayView(APIView):
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "order_write"
 
-    @extend_schema(request=None, responses=s.OrderDetailSerializer)
+    @extend_schema(request=s.OrderPaySerializer, responses=s.OrderDetailSerializer)
     def post(self, request, order_id):
         actor = actor_from_request(request)
         order = services.get_order(actor=actor, order_id=order_id)
-        payments.pay_order(order=order, actor=actor, request_id=request_id_of(request))
+        payload = s.OrderPaySerializer(data=request.data)
+        payload.is_valid(raise_exception=True)
+        payments.pay_order(
+            order=order, actor=actor, request_id=request_id_of(request), **payload.validated_data
+        )
         order.refresh_from_db()
         return Response(s.OrderDetailSerializer(order).data)
 

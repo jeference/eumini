@@ -724,6 +724,14 @@ paths:
         required: true
       tags:
       - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderPayRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderPayRequest'
       security:
       - jwtAuth: []
       - visitorCookie: []
@@ -1075,6 +1083,10 @@ components:
           type: string
           format: uuid
           readOnly: true
+        method:
+          allOf:
+          - $ref: '#/components/schemas/MethodEnum'
+          readOnly: true
         status:
           allOf:
           - $ref: '#/components/schemas/ChargeStatusEnum'
@@ -1088,10 +1100,17 @@ components:
         pix_qr_base64:
           type: string
           readOnly: true
+        card_brand:
+          type: string
+          readOnly: true
+        card_last_four:
+          type: string
+          readOnly: true
         expires_at:
           type: string
           format: date-time
           readOnly: true
+          nullable: true
         paid_at:
           type: string
           format: date-time
@@ -1099,8 +1118,11 @@ components:
           nullable: true
       required:
       - amount_cents
+      - card_brand
+      - card_last_four
       - expires_at
       - id
+      - method
       - paid_at
       - pix_br_code
       - pix_qr_base64
@@ -1378,15 +1400,26 @@ components:
       required:
       - email
       - password
+    MethodEnum:
+      enum:
+      - PIX
+      - CARD
+      type: string
+      description: |-
+        * `PIX` - Pix
+        * `CARD` - Cartão de crédito
     NameEnum:
       enum:
       - buy_now_clicked
+      - card_declined
+      - card_submitted
       - category_selected
       - checkout_started
       - checkout_step_completed
       - edit_requested
       - item_added_to_cart
       - page_viewed
+      - payment_method_selected
       - pix_copied
       - pix_generated
       - prompt_submitted
@@ -1396,12 +1429,15 @@ components:
       type: string
       description: |-
         * `buy_now_clicked` - buy_now_clicked
+        * `card_declined` - card_declined
+        * `card_submitted` - card_submitted
         * `category_selected` - category_selected
         * `checkout_started` - checkout_started
         * `checkout_step_completed` - checkout_step_completed
         * `edit_requested` - edit_requested
         * `item_added_to_cart` - item_added_to_cart
         * `page_viewed` - page_viewed
+        * `payment_method_selected` - payment_method_selected
         * `pix_copied` - pix_copied
         * `pix_generated` - pix_generated
         * `prompt_submitted` - prompt_submitted
@@ -1660,6 +1696,22 @@ components:
       - status
       - thumbnail_url
       - total_cents
+    OrderPayRequest:
+      type: object
+      description: |-
+        Sem corpo, gera o PIX. Cartão traz o token do abacatepay.js e o celular, que o
+        gateway exige no cartão e que não guardamos.
+      properties:
+        method:
+          allOf:
+          - $ref: '#/components/schemas/MethodEnum'
+          default: PIX
+        card_token:
+          type: string
+          maxLength: 128
+        cellphone:
+          type: string
+          maxLength: 20
     OrderStatusEnum:
       enum:
       - pending_payment

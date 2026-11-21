@@ -13,7 +13,7 @@ import responses
 from botocore.response import StreamingBody
 from botocore.stub import Stubber
 
-from common.exceptions import ServiceBusy, UpstreamUnavailable
+from common.exceptions import PaymentDeclined, ServiceBusy, UpstreamUnavailable
 from integrations.adapters.abacatepay import AbacatePayAdapter
 from integrations.adapters.media_s3 import S3MediaAdapter
 from integrations.adapters.melhor_envio import MelhorEnvioAdapter
@@ -23,6 +23,7 @@ from integrations.adapters.viacep import ViaCepAdapter
 from integrations.models import IntegrationCredential
 from integrations.ports import (
     ContentRefused,
+    GatewayCustomer,
     ProviderPermanentError,
     ProviderTemporaryError,
     ShippingItem,
@@ -141,7 +142,11 @@ def test_abacatepay_create_charge(_keys):
         },
     )
     charge = AbacatePayAdapter().create_charge(
-        amount=12990, reference="ref", description="Pedido Kubo KB123", expires_in_seconds=1800
+        method="PIX",
+        amount=12990,
+        reference="ref",
+        description="Pedido Kubo KB123",
+        expires_in_seconds=1800,
     )
     assert charge.external_id == "pix_char_1"
     assert charge.status == "pending"
@@ -167,7 +172,7 @@ def test_abacatepay_create_charge(_keys):
 @responses.activate
 def test_abacatepay_only_paid_settles(_keys, raw, mapped):
     responses.get(f"{ABACATE}/transparents/check", json={"data": {"status": raw}, "success": True})
-    assert AbacatePayAdapter().get_charge_status(external_id="pix") == mapped
+    assert AbacatePayAdapter().get_charge_status(external_id="pix", method="PIX") == mapped
 
 
 @responses.activate
@@ -175,11 +180,89 @@ def test_abacatepay_errors_are_upstream_unavailable(_keys):
     responses.post(f"{ABACATE}/transparents/create", json={"error": "x", "success": False})
     with pytest.raises(UpstreamUnavailable):
         AbacatePayAdapter().create_charge(
-            amount=1, reference="r", description="d", expires_in_seconds=1
+            method="PIX", amount=1, reference="r", description="d", expires_in_seconds=1
         )
     responses.get(f"{ABACATE}/transparents/check", status=500)
     with pytest.raises(UpstreamUnavailable):
-        AbacatePayAdapter().get_charge_status(external_id="pix")
+        AbacatePayAdapter().get_charge_status(external_id="pix", method="PIX")
+
+
+_CUSTOMER = GatewayCustomer(
+    name="Ana Souza", email="ana@exemplo.com", tax_id="52998224725", cellphone="11999998888"
+)
+
+
+@responses.activate
+def test_abacatepay_card_charge_approved_is_paid(_keys):
+    responses.post(
+        f"{ABACATE}/transparents/create",
+        json={
+            "data": {"id": "card_1", "status": "APPROVED", "brand": "VISA", "lastFour": "4242"},
+            "success": True,
+            "error": None,
+        },
+    )
+    charge = AbacatePayAdapter().create_charge(
+        method="CARD",
+        amount=12990,
+        reference="ref",
+        description="Pedido Kubo KB123",
+        card_token="ctok_abc",
+        customer=_CUSTOMER,
+    )
+    assert charge.status == "paid"
+    assert (charge.card_brand, charge.card_last_four) == ("VISA", "4242")
+    body = json.loads(responses.calls[0].request.body)
+    assert body["method"] == "CARD"
+    assert body["data"]["token"] == "ctok_abc"
+    assert "expiresIn" not in body["data"]
+    assert body["data"]["customer"] == {
+        "name": "Ana Souza",
+        "email": "ana@exemplo.com",
+        "taxId": "52998224725",
+        "cellphone": "11999998888",
+    }
+
+
+@pytest.mark.parametrize("http_status", [400, 422])
+@responses.activate
+def test_abacatepay_card_decline_is_payment_declined(_keys, http_status):
+    responses.post(
+        f"{ABACATE}/transparents/create",
+        status=http_status,
+        json={"data": None, "success": False, "error": "Cartão recusado"},
+    )
+    with pytest.raises(PaymentDeclined):
+        AbacatePayAdapter().create_charge(
+            method="CARD",
+            amount=12990,
+            reference="r",
+            description="d",
+            card_token="ctok_abc",
+            customer=_CUSTOMER,
+        )
+
+
+@responses.activate
+def test_abacatepay_card_auth_error_is_upstream(_keys):
+    responses.post(f"{ABACATE}/transparents/create", status=401, json={"success": False})
+    with pytest.raises(UpstreamUnavailable):
+        AbacatePayAdapter().create_charge(
+            method="CARD",
+            amount=12990,
+            reference="r",
+            description="d",
+            card_token="ctok_abc",
+            customer=_CUSTOMER,
+        )
+
+
+@responses.activate
+def test_abacatepay_card_status_uses_get(_keys):
+    responses.get(
+        f"{ABACATE}/transparents/get", json={"data": {"status": "APPROVED"}, "success": True}
+    )
+    assert AbacatePayAdapter().get_charge_status(external_id="card_1", method="CARD") == "paid"
 
 
 # --- Melhor Envio ---

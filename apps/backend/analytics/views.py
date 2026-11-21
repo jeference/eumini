@@ -22,6 +22,9 @@ ALLOWED_EVENTS = {
     "shipping_quoted",
     "pix_generated",
     "pix_copied",
+    "payment_method_selected",
+    "card_submitted",
+    "card_declined",
     "category_selected",
     "waitlist_joined",
 }
