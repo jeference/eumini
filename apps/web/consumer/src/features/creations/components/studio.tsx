@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@kubo/ui/button";
-import { Card } from "@kubo/ui/card";
-import { EmptyState } from "@kubo/ui/empty-state";
-import { Skeleton } from "@kubo/ui/skeleton";
+import { Button } from "@eumini/ui/button";
+import { Card } from "@eumini/ui/card";
+import { EmptyState } from "@eumini/ui/empty-state";
+import { Skeleton } from "@eumini/ui/skeleton";
 import { ArrowLeft, Pencil, RotateCw, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

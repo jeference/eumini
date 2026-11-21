@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Data** | 19/11/2026 |
-| **Objetivo** | Saber se o Jev serve como classificador da Kubo (RN-30 a RN-38 do [PRD](../PRD.md)): decidir a categoria da foto antes de gerar e a categoria de cada versão gerada |
+| **Objetivo** | Saber se o Jev serve como classificador da EuMini (RN-30 a RN-38 do [PRD](../PRD.md)): decidir a categoria da foto antes de gerar e a categoria de cada versão gerada |
 | **Resultado** | **Aprovado no teste.** Na versão final das perguntas, acertou 46 de 47 casos, sempre com a mesma resposta nas 3 repetições, em 0,23 s (mediana) e por cerca de US$ 0,0001 por chamada |
 
 ## Como foi feito
@@ -11,7 +11,7 @@
 - **Modelo:** `jev-1.14.0`, pela API da TypeSafe (`POST https://api.typesafe.ai/v1/systemone`), com a imagem ligada pelo cabeçalho `TypeSafe-Danger-Zone-Images: true`. A TypeSafe diz que a entrada de imagem ainda não está pronta para produção.
 - **Casos:** 47 imagens em [`casos.json`](casos.json), cada uma com a resposta esperada.
   - **29 fotos:** os casos difíceis do estudo da Pockella, mais fotos do Wikimedia Commons e fotos enviadas no app em desenvolvimento.
-  - **18 versões:** imagens geradas pela Kubo em desenvolvimento e resultados do estudo de estilos da Jujubit.
+  - **18 versões:** imagens geradas pela EuMini em desenvolvimento e resultados do estudo de estilos da Jujubit.
   - **Excluídas:** fotos de crianças e fotos de uma pessoa real que não é pública.
 - **Uma chamada por imagem**, com várias perguntas, todas no [`teste_jev.py`](teste_jev.py):
   - `subject` (escolha): quem está na imagem, entre as 4 categorias vendidas e as 4 recusadas da Pockella. A descrição muda entre foto e versão.
@@ -42,7 +42,7 @@ O custo considera só os tokens de entrada (cerca de 2.800 por chamada, imagem i
 
 - **"É foto real?" é a pergunta errada** (v1). Duas fotos realistas, muito tratadas e talvez feitas por IA (mulher abraçando um cachorro, dois cães), tiveram notas de 0,17 e 0,26. O desenho infantil teve 0,20, então nenhum limite separava os dois grupos. Perguntando "é desenho, pintura ou ilustração?", a arte ficou entre 0,94 e 0,97, e todas as fotos ficaram em 0,31 ou menos.
 - **A pergunta de desenho quase não mudava as decisões** (v2). Sem ela, o desenho infantil já cai em `no_subject` e o Mickey em `protected_character`. Só os retratos pintados passavam a ser vendidos. Ela saiu porque recusaria avatares e retratos de pets feitos por encomenda; o risco que fica é o de ilustração de outro autor (RN-27).
-- **Personagem com limite 0,5 erra.** Um gatinho gerado pela Kubo, com laço rosa, teve 0,67, provavelmente por lembrar a Hello Kitty. Os personagens de verdade ficaram entre 0,97 e 0,99, então o limite passou a 0,8.
+- **Personagem com limite 0,5 erra.** Um gatinho gerado pela EuMini, com laço rosa, teve 0,67, provavelmente por lembrar a Hello Kitty. Os personagens de verdade ficaram entre 0,97 e 0,99, então o limite passou a 0,8.
 - **Imagens pequenas são recusadas.** A foto do busto do Batman, com 231 × 300 px, deu erro 400 ("Invalid image dimensions").
 
 ### Casos difíceis da Pockella

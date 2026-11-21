@@ -1,6 +1,6 @@
 # Meshy Shop (meshy.ai/shop): mapeamento completo
 
-> Estudo de um concorrente direto do Kubo, feito em 01/11 e 02/11/2026 usando o site de verdade: um Chrome controlado por script no PC do Jeferson, em português e com preços do Brasil.
+> Estudo de um concorrente direto do EuMini, feito em 01/11 e 02/11/2026 usando o site de verdade: um Chrome controlado por script no PC do Jeferson, em português e com preços do Brasil.
 >
 > **Sem login (01/11):**
 > - **8 fotos**, cada uma gerando 4 designs (32 imagens), até **estourar o limite diário**;
@@ -21,7 +21,7 @@
 ## Resumo em 10 pontos
 
 1. **O que é:** a loja de presentes da própria Meshy, a empresa de IA 3D. O cliente envia uma foto e recebe uma figura chibi ou um chaveiro de pet impresso em cores. A impressão e o envio ficam com terceiros, segundo os termos.
-2. **Fluxo central:** foto → **4 designs 2D** (~30 s) → cliente escolhe um → **"Faça este em 3D"** (~1 min) → tamanho → checkout. Ao contrário do Jujubit, o 2D **precisa ser aprovado** antes do 3D. É o mesmo desenho do fluxo-alvo do Kubo.
+2. **Fluxo central:** foto → **4 designs 2D** (~30 s) → cliente escolhe um → **"Faça este em 3D"** (~1 min) → tamanho → checkout. Ao contrário do Jujubit, o 2D **precisa ser aprovado** antes do 3D. É o mesmo desenho do fluxo-alvo do EuMini.
 3. **Só foto.** Não há prompt, estilo, edição por chat nem regeneração de um design específico. O único texto é o nome do pet, no chaveiro.
 4. **Não exige login para gerar nem para comprar.** O site cria uma sessão de convidado, e o pedido vira conta pelo e-mail do checkout. Com login, a loja quase não muda: cota um pouco maior, designs na conta e a lista de pedidos (seção 11).
 5. **Limite de 8 fotos por dia para convidado, compartilhado entre os produtos.** Com o limite estourado, o 3D **continua liberado**: fiz mais 7 sem bloqueio. Numa conta grátis são **10 designs de figura por dia**, renovados às 21h de Brasília, e a loja não gasta os créditos da conta.
@@ -29,7 +29,7 @@
 7. **Um classificador decide o que pode ser vendido, mas só avisa depois de gastar.** O veredito (`subject_type`) já existe nos primeiros segundos do 3D, mas o processo vai até o fim, e só então a compra some. Ele também erra: **uma xícara com carinha passou como "1 pessoa"** e pode ser comprada. Já a imagem do Mickey foi recusada ainda no 2D, com um aviso genérico e a cota devolvida.
 8. **O arquivo da prévia é protegido:** vem em `.meshy`, um formato próprio aberto por um worker de `decrypt`. O cliente vê o 3D, mas não recebe um GLB. Não tentei decifrar.
 9. **Preço:** figura de pessoa de R$ 188 (6 cm) a R$ 851 (12 cm), pet de R$ 227 (4 cm) a R$ 801 (8 cm), duas pessoas de R$ 271 a R$ 492, chaveiro por R$ 216. Frete de **R$ 26** para o Brasil. A promessa é de envio em 7 a 10 dias, e a tela calculou chegada em ~21 dias.
-10. **Para o Kubo, o ponto mais sensível é estratégico:** a Meshy, único provedor 3D planejado, vende o mesmo tipo de produto final. Ao mesmo tempo, ela oferece a mesma tecnologia por API "para negócios", com a frase "você traz a loja e o fulfillment" (seção 10).
+10. **Para o EuMini, o ponto mais sensível é estratégico:** a Meshy, único provedor 3D planejado, vende o mesmo tipo de produto final. Ao mesmo tempo, ela oferece a mesma tecnologia por API "para negócios", com a frase "você traz a loja e o fulfillment" (seção 10).
 
 ---
 
@@ -324,22 +324,22 @@ O FAQ é generoso, mas os termos escritos dizem coisas diferentes. Vale lembrar 
 
 ---
 
-## 10. O que isso sugere para o Kubo
+## 10. O que isso sugere para o EuMini
 
-1. **O fluxo-alvo do Kubo tem um concorrente real, e funcionando:** imagem → aprovar 2D → 3D → comprar. Isso valida o desenho e tira a dúvida levantada no estudo do Jujubit sobre pular a aprovação.
-2. **Testar 4 opções em vez de 1.** Escolher entre 4 é simples, mas custa 4 imagens por tentativa. Vale um teste no protótipo, junto com a edição por chat, que a Meshy não tem e é uma diferença real do Kubo.
-3. **Classificar antes de gastar.** A lição mais barata deste estudo: o Kubo deve checar o assunto logo na foto ou no design aprovado e parar antes do 3D. Hoje o protótipo não restringe assunto, então isso só importa quando houver regra de venda.
+1. **O fluxo-alvo do EuMini tem um concorrente real, e funcionando:** imagem → aprovar 2D → 3D → comprar. Isso valida o desenho e tira a dúvida levantada no estudo do Jujubit sobre pular a aprovação.
+2. **Testar 4 opções em vez de 1.** Escolher entre 4 é simples, mas custa 4 imagens por tentativa. Vale um teste no protótipo, junto com a edição por chat, que a Meshy não tem e é uma diferença real do EuMini.
+3. **Classificar antes de gastar.** A lição mais barata deste estudo: o EuMini deve checar o assunto logo na foto ou no design aprovado e parar antes do 3D. Hoje o protótipo não restringe assunto, então isso só importa quando houver regra de venda.
 4. **Mostrar o preço certo cedo.** Se o preço depende do assunto, ele não pode mudar depois de 1 minuto de espera.
 5. **Proteger a prévia.** Vale avaliar um formato ou uma entrega que não exponha o GLB completo, ou ao menos uma prévia de baixa resolução, já que o modelo é o entregável.
 6. **Não mandar links de produção ao navegador.** Links de fornecedor e pacote devem ser criados no servidor, depois do pagamento.
 7. **Limitar o 3D também.** O 3D é a etapa cara, e a cota deve valer para ele. Vale manter a boa ideia da cota única por usuário, somando todos os produtos.
 8. **Dependência de provedor: a questão que merece decisão.** O plano atual é usar só a Meshy no 3D, e a Meshy é concorrente direta no produto final. O [relatório de endpoints](../../../fornecedores-3d/comparativo/Endpoints%20Tripo%20AI%20e%20Meshy.md) já deixa em aberto se um marketplace de impressão é "produto concorrente" pela s. 2.6(iv) dos termos. A oferta "para negócios" aponta para o outro lado, mas não responde à dúvida. **Sugestão: perguntar à Meshy por escrito** pelo formulário de integração, antes de investir mais nesse caminho.
-9. **API equivalente.** Os nomes internos `figure-prototype` e `figure-build` batem com `POST /prototype` e `/build` do Creative Lab Figure documentados no relatório (6 créditos por imagem e 30 no build). Seria um atalho para testar a mesma qualidade, com a ressalva do próprio relatório: é chibi e não tem parâmetro de tamanho. O fluxo-alvo do Kubo, com análise, reparo e multicolor, usa outros endpoints.
-10. **Onde o Kubo pode diferenciar:**
+9. **API equivalente.** Os nomes internos `figure-prototype` e `figure-build` batem com `POST /prototype` e `/build` do Creative Lab Figure documentados no relatório (6 créditos por imagem e 30 no build). Seria um atalho para testar a mesma qualidade, com a ressalva do próprio relatório: é chibi e não tem parâmetro de tamanho. O fluxo-alvo do EuMini, com análise, reparo e multicolor, usa outros endpoints.
+10. **Onde o EuMini pode diferenciar:**
     - **prazo:** 21 dias na tela da Meshy, contra produção local;
     - **assunto:** a Meshy vende só pessoas e pets; objetos ficam de fora, e no Jujubit eram o ponto forte;
     - **controle:** edição por chat e troca de cores, que a Meshy não oferece;
-    - **preço:** aqui a Meshy pressiona, com R$ 188 + R$ 26 para uma figura de 6 cm em cores. O custo real do Kubo em FDM ainda precisa ser comparado a isso.
+    - **preço:** aqui a Meshy pressiona, com R$ 188 + R$ 26 para uma figura de 6 cm em cores. O custo real do EuMini em FDM ainda precisa ser comparado a isso.
 
 ### Comparação rápida com o Jujubit
 
@@ -433,7 +433,7 @@ O nome do erro sugere que quem recusou foi o provedor do modelo de imagem, e nã
 
 ![Recusa do Mickey](prints/desktop/33-dupla-3d-e-recusa.jpg)
 
-### 11.4 O que isso sugere para o Kubo
+### 11.4 O que isso sugere para o EuMini
 
 - **Devolver a cota quando a geração é recusada.** A regra é simples e justa: conta só o que foi entregue.
 - **Explicar a recusa.** "Tente outra foto" não ajuda quem enviou um personagem, porque qualquer outra foto dele vai falhar igual. E o aviso deve aparecer junto do pedido que falhou.
@@ -488,9 +488,9 @@ A tela de compra inteira está em [09b-3d-compra-inteira.jpg](prints/mobile/09b-
 
 <img src="prints/mobile/21-creative-lab-figura.jpg" width="190" alt="Figura no Creative Lab"> <img src="prints/mobile/22-pockella.jpg" width="190" alt="Pockella">
 
-### O que isso sugere para o Kubo
+### O que isso sugere para o EuMini
 
-- **Decidir de propósito se a geração começa ao escolher a foto.** Tira um toque, mas gasta geração e cota com fotos enviadas por engano. Se o Kubo seguir esse caminho, precisa de um jeito rápido de cancelar.
+- **Decidir de propósito se a geração começa ao escolher a foto.** Tira um toque, mas gasta geração e cota com fotos enviadas por engano. Se o EuMini seguir esse caminho, precisa de um jeito rápido de cancelar.
 - **A primeira tela mobile já leva à ação:** exemplo, preço e um único botão. É um bom modelo para o protótipo.
 - **Evitar pop-ups de terceiros sobre o botão principal.** O caso do Google mostra o risco de carregar login automático na tela de criação.
 

@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@kubo/ui/button";
-import { formatBRL } from "@kubo/ui/lib/format";
-import { cn } from "@kubo/ui/lib/utils";
+import { Button } from "@eumini/ui/button";
+import { formatBRL } from "@eumini/ui/lib/format";
+import { cn } from "@eumini/ui/lib/utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
   AlertTriangle,

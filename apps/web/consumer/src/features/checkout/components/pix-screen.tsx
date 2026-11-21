@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@kubo/ui/button";
-import { Skeleton } from "@kubo/ui/skeleton";
+import { Button } from "@eumini/ui/button";
+import { Skeleton } from "@eumini/ui/skeleton";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";

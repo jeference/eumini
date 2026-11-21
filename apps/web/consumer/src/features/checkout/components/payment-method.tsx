@@ -1,11 +1,11 @@
 "use client";
 
-import { Card } from "@kubo/ui/card";
-import { Input } from "@kubo/ui/input";
-import { Label } from "@kubo/ui/label";
-import { formatPhone } from "@kubo/ui/lib/format";
-import { RadioCard } from "@kubo/ui/radio-card";
-import { Skeleton } from "@kubo/ui/skeleton";
+import { Card } from "@eumini/ui/card";
+import { Input } from "@eumini/ui/input";
+import { Label } from "@eumini/ui/label";
+import { formatPhone } from "@eumini/ui/lib/format";
+import { RadioCard } from "@eumini/ui/radio-card";
+import { Skeleton } from "@eumini/ui/skeleton";
 import { CreditCard, Lock, type LucideIcon, QrCode } from "lucide-react";
 import { type ReactNode, useId } from "react";
 

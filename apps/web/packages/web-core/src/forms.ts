@@ -1,4 +1,4 @@
-import { ApiError } from "@kubo/api-client";
+import { ApiError } from "@eumini/api-client";
 import type { FieldValues, Path, UseFormSetError } from "react-hook-form";
 import { toast } from "sonner";
 

@@ -1,12 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { unwrap } from "@kubo/api-client";
-import { useApiClient } from "@kubo/api-client/react";
-import { Button } from "@kubo/ui/button";
-import { Form, TextField } from "@kubo/ui/form";
-import { useVerifyEmail } from "@kubo/web-core/auth-client";
-import { handleFormError } from "@kubo/web-core/forms";
+import { unwrap } from "@eumini/api-client";
+import { useApiClient } from "@eumini/api-client/react";
+import { Button } from "@eumini/ui/button";
+import { Form, TextField } from "@eumini/ui/form";
+import { useVerifyEmail } from "@eumini/web-core/auth-client";
+import { handleFormError } from "@eumini/web-core/forms";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";

@@ -1,5 +1,5 @@
-import { Button } from "@kubo/ui/button";
-import { EmptyState } from "@kubo/ui/empty-state";
+import { Button } from "@eumini/ui/button";
+import { EmptyState } from "@eumini/ui/empty-state";
 import Link from "next/link";
 
 export default function NotFound() {

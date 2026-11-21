@@ -1,4 +1,4 @@
-# Kubo
+# EuMini
 
 Plataforma que conecta quem quer comprar objetos impressos em 3D a parceiros que os imprimem. O cliente descreve o que quer ou envia uma foto, ajusta a imagem conversando com a IA e compra a peça direto da imagem.
 
@@ -54,7 +54,7 @@ Os nomes das classes reais estão em `.env.example`. Só os testes automatizados
 Enquanto o pagamento for simulado, confirme um PIX com:
 
 ```sh
-cd apps/backend && .venv/Scripts/python manage.py simulate_pix_payment KB...
+cd apps/backend && .venv/Scripts/python manage.py simulate_pix_payment EM...
 ```
 
 Para receber webhooks da AbacatePay, registre `https://SEU-DOMINIO/api/webhooks/abacatepay/?webhookSecret=SEU_SEGREDO` no painel dela, com o mesmo segredo em `ABACATE_PAY_WEBHOOK_SECRET`.

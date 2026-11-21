@@ -1,5 +1,5 @@
 {
-  "name": "@kubo/api-types",
+  "name": "@eumini/api-types",
   "version": "0.1.0",
   "description": "Tipos gerados do OpenAPI do backend. Nunca edite à mão: rode `make types`.",
   "types": "index.ts",

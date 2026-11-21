@@ -1,7 +1,7 @@
 "use client";
 
-import { ApiError, normalizeError, unwrap } from "@kubo/api-client";
-import { useApiClient } from "@kubo/api-client/react";
+import { ApiError, normalizeError, unwrap } from "@eumini/api-client";
+import { useApiClient } from "@eumini/api-client/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { getApiClient } from "./api";

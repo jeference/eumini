@@ -1,9 +1,9 @@
 "use client";
 
-import { ApiError, type Schemas } from "@kubo/api-client";
-import { Button } from "@kubo/ui/button";
-import { Card } from "@kubo/ui/card";
-import { Skeleton } from "@kubo/ui/skeleton";
+import { ApiError, type Schemas } from "@eumini/api-client";
+import { Button } from "@eumini/ui/button";
+import { Card } from "@eumini/ui/card";
+import { Skeleton } from "@eumini/ui/skeleton";
 import { Hourglass } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";

@@ -1,6 +1,6 @@
-import { ORDER_STATUS, type OrderStatus } from "@kubo/ui/lib/status";
-import { cn } from "@kubo/ui/lib/utils";
-import { StatusBadge } from "@kubo/ui/status-badge";
+import { ORDER_STATUS, type OrderStatus } from "@eumini/ui/lib/status";
+import { cn } from "@eumini/ui/lib/utils";
+import { StatusBadge } from "@eumini/ui/status-badge";
 import { CheckCircle2, Circle } from "lucide-react";
 
 const STEPS: OrderStatus[] = ["paid", "in_production", "shipped", "delivered"];

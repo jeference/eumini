@@ -1,1 +1,1 @@
-export { bffVisitor as POST } from "@kubo/web-core/server";
+export { bffVisitor as POST } from "@eumini/web-core/server";

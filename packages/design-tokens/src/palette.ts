@@ -1,5 +1,5 @@
 /**
- * Identidade da Kubo: roxo, amarelo neon e branco. Mantida em sincronia com `styles/tokens.css`.
+ * Identidade da EuMini: roxo, amarelo neon e branco. Mantida em sincronia com `styles/tokens.css`.
  * Amarelo neon é quase invisível sobre branco: use como preenchimento ou sobre roxo, nunca como
  * texto em fundo branco.
  */

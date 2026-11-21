@@ -1,7 +1,7 @@
 "use client";
 
-import { unwrap } from "@kubo/api-client";
-import { useApiClient } from "@kubo/api-client/react";
+import { unwrap } from "@eumini/api-client";
+import { useApiClient } from "@eumini/api-client/react";
 import { useEffect } from "react";
 
 import { refreshSession } from "../api";

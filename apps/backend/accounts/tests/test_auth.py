@@ -146,7 +146,7 @@ def test_delete_account_anonymizes(user_client, user):
 def test_visitor_create_returns_token_and_authenticates(anon):
     response = anon.post("/api/visitors/")
     assert response.status_code == 201
-    client = APIClient(HTTP_X_KUBO_CLIENT="web")
+    client = APIClient(HTTP_X_EUMINI_CLIENT="web")
     client.cookies[VISITOR_COOKIE] = response.data["token"]
     assert client.get("/api/quota/").status_code == 200
 
@@ -162,7 +162,7 @@ def test_visitor_write_requires_client_header(visitor_client):
 
 
 def test_invalid_visitor_cookie_is_rejected():
-    client = APIClient(HTTP_X_KUBO_CLIENT="web")
+    client = APIClient(HTTP_X_EUMINI_CLIENT="web")
     client.cookies[VISITOR_COOKIE] = "token-invalido"
     assert client.get("/api/quota/").status_code in (401, 403)
 

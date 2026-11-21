@@ -1,4 +1,4 @@
-# PRD: MVP da Kubo
+# PRD: MVP da EuMini
 
 | | |
 |---|---|
@@ -12,13 +12,13 @@
 
 ## 1. Visão geral
 
-A Kubo transforma uma foto em um objeto físico, impresso em 3D. O cliente envia uma imagem, pede uma mudança se quiser, vê o resultado em 2D, ajusta conversando com a IA e compra a peça a partir da imagem. A peça é impressa e enviada para a casa dele.
+A EuMini transforma uma foto em um objeto físico, impresso em 3D. O cliente envia uma imagem, pede uma mudança se quiser, vê o resultado em 2D, ajusta conversando com a IA e compra a peça a partir da imagem. A peça é impressa e enviada para a casa dele.
 
 **O cliente não vê um modelo 3D antes de comprar.** Como na Pockella, a compra abre assim que a imagem fica pronta. O modelo 3D é feito depois do pagamento, na preparação de impressão, que está fora do MVP.
 
 **O catálogo segue o da Pockella:** quatro figuras, **Pessoa, Pet, Casal e Pessoa + Pet**, num único estilo. O cliente entra pela categoria que quer, mas quem decide a categoria é um classificador, que lê a foto antes de gerar. A categoria define os tamanhos e o preço. Fotos fora das quatro categorias são recusadas com orientação, e o interesse fica registrado para decidir quais categorias abrir depois.
 
-A plataforma terá dois lados: o **app do cliente** e, no futuro, o **app dos parceiros**, que imprimem e enviam os pedidos. O cliente compra da Kubo e não vê quem imprimiu.
+A plataforma terá dois lados: o **app do cliente** e, no futuro, o **app dos parceiros**, que imprimem e enviam os pedidos. O cliente compra da EuMini e não vê quem imprimiu.
 
 **O MVP entrega o app do cliente, do primeiro prompt até o pedido pago.** **Este app não tem nenhuma funcionalidade de operação:** tratar pedidos, baixar arquivos, atualizar status e informar rastreio pertencem ao app de parceiros. Os dados já ficam organizados para ele.
 
@@ -71,7 +71,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 |---|---|---|
 | **Visitante** | Chegou por curiosidade ou para presentear alguém. Não quer criar conta | Criar e comprar rápido, pelo celular, e entender o preço cedo |
 | **Cliente com conta** | Voltou, ou quer acessar suas criações em outro dispositivo | Ver criações e pedidos em um só lugar |
-| **Operação Kubo** (futuro, no app de parceiros) | Equipe que trata os pedidos | Ver pedidos pagos, baixar os arquivos, atualizar status e rastreio, cancelar e reembolsar |
+| **Operação EuMini** (futuro, no app de parceiros) | Equipe que trata os pedidos | Ver pedidos pagos, baixar os arquivos, atualizar status e rastreio, cancelar e reembolsar |
 | **Parceiro** (futuro, no app de parceiros) | Empresa ou pessoa que imprime | Ver pedidos atribuídos, baixar arquivos, informar produção e envio |
 
 ---
@@ -88,7 +88,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 
 ### O que reaproveitamos dos concorrentes
 
-| Funcionalidade | Inspiração | Como entra na Kubo |
+| Funcionalidade | Inspiração | Como entra na EuMini |
 |---|---|---|
 | Gerar e comprar sem login | Jujubit e Meshy Shop | Igual: sessão de visitante e checkout de convidado |
 | Pedido ligado ao e-mail do checkout | Meshy Shop | Igual, com link de acompanhamento por e-mail |
@@ -97,7 +97,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | Catálogo de quatro figuras | Pockella | Igual: Pessoa, Pet, Casal e Pessoa + Pet, com os tamanhos de cada uma. Sem chaveiro |
 | Categoria decidida pela foto | Pockella | Igual: o classificador roda antes de gerar, e a página de entrada é só uma sugestão |
 | Recusa com caminho | Pockella | Igual: "Escolher outra foto" e, para grupos, "Recorte e nós fazemos", com lista de espera |
-| Estilo único | Pockella | Um estilo de figura. A Pockella usa chibi; a Kubo usa uma animação 3D estilizada, com cabeça só um pouco maior que a real, menos desproporcional que o chibi |
+| Estilo único | Pockella | Um estilo de figura. A Pockella usa chibi; a EuMini usa uma animação 3D estilizada, com cabeça só um pouco maior que a real, menos desproporcional que o chibi |
 | Cota reservada e debitada só no sucesso | Jujubit | Igual, valendo também para edição |
 | Retomar tarefas em andamento | Meshy Shop | Igual |
 | Botões de compra fixos no celular | Jujubit | Igual, sempre com o preço ao lado |
@@ -105,7 +105,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 
 ### O que evitamos de propósito
 
-| Problema observado | Decisão na Kubo |
+| Problema observado | Decisão na EuMini |
 |---|---|
 | Barra de progresso falsa, parada em 90% | Mensagens de etapa e tempo decorrido, sem porcentagem inventada |
 | Preço que muda depois do 3D (Meshy Shop) | Preço fixo por categoria e tamanho, visível junto com a imagem |
@@ -203,7 +203,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RF-COM-05 | Manter o carrinho da sessão ou da conta | P0 |
 | RF-COM-06 | Finalizar sem conta, informando e-mail, nome, CPF e endereço | P0 |
 | RF-COM-07 | Cotar o frete por CEP, com valor e prazo por serviço | P0 |
-| RF-COM-08 | Somar ao prazo de entrega o prazo de produção da Kubo | P0 |
+| RF-COM-08 | Somar ao prazo de entrega o prazo de produção da EuMini | P0 |
 | RF-COM-09 | Pagar com PIX, com QR Code, copia e cola e prazo visível | P0 |
 | RF-COM-13 | Pagar com cartão de crédito à vista (Visa e Mastercard), com os dados do cartão no formulário do gateway e o celular que ele exige | P0 |
 | RF-COM-10 | Confirmar o pagamento sem o cliente precisar recarregar a página | P0 |
@@ -295,7 +295,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | Pessoa + Pet | 1,3 | - | R$ 129,90 | R$ 189,90 | R$ 249,90 | R$ 299,90 |
 | Casal | 1,5 | - | R$ 149,90 | R$ 219,90 | - | - |
 
-A Pockella cobra pelo Pet mais que o dobro da Pessoa e mais que Pessoa + Pet. A Kubo não segue isso, porque um pet do mesmo tamanho não gasta o dobro de material e porque a combinação mais barata que a figura isolada vira brecha de preço.
+A Pockella cobra pelo Pet mais que o dobro da Pessoa e mais que Pessoa + Pet. A EuMini não segue isso, porque um pet do mesmo tamanho não gasta o dobro de material e porque a combinação mais barata que a figura isolada vira brecha de preço.
 
 ### Pedido e pós-venda
 
@@ -444,7 +444,7 @@ Cada template ganha uma página de entrada própria ("Seu pet no Natal"), com o 
 
 ### O que o app de parceiros precisa cobrir
 
-**Para a operação da Kubo:**
+**Para a operação da EuMini:**
 
 - Listar e filtrar pedidos por status, data e e-mail.
 - Ver no pedido a imagem comprada, o prompt, a categoria, o tamanho e o endereço.
@@ -482,7 +482,7 @@ Cada template ganha uma página de entrada própria ("Seu pet no Natal"), com o 
 | **Visitante** | Cliente sem conta, identificado por uma sessão no navegador |
 | **Cota** | Limite diário de gerações por sessão ou conta |
 | **Teto de gasto** | Limite diário de gasto com IA em toda a plataforma |
-| **Operação** | Equipe interna da Kubo que trata os pedidos, pelo app de parceiros |
+| **Operação** | Equipe interna da EuMini que trata os pedidos, pelo app de parceiros |
 | **Parceiro** | Quem imprime e envia. Invisível para o cliente |
 | **FDM** | Impressão 3D por filamento derretido |
 | **PIX copia e cola** | Código de pagamento que o cliente cola no app do banco |

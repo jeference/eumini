@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@kubo/ui/lib/utils";
+import { cn } from "@eumini/ui/lib/utils";
 import { CheckCircle2, Circle, Loader2 } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 

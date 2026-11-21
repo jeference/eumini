@@ -1,8 +1,8 @@
 "use client";
 
-import { unwrap } from "@kubo/api-client";
-import { qk, useApiClient } from "@kubo/api-client/react";
-import { useActorReady } from "@kubo/web-core/session";
+import { unwrap } from "@eumini/api-client";
+import { qk, useApiClient } from "@eumini/api-client/react";
+import { useActorReady } from "@eumini/web-core/session";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useCart() {

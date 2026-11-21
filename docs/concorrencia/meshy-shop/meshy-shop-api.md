@@ -386,7 +386,7 @@ Na prática, o bloqueio observado no 9º design não usou a mensagem de login: a
 
 **Modelos no código:** `MESHY_7: "blueberry"`, `MESHY_6: "avocado"`, além de `blueberry-20260902` (Meshy 7.1) e `blueberry-2stage`.
 
-**Filamentos:** o catálogo interno associa SKUs de filamento a acabamentos apenas no produto **Pet Keepsake**, do Creative Lab (`marble_white: 13103`, `alabaster: 11100`, `fawn: 11401`, `espresso: 11802`, `graphite: 11101`). Esse produto não está à venda na loja. É a única menção a filamento que encontrei, e pode interessar ao Kubo por ser FDM.
+**Filamentos:** o catálogo interno associa SKUs de filamento a acabamentos apenas no produto **Pet Keepsake**, do Creative Lab (`marble_white: 13103`, `alabaster: 11100`, `fawn: 11401`, `espresso: 11802`, `graphite: 11101`). Esse produto não está à venda na loja. É a única menção a filamento que encontrei, e pode interessar ao EuMini por ser FDM.
 
 **Rotas relacionadas do Creative Lab:** `/creative-lab/share/[product]/[taskid]`, `/creative-lab/ar/[taskid]`, `/creative-lab/orders/[id]`.
 

@@ -1,11 +1,11 @@
 "use client";
 
-import type { Schemas } from "@kubo/api-client";
-import { Button } from "@kubo/ui/button";
-import { TextField } from "@kubo/ui/form";
-import { formatBRL, formatCep } from "@kubo/ui/lib/format";
-import { RadioCard } from "@kubo/ui/radio-card";
-import { Skeleton } from "@kubo/ui/skeleton";
+import type { Schemas } from "@eumini/api-client";
+import { Button } from "@eumini/ui/button";
+import { TextField } from "@eumini/ui/form";
+import { formatBRL, formatCep } from "@eumini/ui/lib/format";
+import { RadioCard } from "@eumini/ui/radio-card";
+import { Skeleton } from "@eumini/ui/skeleton";
 import { MapPin } from "lucide-react";
 import { useFormContext, useWatch } from "react-hook-form";
 

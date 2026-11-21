@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@kubo/ui/button";
-import { Callout } from "@kubo/ui/callout";
-import { Input } from "@kubo/ui/input";
-import { Label } from "@kubo/ui/label";
+import { Button } from "@eumini/ui/button";
+import { Callout } from "@eumini/ui/callout";
+import { Input } from "@eumini/ui/input";
+import { Label } from "@eumini/ui/label";
 import { ImagePlus, Scissors } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";

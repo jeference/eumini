@@ -1,6 +1,6 @@
 # Pockella (pockella.com): mapeamento completo
 
-> Estudo de um concorrente direto do Kubo, feito em 05/11/2026 usando o site de verdade: um Chrome controlado por script no PC do Jeferson, em português e com preços do Brasil.
+> Estudo de um concorrente direto do EuMini, feito em 05/11/2026 usando o site de verdade: um Chrome controlado por script no PC do Jeferson, em português e com preços do Brasil.
 >
 > **Sem login (navegador 1, desktop):**
 > - **11 fotos enviadas:** 9 viraram designs (36 imagens) e 2 foram recusadas pelo classificador, até **estourar o limite diário**;
@@ -30,7 +30,7 @@
 7. **Desconto em dobro na vitrine:** a figura de pessoa aparece com R$ 218 riscado e R$ 190, ao lado de "Cerca de R$ 28 de desconto no seu primeiro pedido". No checkout, o cupom **WELCOME5** (US$ 5 fixos, R$ 27,86) sai **de novo** dos R$ 190. Uma figura de 6 cm entregue no Brasil fica em **R$ 188,14**.
 8. **Sem login, com limite:** o convidado gera cerca de 9 a 10 designs por dia, somando todos os produtos, e depois recebe `429 allowance_exhausted`. A cota segue o navegador (cookie `pk_guest`, de 1 ano), não o IP. Com login, a loja quase não muda: o limite é parecido, os designs do convidado passam para a conta, e o checkout já vem com o e-mail.
 9. **A prévia 3D do bobblehead é um GLB aberto** (`model-web.glb`, 2,8 MB, 416 mil triângulos, textura WebP 2048², compressão meshopt), e não mais o `.meshy` cifrado do Meshy Shop.
-10. **Para o Kubo:** a Meshy agora opera uma marca de consumidor completa, em 25 idiomas e com preços em reais, e resolveu sozinha várias falhas que o estudo anterior apontou. O fluxo "comprar só com o 2D" é a decisão mais diferente da do Kubo e merece discussão (seção 10). Os termos da Pockella **proíbem "competitive analysis"** (s. 2.4 iv), o que vale registrar.
+10. **Para o EuMini:** a Meshy agora opera uma marca de consumidor completa, em 25 idiomas e com preços em reais, e resolveu sozinha várias falhas que o estudo anterior apontou. O fluxo "comprar só com o 2D" é a decisão mais diferente da do EuMini e merece discussão (seção 10). Os termos da Pockella **proíbem "competitive analysis"** (s. 2.4 iv), o que vale registrar.
 
 ---
 
@@ -342,24 +342,24 @@ A privacidade (05/11/2026, o mesmo dia do estudo) descreve o pixel da Meta com e
 
 ---
 
-## 10. O que isso sugere para o Kubo
+## 10. O que isso sugere para o EuMini
 
-1. **A Meshy corrigiu o que o estudo anterior apontou.** Classificar antes de gastar, preço certo cedo e recusa explicada: tudo isso já está na Pockella. Não deu para confirmar se as recusas contam na cota (11.2). O Kubo deve adotar o mesmo, e o diferencial terá de vir de outro lugar.
-2. **"Comprar só com o 2D" é a decisão a discutir.** A Pockella tirou o 3D da frente do cliente na figura: a compra abre na hora, e o 3D (~2 min) roda em segundo plano. O Kubo prevê aprovar o 2D e depois mostrar o 3D antes de pagar. As duas leituras possíveis:
+1. **A Meshy corrigiu o que o estudo anterior apontou.** Classificar antes de gastar, preço certo cedo e recusa explicada: tudo isso já está na Pockella. Não deu para confirmar se as recusas contam na cota (11.2). O EuMini deve adotar o mesmo, e o diferencial terá de vir de outro lugar.
+2. **"Comprar só com o 2D" é a decisão a discutir.** A Pockella tirou o 3D da frente do cliente na figura: a compra abre na hora, e o 3D (~2 min) roda em segundo plano. O EuMini prevê aprovar o 2D e depois mostrar o 3D antes de pagar. As duas leituras possíveis:
    - a favor do caminho da Pockella: menos espera e menos custo de 3D em quem não compra;
    - contra: o cliente compra algo que nunca viu em 3D, e a malha real (aberta, no caso do Trellis) pode diferir da imagem.
    Um meio-termo seria **começar o 3D em segundo plano assim que o cliente escolhe o design**, enquanto ele escolhe o tamanho.
 3. **Velocidade virou padrão.** A Pockella entrega 4 designs em ~15 s. Vale medir o tempo do GPT Image 2 no Runware frente a isso, e decidir entre 1 e 4 opções com esse número na mão.
-4. **Produtos em relevo são uma porta para o FDM.** O ímã e o quadro em relevo são peças quase planas, que imprimem com muito menos risco que uma figura em pé. Pode valer um teste no Kubo antes das figuras de 12 cm.
-5. **Não mostrar "preço de" artificial.** A vitrine da Pockella mostra dois descontos de ~R$ 28 quando só existe um. É o tipo de coisa que gera reclamação no Brasil, e o Kubo deve evitar.
+4. **Produtos em relevo são uma porta para o FDM.** O ímã e o quadro em relevo são peças quase planas, que imprimem com muito menos risco que uma figura em pé. Pode valer um teste no EuMini antes das figuras de 12 cm.
+5. **Não mostrar "preço de" artificial.** A vitrine da Pockella mostra dois descontos de ~R$ 28 quando só existe um. É o tipo de coisa que gera reclamação no Brasil, e o EuMini deve evitar.
 6. **Não mandar links de produção ao navegador**, de novo: o `assets.zip` assinado chega ao convidado antes do pagamento.
 7. **A pressão da Meshy aumentou.** Agora é uma marca de consumidor completa, em 25 idiomas, com preços em reais e Pix no checkout. O preço de referência no Brasil continua em **R$ 188 entregue** para uma figura de 6 cm.
-8. **Dependência de provedor:** a Meshy é concorrente direta no produto final e, pelos termos da Pockella, proíbe análise competitiva no site dela. Isso reforça a sugestão do estudo anterior de não depender só da Meshy no 3D. O Kubo já segue esse caminho com o Trellis 2 via Runware.
-9. **Onde o Kubo ainda diferencia:**
+8. **Dependência de provedor:** a Meshy é concorrente direta no produto final e, pelos termos da Pockella, proíbe análise competitiva no site dela. Isso reforça a sugestão do estudo anterior de não depender só da Meshy no 3D. O EuMini já segue esse caminho com o Trellis 2 via Runware.
+9. **Onde o EuMini ainda diferencia:**
    - **prazo:** produção local, contra envio internacional "em 7–10 dias" mais transporte;
    - **assunto:** a Pockella continua vendendo só pessoas e pets na figura (o quadro aceita grupos de pets);
    - **controle:** a Pockella não tem prompt, estilo nem edição;
-   - **prévia:** mostrar o 3D antes de pagar, se o Kubo mantiver essa etapa, vira um argumento.
+   - **prévia:** mostrar o 3D antes de pagar, se o EuMini mantiver essa etapa, vira um argumento.
 
 ### Comparação rápida
 
@@ -473,11 +473,11 @@ Chrome em emulação de celular: 390×844, toque e identificação de iPhone. **
 
 A tela de compra inteira está em [09b-compra-inteira.jpg](prints/mobile/09b-compra-inteira.jpg), e a home inteira em [01b-home-inteira.jpg](prints/mobile/01b-home-inteira.jpg). Os prints [08-bobblehead-3d.jpg](prints/mobile/08-bobblehead-3d.jpg) e [30-rastrear-pedido.jpg](prints/mobile/30-rastrear-pedido.jpg) são da sessão sem login.
 
-### O que isso sugere para o Kubo
+### O que isso sugere para o EuMini
 
 - **Juntar o histórico ao entrar, como a Pockella faz.** É o comportamento que o PRD já prevê, e ele resolve a falha que o Meshy Shop tinha.
 - **Preencher o e-mail no checkout de quem está logado.** Parece óbvio, mas o Meshy Shop não fazia.
-- **Cota por cookie é fácil de contornar.** Um navegador novo ganha outra cota. Se o custo de IA pesar, o Kubo precisa de mais de um sinal (cookie, IP, dispositivo) ou de exigir login a partir de certo uso.
+- **Cota por cookie é fácil de contornar.** Um navegador novo ganha outra cota. Se o custo de IA pesar, o EuMini precisa de mais de um sinal (cookie, IP, dispositivo) ou de exigir login a partir de certo uso.
 
 ---
 

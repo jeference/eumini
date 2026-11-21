@@ -169,7 +169,7 @@ def transfer_visitor_cart(*, visitor, user) -> None:
 
 
 def _generate_number() -> str:
-    return "KB" + "".join(secrets.choice(_NUMBER_ALPHABET) for _ in range(8))
+    return "EM" + "".join(secrets.choice(_NUMBER_ALPHABET) for _ in range(8))
 
 
 def _valid_cpf(cpf: str) -> bool:
@@ -365,7 +365,7 @@ def resend_tracking_links(email: str) -> None:
     for order in orders.order_by("-created_at")[:5]:
         send_email(
             to=order.customer_email,
-            subject=f"Acompanhe seu pedido {order.number} na Kubo",
+            subject=f"Acompanhe seu pedido {order.number} na EuMini",
             template="order_tracking_link",
             context={"number": order.number, "tracking_url": tracking_url(order)},
         )

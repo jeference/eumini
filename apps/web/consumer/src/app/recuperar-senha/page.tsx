@@ -1,12 +1,12 @@
 "use client";
 
-import { unwrap } from "@kubo/api-client";
-import { useApiClient } from "@kubo/api-client/react";
-import { Callout } from "@kubo/ui/callout";
-import { Button } from "@kubo/ui/button";
-import { Input } from "@kubo/ui/input";
-import { Label } from "@kubo/ui/label";
-import { handleFormError } from "@kubo/web-core/forms";
+import { unwrap } from "@eumini/api-client";
+import { useApiClient } from "@eumini/api-client/react";
+import { Callout } from "@eumini/ui/callout";
+import { Button } from "@eumini/ui/button";
+import { Input } from "@eumini/ui/input";
+import { Label } from "@eumini/ui/label";
+import { handleFormError } from "@eumini/web-core/forms";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { type FormEvent, useState } from "react";

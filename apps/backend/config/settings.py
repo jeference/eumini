@@ -57,7 +57,7 @@ TEMPLATES = [
     },
 ]
 
-DATABASES = {"default": env.db("DATABASE_URL", default="postgres://kubo@127.0.0.1:5433/kubo")}
+DATABASES = {"default": env.db("DATABASE_URL", default="postgres://eumini@127.0.0.1:5433/eumini")}
 DATABASES["default"]["ATOMIC_REQUESTS"] = False
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("DB_CONN_MAX_AGE", default=60)
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -130,7 +130,7 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Kubo API",
+    "TITLE": "EuMini API",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "COMPONENT_SPLIT_REQUEST": True,
@@ -249,7 +249,7 @@ MELHOR_ENVIO_CLIENT_ID = env("MELHOR_ENVIO_CLIENT_ID", default="")
 MELHOR_ENVIO_CLIENT_SECRET = env("MELHOR_ENVIO_CLIENT_SECRET", default="")
 MELHOR_ENVIO_ACCESS_TOKEN = env("MELHOR_ENVIO_ACCESS_TOKEN", default="")
 MELHOR_ENVIO_REFRESH_TOKEN = env("MELHOR_ENVIO_REFRESH_TOKEN", default="")
-MELHOR_ENVIO_USER_AGENT = env("MELHOR_ENVIO_USER_AGENT", default="Kubo")
+MELHOR_ENVIO_USER_AGENT = env("MELHOR_ENVIO_USER_AGENT", default="EuMini")
 MELHOR_ENVIO_SERVICES = env("MELHOR_ENVIO_SERVICES", default="")
 
 # Storage.
@@ -267,7 +267,7 @@ EMAIL_PORT = env.int("EMAIL_PORT", default=587)
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="Kubo <nao-responda@exemplo.com>")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="EuMini <nao-responda@exemplo.com>")
 
 # --- Segurança em produção ---
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

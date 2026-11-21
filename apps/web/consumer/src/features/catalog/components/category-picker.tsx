@@ -1,8 +1,8 @@
 "use client";
 
-import { track } from "@kubo/analytics";
-import { Card } from "@kubo/ui/card";
-import { formatBRL } from "@kubo/ui/lib/format";
+import { track } from "@eumini/analytics";
+import { Card } from "@eumini/ui/card";
+import { formatBRL } from "@eumini/ui/lib/format";
 import { ArrowRight, type LucideIcon, PawPrint, User, Users } from "lucide-react";
 import Link from "next/link";
 

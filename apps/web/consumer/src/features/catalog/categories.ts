@@ -1,4 +1,4 @@
-import type { Schemas } from "@kubo/api-client";
+import type { Schemas } from "@eumini/api-client";
 
 export type Category = Schemas["CategoryEnum"];
 export type RejectionReason = Schemas["RejectionReasonEnum"];

@@ -1,1 +1,1 @@
-export { bffRefresh as POST } from "@kubo/web-core/server";
+export { bffRefresh as POST } from "@eumini/web-core/server";

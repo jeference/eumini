@@ -27,12 +27,12 @@ const nextConfig = {
   // Só na imagem Docker: no Windows, o modo standalone exige permissão para criar symlinks.
   output: process.env.NEXT_STANDALONE ? "standalone" : undefined,
   transpilePackages: [
-    "@kubo/api-types",
-    "@kubo/api-client",
-    "@kubo/design-tokens",
-    "@kubo/ui",
-    "@kubo/web-core",
-    "@kubo/analytics",
+    "@eumini/api-types",
+    "@eumini/api-client",
+    "@eumini/design-tokens",
+    "@eumini/ui",
+    "@eumini/web-core",
+    "@eumini/analytics",
   ],
   // O navegador fica na mesma origem, sem CORS. As rotas do Django terminam em barra: evitamos
   // o redirecionamento do Next e devolvemos a barra no destino.

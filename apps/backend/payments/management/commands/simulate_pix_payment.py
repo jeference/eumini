@@ -8,7 +8,7 @@ lança no ledger e avança o pedido. O comando só espera esse efeito aparecer n
 Se o webhook não chega, o comando falha, e a falha é verdadeira: em produção aquele pagamento
 também não seria reconhecido. Exige o túnel de pé (`make backend-tunnel`).
 
-    manage.py simulate_pix_payment KB...
+    manage.py simulate_pix_payment EM...
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ class Command(BaseCommand):
     help = "Simula o pagamento do PIX no AbacatePay (devMode) e espera o webhook liquidar."
 
     def add_arguments(self, parser):
-        parser.add_argument("number", help="Número do pedido (KB...)")
+        parser.add_argument("number", help="Número do pedido (EM...)")
         parser.add_argument(
             "--timeout",
             type=int,

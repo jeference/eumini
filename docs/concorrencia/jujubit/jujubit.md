@@ -1,6 +1,6 @@
 # Jujubit (jujubit.ai): mapeamento completo
 
-> Estudo de um concorrente direto do Kubo, feito em 31/10/2026 usando o site de verdade: um Chrome controlado por script no PC do Jeferson, sem login. Numa segunda sessão, no mesmo dia, refiz a exploração **logado** com uma conta grátis; o que só aparece com login está na [seção 13](#13-com-login-conta-e-assinatura). Em 02/11/2026, uma terceira sessão percorreu o site em layout de celular ([seção 8](#8-mobile)).
+> Estudo de um concorrente direto do EuMini, feito em 31/10/2026 usando o site de verdade: um Chrome controlado por script no PC do Jeferson, sem login. Numa segunda sessão, no mesmo dia, refiz a exploração **logado** com uma conta grátis; o que só aparece com login está na [seção 13](#13-com-login-conta-e-assinatura). Em 02/11/2026, uma terceira sessão percorreu o site em layout de celular ([seção 8](#8-mobile)).
 >
 > Testei:
 > - **42 gerações reais**, de ~35 categorias diferentes, até **estourar o limite diário**;
@@ -357,7 +357,7 @@ O "Done" mostrou o 3D em ~7 s porque ele já estava pronto, o que confirma a ger
 
 <img src="prints/mobile/51-mobile-creator.jpg" width="190" alt="Criador em 31/10, com o chat sobre o prompt">
 
-**O que isso sugere para o Kubo:**
+**O que isso sugere para o EuMini:**
 - **Reservar espaço para botões flutuantes.** O chat da Jujubit está sempre cobrindo alguma coisa.
 - **Botões de compra fixos no rodapé funcionam bem**, mas o preço precisa aparecer junto deles.
 - **Chat em gaveta é um bom modelo para a edição no celular:** a imagem fica grande, e o histórico só aparece quando o usuário pede.
@@ -369,7 +369,7 @@ O "Done" mostrou o 3D em ~7 s porque ele já estava pronto, o que confirma a ger
 **Fortes**
 - **Zero atrito para começar:** gera sem login, com uma cota generosa.
 - **Um único botão faz tudo** (2D e 3D), e a imagem 2D aparece cedo (~35 s), o que alivia a espera do 3D.
-- **A edição por chat preserva a identidade** e regera o 3D sozinha. É exatamente o "ajuste" que o Kubo quer.
+- **A edição por chat preserva a identidade** e regera o 3D sozinha. É exatamente o "ajuste" que o EuMini quer.
 - Estilos e templates garantem um resultado "imprimível e bonito" (bases, poses, proporções de miniatura) e alimentam o marketing por nicho.
 - Histórico com versões, Remix a partir da galeria e AR no celular.
 - O pedido usa **a imagem 2D como contrato**, e um humano refina o 3D. Isso reduz a pressão sobre a qualidade da prévia automática.
@@ -386,11 +386,11 @@ O "Done" mostrou o 3D em ~7 s porque ele já estava pronto, o que confirma a ger
 
 ---
 
-## 10. O que isso sugere para o Kubo
+## 10. O que isso sugere para o EuMini
 
 1. **Fluxo de 1 clique, com o 2D primeiro.** O Jujubit nem pede aprovação da imagem: mostra o 2D cedo e segue para o 3D. Vale testar no protótipo uma opção "gerar imagem + 3D direto", mantendo o ajuste depois.
 2. **Edição por chat em vez de regerar.** Editar a imagem atual ("muda a cor da capa") preserva o objeto. Isso é melhor do que o "Gerar com o ajuste" atual do protótipo, que cria uma imagem nova do zero. Modelos de edição de imagem na Runware (FLUX Kontext/edit, Seedream, Nano Banana etc.) permitiriam isso.
-3. **A imagem 2D como contrato** e acabamento humano/automático depois da compra. Bate com o plano do Kubo (prévia barata, Tripo depois), e o Jujubit prova que dá para vender assim.
+3. **A imagem 2D como contrato** e acabamento humano/automático depois da compra. Bate com o plano do EuMini (prévia barata, Tripo depois), e o Jujubit prova que dá para vender assim.
 4. **O Jujubit usa a Tripo já na prévia** (não o Trellis), com malhas de até 1,2 milhão de faces, e investe no 2D por estilo. A qualidade percebida vem muito do **2D estilizado com base de miniatura**.
 5. **Templates e estilos como produto:** cada estilo é um prompt e um parâmetro de backend, mais uma landing page. É um caminho barato de crescimento.
 6. **Detalhes que valem copiar:**
@@ -402,7 +402,7 @@ O "Done" mostrou o 3D em ~7 s porque ele já estava pronto, o que confirma a ger
 7. **Detalhes a evitar:** progresso falso parado em 90%, prévia sem zoom, estilo distorcendo a foto sem avisar, e excesso de urgência e pop-ups.
 8. **Limites e custo (seções 11 e 12):**
    - Reservar a cota no início e só debitar no sucesso é um bom padrão.
-   - A Jujubit deixa as edições livres, e cada uma ainda gera um 3D. No Kubo, edição e 3D deveriam ter uma cota (ou um custo) próprios.
+   - A Jujubit deixa as edições livres, e cada uma ainda gera um 3D. No EuMini, edição e 3D deveriam ter uma cota (ou um custo) próprios.
    - Verificar a textura do GLB, ou ter um fallback, para não entregar modelos cinzas.
    - Mostrar mensagens amigáveis em recusas de política, em vez do erro técnico cru.
 
@@ -551,7 +551,7 @@ Observações:
 - **Downgrade:** não existe downgrade, nem troca de anual para mensal.
 - **Falha no pagamento:** a cobrança é tentada de novo. O membro mantém o que já pagou, mas não recebe benefícios novos enquanto estiver em atraso, e volta ao Basic quando o período pago acaba.
 
-### 13.5 O que isso sugere para o Kubo
+### 13.5 O que isso sugere para o EuMini
 
 - **A cota precisa estar amarrada à conta no servidor.** A cota anônima da Jujubit é contornável: basta trocar de navegador. A cota por conta é a que de fato vale.
 - **Assinatura e pedidos podem ter cobranças separadas.** A Jujubit cobra a assinatura recorrente pela Airwallex e deixa o carrinho e o pedido no checkout normal da loja.

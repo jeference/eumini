@@ -1,5 +1,5 @@
-import { Button } from "@kubo/ui/button";
-import { Card } from "@kubo/ui/card";
+import { Button } from "@eumini/ui/button";
+import { Card } from "@eumini/ui/card";
 import { ArrowRight, Lock } from "lucide-react";
 import type { ReactNode } from "react";
 

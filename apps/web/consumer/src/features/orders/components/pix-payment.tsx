@@ -1,8 +1,8 @@
 "use client";
 
-import { track } from "@kubo/analytics";
-import type { Schemas } from "@kubo/api-client";
-import { Button } from "@kubo/ui/button";
+import { track } from "@eumini/analytics";
+import type { Schemas } from "@eumini/api-client";
+import { Button } from "@eumini/ui/button";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";

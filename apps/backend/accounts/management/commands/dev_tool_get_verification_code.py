@@ -9,7 +9,7 @@ puro, sem enviar e-mail.
 Só roda com `DEBUG=True`: ele expõe deliberadamente um segredo e nunca deve tocar produção.
 
 Exemplo:
-  python manage.py dev_tool_get_verification_code fulano@kubo.com
+  python manage.py dev_tool_get_verification_code fulano@eumini.com
 """
 
 from __future__ import annotations

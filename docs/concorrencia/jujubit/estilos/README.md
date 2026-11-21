@@ -1,12 +1,12 @@
-# Estilos Pixar, Mini Pop e Chibi: referências da Jujubit e prompts do Kubo
+# Estilos Pixar, Mini Pop e Chibi: referências da Jujubit e prompts do EuMini
 
-Teste de 02 e 03/11/2026, só em 2D. As mesmas 21 entradas passaram pelos 3 estilos na Jujubit e no Kubo (GPT Image 2 pela Runware, com o adaptador real do backend).
+Teste de 02 e 03/11/2026, só em 2D. As mesmas 21 entradas passaram pelos 3 estilos na Jujubit e no EuMini (GPT Image 2 pela Runware, com o adaptador real do backend).
 
 ## O que tem aqui
 
 | Caminho | Conteúdo |
 |---|---|
-| [comparativo-pixar.jpg](comparativo-pixar.jpg), [comparativo-mini-pop.jpg](comparativo-mini-pop.jpg), [comparativo-chibi.jpg](comparativo-chibi.jpg) | Entrada, Jujubit e Kubo lado a lado. `[V]` marca um caso de validação. As imagens do Kubo são de antes do plano de cores, então têm mais cores e detalhes que as atuais. |
+| [comparativo-pixar.jpg](comparativo-pixar.jpg), [comparativo-mini-pop.jpg](comparativo-mini-pop.jpg), [comparativo-chibi.jpg](comparativo-chibi.jpg) | Entrada, Jujubit e EuMini lado a lado. `[V]` marca um caso de validação. As imagens do EuMini são de antes do plano de cores, então têm mais cores e detalhes que as atuais. |
 | [prompts.json](prompts.json) | Versão ajustada dos prompts: `text`, `photo` e `photo_request`, um trio por estilo. O `_COLOR_RULE` entra antes de cada um. Em uso no backend, em `GENERATION["STYLES"]` de `settings.py`. |
 | [casos.json](casos.json) | As 21 entradas, com categoria, modo e grupo (ajuste ou validação). |
 | `jujubit/<estilo>/` | As 63 referências da Jujubit, em JPG. |
@@ -44,9 +44,9 @@ Das 21 imagens do Pixar, 9 não passam na verificação de fundo liso do backend
 
 - **Seguimos a Jujubit em:** proporções e rostos dos 3 estilos, Chibi humanizando tudo e Mini Pop transformando objetos em bonecos.
 - **Não copiamos as falhas do Pixar:** objetos e estruturas continuam sendo o que são, em formato estilizado e sem rosto.
-- **Mantivemos a regra de cores do Kubo e acrescentamos um plano de cores:** por isso as cores saem mais primárias e as roupas mais lisas que na Jujubit. Veja a seção seguinte.
+- **Mantivemos a regra de cores do EuMini e acrescentamos um plano de cores:** por isso as cores saem mais primárias e as roupas mais lisas que na Jujubit. Veja a seção seguinte.
 - **Sem nomes de marca nos prompts:** eles descrevem o visual sem citar Pixar ou Funko. A interface usa o rótulo "Pixar".
-- **Sem base:** os estilos da Jujubit não trazem base, diferentemente do fluxo de foto atual do Kubo.
+- **Sem base:** os estilos da Jujubit não trazem base, diferentemente do fluxo de foto atual do EuMini.
 
 ## Limite de 4 cores
 
@@ -79,4 +79,4 @@ Pixar e Livre melhoraram na mesma direção, mas não foram contados. A foto de 
 - Uma imagem por caso e por estilo, então a variação entre gerações não foi medida.
 - A avaliação de semelhança é visual. Só o fundo foi medido.
 - Nada passou pelo 3D nem foi impresso.
-- O Kubo não tem Solo/Duo: os casais rodaram sem esse controle. Na Jujubit, rodaram em Duo.
+- O EuMini não tem Solo/Duo: os casais rodaram sem esse controle. Na Jujubit, rodaram em Duo.

@@ -1,4 +1,4 @@
-/** Raios generosos em tudo: a identidade da Kubo é arredondada, nunca quadrada. */
+/** Raios generosos em tudo: a identidade da EuMini é arredondada, nunca quadrada. */
 export const borderRadius = { lg: "12px", xl: "16px", "2xl": "24px", "3xl": "32px" };
 
 export const boxShadow = {

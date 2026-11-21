@@ -1,6 +1,6 @@
 {
-  "name": "Kubo",
-  "short_name": "Kubo",
+  "name": "EuMini",
+  "short_name": "EuMini",
   "description": "Crie um modelo com IA e receba a peça impressa em 3D.",
   "start_url": "/",
   "display": "standalone",

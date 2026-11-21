@@ -1,15 +1,15 @@
 "use client";
 
-import { unwrap } from "@kubo/api-client";
-import { useApiClient } from "@kubo/api-client/react";
-import { Button } from "@kubo/ui/button";
-import { Input } from "@kubo/ui/input";
-import { Label } from "@kubo/ui/label";
-import { formatPhone } from "@kubo/ui/lib/format";
-import { signOutAndRedirect, useLogout } from "@kubo/web-core/auth-client";
-import { AuthGuard } from "@kubo/web-core/components/auth-guard";
-import { handleFormError } from "@kubo/web-core/forms";
-import { type SessionUser, useSession } from "@kubo/web-core/session";
+import { unwrap } from "@eumini/api-client";
+import { useApiClient } from "@eumini/api-client/react";
+import { Button } from "@eumini/ui/button";
+import { Input } from "@eumini/ui/input";
+import { Label } from "@eumini/ui/label";
+import { formatPhone } from "@eumini/ui/lib/format";
+import { signOutAndRedirect, useLogout } from "@eumini/web-core/auth-client";
+import { AuthGuard } from "@eumini/web-core/components/auth-guard";
+import { handleFormError } from "@eumini/web-core/forms";
+import { type SessionUser, useSession } from "@eumini/web-core/session";
 import { useMutation } from "@tanstack/react-query";
 import { type FormEvent, useState } from "react";
 import { toast } from "sonner";

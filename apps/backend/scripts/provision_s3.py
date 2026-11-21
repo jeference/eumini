@@ -1,4 +1,4 @@
-"""Cria e mantém a infraestrutura S3 do Kubo. Pode rodar de novo sem efeitos colaterais.
+"""Cria e mantém a infraestrutura S3 do EuMini. Pode rodar de novo sem efeitos colaterais.
 
 Usa a sessão do AWS CLI (`aws login`), que precisa poder administrar S3 e IAM.
 
@@ -36,11 +36,11 @@ class ProvisionError(Exception):
 
 
 def bucket_name(env: str) -> str:
-    return f"kubo-media-{env}"
+    return f"eumini-media-{env}"
 
 
 def user_name(env: str) -> str:
-    return f"kubo-app-{env}"
+    return f"eumini-app-{env}"
 
 
 def admin_session() -> boto3.Session:
@@ -82,7 +82,7 @@ def app_policy(bucket: str) -> dict:
         "Version": "2012-10-17",
         "Statement": [
             {
-                "Sid": "ObjectsInKuboBucket",
+                "Sid": "ObjectsInEuMiniBucket",
                 "Effect": "Allow",
                 "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
                 "Resource": f"arn:aws:s3:::{bucket}/*",
@@ -156,7 +156,7 @@ def ensure_bucket(s3, bucket: str) -> None:
 def ensure_app_user(iam, env: str) -> None:
     user = user_name(env)
     try:
-        iam.create_user(UserName=user, Tags=[{"Key": "project", "Value": "kubo"}])
+        iam.create_user(UserName=user, Tags=[{"Key": "project", "Value": "eumini"}])
     except iam.exceptions.EntityAlreadyExistsException:
         pass
     iam.put_user_policy(
@@ -246,7 +246,7 @@ def provision(args: argparse.Namespace) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Provisiona o S3 do Kubo.")
+    parser = argparse.ArgumentParser(description="Provisiona o S3 do EuMini.")
     parser.add_argument("--create-key", choices=ENVIRONMENTS, help="cria a chave da aplicação")
     parser.add_argument("--env-file", type=Path, help="arquivo que recebe a chave")
     parser.add_argument("--upload-local", choices=ENVIRONMENTS, help="envia o _media/ local")

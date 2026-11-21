@@ -17,22 +17,22 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.91.0(@types/react@19.3.0)(react@19.3.1))
-      '@kubo/analytics':
+      '@eumini/analytics':
         specifier: workspace:*
         version: link:../packages/analytics
-      '@kubo/api-client':
+      '@eumini/api-client':
         specifier: workspace:*
         version: link:../../../packages/api-client
-      '@kubo/api-types':
+      '@eumini/api-types':
         specifier: workspace:*
         version: link:../../../packages/api-types
-      '@kubo/design-tokens':
+      '@eumini/design-tokens':
         specifier: workspace:*
         version: link:../../../packages/design-tokens
-      '@kubo/ui':
+      '@eumini/ui':
         specifier: workspace:*
         version: link:../packages/ui
-      '@kubo/web-core':
+      '@eumini/web-core':
         specifier: workspace:*
         version: link:../packages/web-core
       '@radix-ui/react-dialog':
@@ -117,7 +117,7 @@ importers:
 
   apps/web/packages/analytics:
     dependencies:
-      '@kubo/api-types':
+      '@eumini/api-types':
         specifier: workspace:*
         version: link:../../../../packages/api-types
     devDependencies:
@@ -127,7 +127,7 @@ importers:
 
   apps/web/packages/ui:
     dependencies:
-      '@kubo/design-tokens':
+      '@eumini/design-tokens':
         specifier: workspace:*
         version: link:../../../../packages/design-tokens
       '@radix-ui/react-dialog':
@@ -209,10 +209,10 @@ importers:
 
   apps/web/packages/web-core:
     dependencies:
-      '@kubo/api-client':
+      '@eumini/api-client':
         specifier: workspace:*
         version: link:../../../../packages/api-client
-      '@kubo/ui':
+      '@eumini/ui':
         specifier: workspace:*
         version: link:../ui
       sonner:
@@ -264,7 +264,7 @@ importers:
 
   packages/api-client:
     dependencies:
-      '@kubo/api-types':
+      '@eumini/api-types':
         specifier: workspace:*
         version: link:../api-types
       openapi-fetch:

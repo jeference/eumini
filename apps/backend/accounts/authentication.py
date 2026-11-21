@@ -1,6 +1,6 @@
 """Autenticação do visitante, por cookie httpOnly.
 
-O cookie autentica sozinho, então escritas exigem também o cabeçalho `X-Kubo-Client`, que um
+O cookie autentica sozinho, então escritas exigem também o cabeçalho `X-EuMini-Client`, que um
 formulário de outro site não consegue enviar (proteção contra CSRF, junto de SameSite=Lax).
 """
 
@@ -17,8 +17,8 @@ from rest_framework.authentication import BaseAuthentication
 from accounts.models import Visitor
 from common.crypto import sha256_hex
 
-VISITOR_COOKIE = "kubo_visitor"
-CLIENT_HEADER = "HTTP_X_KUBO_CLIENT"
+VISITOR_COOKIE = "eumini_visitor"
+CLIENT_HEADER = "HTTP_X_EUMINI_CLIENT"
 _SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 _LAST_SEEN_RESOLUTION = timedelta(hours=1)
 

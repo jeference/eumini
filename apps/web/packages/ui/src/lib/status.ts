@@ -1,4 +1,4 @@
-import type { StatusTone } from "@kubo/design-tokens";
+import type { StatusTone } from "@eumini/design-tokens";
 
 export type OrderStatus =
   "pending_payment" | "paid" | "in_production" | "shipped" | "delivered" | "expired" | "refunded";

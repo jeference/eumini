@@ -1,5 +1,5 @@
 {
-  "name": "@kubo/web-core",
+  "name": "@eumini/web-core",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -21,8 +21,8 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@kubo/api-client": "workspace:*",
-    "@kubo/ui": "workspace:*",
+    "@eumini/api-client": "workspace:*",
+    "@eumini/ui": "workspace:*",
     "sonner": "^1.7.1",
     "zustand": "^5.0.3"
   },

@@ -1,4 +1,4 @@
-"""Teste do Jev (TypeSafe) como classificador de fotos e versões da Kubo.
+"""Teste do Jev (TypeSafe) como classificador de fotos e versões da EuMini.
 
 Uso, a partir da raiz do repositório:
     apps/backend/.venv/Scripts/python.exe -I docs/classificador/teste_jev.py [modelo] [repetições]

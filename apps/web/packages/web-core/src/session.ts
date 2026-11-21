@@ -1,4 +1,4 @@
-import type { Schemas } from "@kubo/api-client";
+import type { Schemas } from "@eumini/api-client";
 import { create } from "zustand";
 
 export type SessionUser = Schemas["User"];

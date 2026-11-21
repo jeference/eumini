@@ -5,7 +5,7 @@ import { LegalPage } from "@/components/legal-page";
 
 export const metadata: Metadata = { title: "Ajuda" };
 
-const CONTACT = process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? "contato@kubo.example";
+const CONTACT = process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? "contato@eumini.example";
 
 export default function HelpPage() {
   return (

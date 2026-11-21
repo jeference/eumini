@@ -1,4 +1,4 @@
-# Kubo: comandos de desenvolvimento. O backend usa um venv isolado em apps/backend/.venv.
+# EuMini: comandos de desenvolvimento. O backend usa um venv isolado em apps/backend/.venv.
 # Funciona em cmd.exe e sh. pnpm roda via npx para dispensar instalação global.
 
 BACKEND := apps/backend
@@ -42,9 +42,9 @@ simulate-pix:
 
 # Emite um código de verificação de e-mail novo e imprime no terminal, já que em dev não há
 # e-mail real. Invalida o código anterior. Só roda com DEBUG=True.
-#   make verification-code EMAIL=fulano@kubo.com
+#   make verification-code EMAIL=fulano@eumini.com
 verification-code:
-	$(if $(EMAIL),,$(error Informe o e-mail: make verification-code EMAIL=fulano@kubo.com))
+	$(if $(EMAIL),,$(error Informe o e-mail: make verification-code EMAIL=fulano@eumini.com))
 	cd $(BACKEND) && $(PY) manage.py dev_tool_get_verification_code $(EMAIL)
 
 worker:
@@ -54,7 +54,7 @@ scheduler:
 	cd $(BACKEND) && $(PY) manage.py run_scheduler
 
 frontend:
-	$(PNPM) --filter @kubo/consumer dev
+	$(PNPM) --filter @eumini/consumer dev
 
 migrate:
 	cd $(BACKEND) && $(PY) manage.py migrate
@@ -65,7 +65,7 @@ makemigrations:
 # Contrato: OpenAPI do backend -> schema.yaml -> tipos do frontend.
 types:
 	cd $(BACKEND) && $(PY) manage.py spectacular --file ../../packages/api-types/schema.yaml --validate
-	$(PNPM) --filter @kubo/api-types generate
+	$(PNPM) --filter @eumini/api-types generate
 
 test: test-backend test-web
 
@@ -85,4 +85,4 @@ fmt:
 	$(PNPM) format
 
 build:
-	$(PNPM) --filter @kubo/consumer build
+	$(PNPM) --filter @eumini/consumer build

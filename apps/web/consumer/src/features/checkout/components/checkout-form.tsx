@@ -1,17 +1,17 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { track } from "@kubo/analytics";
-import { ApiError, type Schemas, unwrap } from "@kubo/api-client";
-import { qk, useApiClient } from "@kubo/api-client/react";
-import { Button } from "@kubo/ui/button";
-import { Callout } from "@kubo/ui/callout";
-import { EmptyState } from "@kubo/ui/empty-state";
-import { Form } from "@kubo/ui/form";
-import { formatBRL, formatCep } from "@kubo/ui/lib/format";
-import { Skeleton } from "@kubo/ui/skeleton";
-import { Steps } from "@kubo/ui/steps";
-import { useSession } from "@kubo/web-core/session";
+import { track } from "@eumini/analytics";
+import { ApiError, type Schemas, unwrap } from "@eumini/api-client";
+import { qk, useApiClient } from "@eumini/api-client/react";
+import { Button } from "@eumini/ui/button";
+import { Callout } from "@eumini/ui/callout";
+import { EmptyState } from "@eumini/ui/empty-state";
+import { Form } from "@eumini/ui/form";
+import { formatBRL, formatCep } from "@eumini/ui/lib/format";
+import { Skeleton } from "@eumini/ui/skeleton";
+import { Steps } from "@eumini/ui/steps";
+import { useSession } from "@eumini/web-core/session";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";

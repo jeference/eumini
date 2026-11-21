@@ -100,7 +100,7 @@ def request_email_verification(*, user, quiet_cooldown: bool = False) -> None:
     _send_code(
         user=user,
         plaintext=plaintext,
-        subject="Seu código de verificação da Kubo",
+        subject="Seu código de verificação da EuMini",
         template="verification_code",
     )
 
@@ -129,7 +129,7 @@ def request_password_reset(*, email: str) -> None:
     _send_code(
         user=user,
         plaintext=plaintext,
-        subject="Redefinição de senha da Kubo",
+        subject="Redefinição de senha da EuMini",
         template="password_reset_code",
     )
 

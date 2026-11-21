@@ -12,12 +12,12 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_USER: kubo
+          POSTGRES_USER: eumini
           POSTGRES_HOST_AUTH_METHOD: trust
-          POSTGRES_DB: kubo
+          POSTGRES_DB: eumini
         ports: ["5433:5432"]
         options: >-
-          --health-cmd "pg_isready -U kubo"
+          --health-cmd "pg_isready -U eumini"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
@@ -26,7 +26,7 @@ jobs:
         working-directory: apps/backend
     env:
       DJANGO_DEBUG: "True"
-      DATABASE_URL: postgres://kubo@127.0.0.1:5433/kubo
+      DATABASE_URL: postgres://eumini@127.0.0.1:5433/eumini
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -55,9 +55,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Tipos gerados atualizados
         run: |
-          pnpm --filter @kubo/api-types generate
+          pnpm --filter @eumini/api-types generate
           git diff --exit-code packages/api-types/index.ts
       - run: pnpm -r lint
       - run: pnpm -r typecheck
       - run: pnpm -r test
-      - run: pnpm --filter @kubo/consumer build
+      - run: pnpm --filter @eumini/consumer build

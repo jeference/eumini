@@ -4,7 +4,7 @@ from django.db import migrations
 
 def seed(apps, schema_editor):
     apps.get_model("fulfillment", "Partner").objects.create(
-        name="Kubo",
+        name="EuMini",
         origin_postal_code=settings.INTERNAL_PARTNER_POSTAL_CODE,
         is_internal=True,
     )

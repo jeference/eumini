@@ -1,10 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@kubo/ui/button";
-import { Form, TextField } from "@kubo/ui/form";
-import { useRegister } from "@kubo/web-core/auth-client";
-import { handleFormError } from "@kubo/web-core/forms";
+import { Button } from "@eumini/ui/button";
+import { Form, TextField } from "@eumini/ui/form";
+import { useRegister } from "@eumini/web-core/auth-client";
+import { handleFormError } from "@eumini/web-core/forms";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";

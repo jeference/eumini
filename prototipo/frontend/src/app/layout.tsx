@@ -9,8 +9,8 @@ const sans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const display = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
 
 export const metadata: Metadata = {
-  title: "Kubo — protótipo de criação 3D",
-  description: "Protótipo da experiência de criação de modelos 3D da Kubo.",
+  title: "EuMini — protótipo de criação 3D",
+  description: "Protótipo da experiência de criação de modelos 3D da EuMini.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

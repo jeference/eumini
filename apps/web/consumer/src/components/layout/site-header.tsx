@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "@kubo/web-core/session";
+import { useSession } from "@eumini/web-core/session";
 import { ShoppingCart, User } from "lucide-react";
 import Link from "next/link";
 
@@ -16,16 +16,16 @@ export function SiteHeader() {
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:h-20 lg:px-9">
         <Link
           href="/"
-          aria-label="Kubo"
+          aria-label="EuMini"
           className="flex items-center text-xl lg:text-3xl"
         >
-          {/* O cubo é o K da marca e o "ubo" é feito das mesmas arestas, na mesma escala. */}
+          {/* O cubo é o E da marca e o "uMini" é feito das mesmas arestas, na mesma escala. */}
           <picture className="shrink-0">
-            <source srcSet="/brand/kubo-cube-still.webp" media="(prefers-reduced-motion: reduce)" />
-            <img src="/brand/kubo-cube.webp" alt="" width={72} height={72} className="size-[1em]" />
+            <source srcSet="/brand/eumini-cube-still.webp" media="(prefers-reduced-motion: reduce)" />
+            <img src="/brand/eumini-cube.webp" alt="" width={72} height={72} className="size-[1em]" />
           </picture>
           {/* eslint-disable-next-line @next/next/no-img-element -- tamanho em em, junto com o cubo */}
-          <img src="/brand/kubo-ubo.webp" alt="" width={156} height={144} className="h-[1em] w-auto" />
+          <img src="/brand/eumini-word.webp" alt="" width={208} height={144} className="h-[1em] w-auto" />
         </Link>
         <nav className="flex items-center gap-1 text-sm font-medium text-white sm:gap-2">
           <Link href="/criacoes" className="rounded-full px-3 py-2 hover:bg-white/15">

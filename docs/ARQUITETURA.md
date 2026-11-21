@@ -1,4 +1,4 @@
-# Arquitetura do MVP da Kubo
+# Arquitetura do MVP da EuMini
 
 | | |
 |---|---|
@@ -135,14 +135,14 @@ Dois tipos de ator convivem. A API resolve quem é o ator em `request.actor`, e 
 
 ### Visitante
 
-- Token opaco e aleatório, **guardado em cookie httpOnly** `kubo_visitor` (`SameSite=Lax`, `Secure` em produção, validade de 1 ano). No banco fica apenas o hash.
+- Token opaco e aleatório, **guardado em cookie httpOnly** `eumini_visitor` (`SameSite=Lax`, `Secure` em produção, validade de 1 ano). No banco fica apenas o hash.
 - A rota `/bff/visitor` do Next cria o visitante no primeiro acesso e grava o cookie. Nas chamadas seguintes, o rewrite de `/api/*` repassa o cookie ao Django, lido pela classe `VisitorAuthentication`.
-- **Proteção contra CSRF:** como esse cookie autentica sozinho, escritas de visitante exigem também o cabeçalho `X-Kubo-Client`, que um formulário de outro site não consegue enviar.
+- **Proteção contra CSRF:** como esse cookie autentica sozinho, escritas de visitante exigem também o cabeçalho `X-EuMini-Client`, que um formulário de outro site não consegue enviar.
 - A criação do visitante não consome nada.
 
 ### Conta
 
-- E-mail e senha, com **access token JWT de 30 minutos guardado só em memória** e **refresh de 7 dias, rotativo e com blacklist, em cookie httpOnly** `kubo_refresh`.
+- E-mail e senha, com **access token JWT de 30 minutos guardado só em memória** e **refresh de 7 dias, rotativo e com blacklist, em cookie httpOnly** `eumini_refresh`.
 - O cookie é gravado pelo BFF do Next. Cada app expõe `bff/auth/{login,refresh,logout,verify-email}`, reexportando o handler compartilhado de `web-core`.
 - Ao carregar a página, o `SessionBootstrap` chama o refresh e depois `/api/me/`. O cliente de API repete a chamada uma vez em caso de 401, renovando a sessão antes.
 - O cadastro não retorna tokens: envia um código de 6 dígitos, e a verificação entrega os tokens.
@@ -255,7 +255,7 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 
 | Entidade | Campos principais | Uso |
 |---|---|---|
-| `Partner` | nome, status, CEP de origem | ● Um registro: a própria Kubo |
+| `Partner` | nome, status, CEP de origem | ● Um registro: a própria EuMini |
 | `PartnerMember` | partner, user | ○ |
 | `ProductionJob` | order item, partner (nulo, atribuível), status, atribuído em | ● |
 | `ProductionFile` | job, tipo (GLB, STL, 3MF), versão, asset | ○ Até a preparação de impressão existir |
@@ -521,14 +521,14 @@ A tabela é conferida com impressões reais antes do lançamento ([PRD](PRD.md#c
 
 ## 15. Storage e acesso
 
-**Um bucket privado por ambiente** (`kubo-media-dev` e `kubo-media-prod`, em `sa-east-1`): fotos, imagens e arquivos de produção, sempre por URL assinada. Imagens de exemplo das categorias são arquivos estáticos do próprio app. O adapter local, com arquivos servidos por `/api/media/<token>/` e token assinado, continua disponível para os testes.
+**Um bucket privado por ambiente** (`eumini-media-dev` e `eumini-media-prod`, em `sa-east-1`): fotos, imagens e arquivos de produção, sempre por URL assinada. Imagens de exemplo das categorias são arquivos estáticos do próprio app. O adapter local, com arquivos servidos por `/api/media/<token>/` e token assinado, continua disponível para os testes.
 
 O script `apps/backend/scripts/provision_s3.py` cria e mantém essa configuração:
 
 - **Sem acesso público:** Block Public Access completo e ACLs desligadas (`BucketOwnerEnforced`).
 - **Criptografia:** AES256 em repouso, SSE-C bloqueado e acesso negado sem TLS.
 - **Versionamento:** versões antigas expiram em 7 dias, para que o expurgo apague o arquivo de verdade.
-- **Acesso da aplicação:** um usuário IAM por ambiente (`kubo-app-<env>`), limitado ao bucket do próprio ambiente.
+- **Acesso da aplicação:** um usuário IAM por ambiente (`eumini-app-<env>`), limitado ao bucket do próprio ambiente.
 
 Como as URLs assinadas mudam a cada resposta, o frontend reaproveita a URL de cada imagem enquanto ela vale, para o polling não baixar tudo de novo.
 
@@ -766,7 +766,7 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 | Ledger com tipo `partner_payable` reservado | Repasse a parceiros |
 | Serializers explícitos e regras de PII | Serializer do parceiro: sem e-mail nem CPF do cliente |
 
-**Por que entra sem migração destrutiva:** o app novo acrescenta endpoints e telas sobre tabelas que já existem. Pedidos do MVP ficam ligados ao parceiro interno (a própria Kubo), e cada tamanho, arquivo e evento já está registrado por item.
+**Por que entra sem migração destrutiva:** o app novo acrescenta endpoints e telas sobre tabelas que já existem. Pedidos do MVP ficam ligados ao parceiro interno (a própria EuMini), e cada tamanho, arquivo e evento já está registrado por item.
 
 ---
 

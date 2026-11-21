@@ -1,4 +1,4 @@
-# Kubo — protótipo de criação do modelo 3D
+# EuMini — protótipo de criação do modelo 3D
 
 Protótipo de uma página para validar a UI/UX do fluxo:
 

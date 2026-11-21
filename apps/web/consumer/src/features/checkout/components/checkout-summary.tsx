@@ -1,9 +1,9 @@
 "use client";
 
-import type { Schemas } from "@kubo/api-client";
-import { Card } from "@kubo/ui/card";
-import { formatBRL } from "@kubo/ui/lib/format";
-import { cn } from "@kubo/ui/lib/utils";
+import type { Schemas } from "@eumini/api-client";
+import { Card } from "@eumini/ui/card";
+import { formatBRL } from "@eumini/ui/lib/format";
+import { cn } from "@eumini/ui/lib/utils";
 
 import { categoryLabel } from "@/features/catalog/categories";
 

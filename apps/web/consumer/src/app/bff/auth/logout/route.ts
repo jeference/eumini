@@ -1,1 +1,1 @@
-export { bffLogout as POST } from "@kubo/web-core/server";
+export { bffLogout as POST } from "@eumini/web-core/server";

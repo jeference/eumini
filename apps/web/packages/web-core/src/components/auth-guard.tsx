@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@kubo/ui/skeleton";
+import { Skeleton } from "@eumini/ui/skeleton";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 

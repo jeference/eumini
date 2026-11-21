@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Kubo API
+  title: EuMini API
   version: 0.1.0
 paths:
   /api/auth/login/:
@@ -2259,4 +2259,4 @@ components:
     visitorCookie:
       type: apiKey
       in: cookie
-      name: kubo_visitor
+      name: eumini_visitor

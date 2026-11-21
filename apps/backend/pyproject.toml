@@ -1,7 +1,7 @@
 [project]
-name = "kubo-backend"
+name = "eumini-backend"
 version = "0.1.0"
-description = "Kubo: backend (API, webhooks, worker de geração e tarefas agendadas)"
+description = "EuMini: backend (API, webhooks, worker de geração e tarefas agendadas)"
 requires-python = ">=3.12"
 dependencies = [
     "Django>=5.2,<5.3",

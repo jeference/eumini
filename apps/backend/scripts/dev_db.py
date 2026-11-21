@@ -1,6 +1,6 @@
 """Postgres local sem Docker: usa os binários do pacote `pgserver`, na porta 5433.
 
-Cria o cluster em `_pgdata/` na primeira execução e o banco `kubo`.
+Cria o cluster em `_pgdata/` na primeira execução e o banco `eumini`.
 Fica em primeiro plano até Ctrl+C (`--detach` só inicia e sai). Apenas para desenvolvimento.
 """
 
@@ -39,7 +39,7 @@ def main() -> int:
             "-D",
             str(DATA),
             "-U",
-            "kubo",
+            "eumini",
             "--auth=trust",
             "--encoding=UTF8",
             "--locale=C",
@@ -61,7 +61,7 @@ def main() -> int:
             check=True,
             stdout=subprocess.DEVNULL,
         )
-    run("createdb", "-h", "127.0.0.1", "-p", PORT, "-U", "kubo", "kubo", check=False)
+    run("createdb", "-h", "127.0.0.1", "-p", PORT, "-U", "eumini", "eumini", check=False)
     print(f"Postgres pronto em 127.0.0.1:{PORT}.", flush=True)
     if "--detach" in sys.argv:
         return 0

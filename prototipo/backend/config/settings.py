@@ -1,4 +1,4 @@
-"""Django settings for the Kubo prototype — single module, env-driven.
+"""Django settings for the EuMini prototype — single module, env-driven.
 
 Mirrors razantti's setup (django-environ + DRF + ports/adapters), scaled down:
 no auth, no database models, files live in MEDIA_ROOT.

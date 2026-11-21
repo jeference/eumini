@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@kubo/ui/button";
-import { EmptyState } from "@kubo/ui/empty-state";
-import { formatBRL, formatDate } from "@kubo/ui/lib/format";
-import { ORDER_STATUS } from "@kubo/ui/lib/status";
-import { Skeleton } from "@kubo/ui/skeleton";
-import { StatusBadge } from "@kubo/ui/status-badge";
+import { Button } from "@eumini/ui/button";
+import { EmptyState } from "@eumini/ui/empty-state";
+import { formatBRL, formatDate } from "@eumini/ui/lib/format";
+import { ORDER_STATUS } from "@eumini/ui/lib/status";
+import { Skeleton } from "@eumini/ui/skeleton";
+import { StatusBadge } from "@eumini/ui/status-badge";
 import Link from "next/link";
 
 import { useOrders } from "@/features/orders/hooks";

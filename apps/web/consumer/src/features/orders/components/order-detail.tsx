@@ -1,14 +1,14 @@
 "use client";
 
-import { Button } from "@kubo/ui/button";
-import { Callout } from "@kubo/ui/callout";
-import { Card } from "@kubo/ui/card";
-import { EmptyState } from "@kubo/ui/empty-state";
-import { formatDate } from "@kubo/ui/lib/format";
-import { ORDER_STATUS } from "@kubo/ui/lib/status";
-import { Skeleton } from "@kubo/ui/skeleton";
-import { StatusBadge } from "@kubo/ui/status-badge";
-import type { Schemas } from "@kubo/api-client";
+import { Button } from "@eumini/ui/button";
+import { Callout } from "@eumini/ui/callout";
+import { Card } from "@eumini/ui/card";
+import { EmptyState } from "@eumini/ui/empty-state";
+import { formatDate } from "@eumini/ui/lib/format";
+import { ORDER_STATUS } from "@eumini/ui/lib/status";
+import { Skeleton } from "@eumini/ui/skeleton";
+import { StatusBadge } from "@eumini/ui/status-badge";
+import type { Schemas } from "@eumini/api-client";
 import Link from "next/link";
 
 import { OrderPayment } from "@/features/orders/components/order-payment";

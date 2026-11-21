@@ -1,5 +1,5 @@
 {
-  "name": "@kubo/analytics",
+  "name": "@eumini/analytics",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,6 +10,6 @@
     "lint": "echo sem-lint",
     "test": "echo sem-testes"
   },
-  "dependencies": { "@kubo/api-types": "workspace:*" },
+  "dependencies": { "@eumini/api-types": "workspace:*" },
   "devDependencies": { "typescript": "^5.7.3" }
 }

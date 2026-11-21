@@ -474,7 +474,7 @@ High-poly output, STL and 3MF export, flatten-bottom, pivot and scale are all re
 | Regenerate higher quality from earlier 3D task | **Not available as such** | Refine is retired. Post-processing tasks take a 3D `task_id`, but none is documented as regenerating geometry at higher quality. New generation from the same image is a new task | [DOC SDK](https://developers.tripo3d.ai/en/docs/sdk); [texture](https://developers.tripo3d.ai/en/docs/models-texture) |
 | Retexture an existing mesh | **Documented** | `models/texture` with `task_id`, keeping geometry; docs "strongly recommend" re-supplying the reference image | [texture](https://developers.tripo3d.ai/en/docs/models-texture) |
 
-**Kubo-flow facts (no recommendation)**
+**EuMini-flow facts (no recommendation)**
 - Preview and final can both be `image-to-model` calls from the same stored image with different `model`, `face_limit`, `texture_quality`, each billed as a new task. — [image H](https://developers.tripo3d.ai/en/docs/generation-image-to-model/standard); [PRICE](https://developers.tripo3d.ai/en/pricing)
 - CLI's print recipe says "Textures are wasted credits for printing". — [CLI print.md](https://registry.npmjs.org/tripo-cli/-/tripo-cli-0.9.0.tgz)
 - Legacy FAQ: inputs and generated models are not used for training. — [LEGACY FAQ](https://docs.tripo3d.ai/other/support-faq.html)

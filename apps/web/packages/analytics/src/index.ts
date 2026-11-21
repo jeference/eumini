@@ -1,4 +1,4 @@
-import type { components } from "@kubo/api-types";
+import type { components } from "@eumini/api-types";
 
 export type EventName = components["schemas"]["NameEnum"];
 
@@ -8,7 +8,7 @@ export function track(name: EventName, properties: Record<string, string | numbe
   void fetch("/api/events/", {
     method: "POST",
     keepalive: true,
-    headers: { "Content-Type": "application/json", "X-Kubo-Client": "web" },
+    headers: { "Content-Type": "application/json", "X-EuMini-Client": "web" },
     body: JSON.stringify({ name, properties }),
   }).catch(() => undefined);
 }

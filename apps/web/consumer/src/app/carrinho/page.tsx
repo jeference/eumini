@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@kubo/ui/button";
-import { Card } from "@kubo/ui/card";
-import { EmptyState } from "@kubo/ui/empty-state";
-import { formatBRL } from "@kubo/ui/lib/format";
-import { QuantityStepper } from "@kubo/ui/quantity-stepper";
-import { Skeleton } from "@kubo/ui/skeleton";
+import { Button } from "@eumini/ui/button";
+import { Card } from "@eumini/ui/card";
+import { EmptyState } from "@eumini/ui/empty-state";
+import { formatBRL } from "@eumini/ui/lib/format";
+import { QuantityStepper } from "@eumini/ui/quantity-stepper";
+import { Skeleton } from "@eumini/ui/skeleton";
 import { Lock, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";

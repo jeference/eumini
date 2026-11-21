@@ -1,4 +1,4 @@
-import { tailwindPreset } from "@kubo/design-tokens";
+import { tailwindPreset } from "@eumini/design-tokens";
 import type { Config } from "tailwindcss";
 
 const config: Config = {

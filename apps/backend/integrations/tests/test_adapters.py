@@ -145,7 +145,7 @@ def test_abacatepay_create_charge(_keys):
         method="PIX",
         amount=12990,
         reference="ref",
-        description="Pedido Kubo KB123",
+        description="Pedido EuMini EM123",
         expires_in_seconds=1800,
     )
     assert charge.external_id == "pix_char_1"
@@ -206,7 +206,7 @@ def test_abacatepay_card_charge_approved_is_paid(_keys):
         method="CARD",
         amount=12990,
         reference="ref",
-        description="Pedido Kubo KB123",
+        description="Pedido EuMini EM123",
         card_token="ctok_abc",
         customer=_CUSTOMER,
     )
@@ -368,12 +368,12 @@ def s3_adapter(settings):
     settings.AWS_SECRET_ACCESS_KEY = "segredo-teste"
     settings.AWS_S3_ENDPOINT_URL = ""
     settings.AWS_S3_REGION_NAME = "sa-east-1"
-    settings.AWS_STORAGE_BUCKET_NAME = "kubo-media-teste"
+    settings.AWS_STORAGE_BUCKET_NAME = "eumini-media-teste"
     return S3MediaAdapter()
 
 
 def test_s3_put_and_get_use_the_private_bucket(s3_adapter):
-    target = {"Bucket": "kubo-media-teste", "Key": "photo/a.png"}
+    target = {"Bucket": "eumini-media-teste", "Key": "photo/a.png"}
     with Stubber(s3_adapter._client) as stub:
         stub.add_response("put_object", {}, {**target, "Body": b"foto", "ContentType": "image/png"})
         stub.add_response("get_object", {"Body": StreamingBody(io.BytesIO(b"foto"), 4)}, target)
@@ -391,7 +391,7 @@ def test_s3_get_returns_none_for_missing_object(s3_adapter):
 def test_s3_signed_url_expires_and_is_signed(s3_adapter):
     url = urlparse(s3_adapter.signed_url(key="image/a.png", ttl_seconds=300))
     query = parse_qs(url.query)
-    assert url.hostname == "kubo-media-teste.s3.sa-east-1.amazonaws.com"
+    assert url.hostname == "eumini-media-teste.s3.sa-east-1.amazonaws.com"
     assert url.path == "/image/a.png"
     assert query["X-Amz-Expires"] == ["300"]
     assert query["X-Amz-Algorithm"] == ["AWS4-HMAC-SHA256"]

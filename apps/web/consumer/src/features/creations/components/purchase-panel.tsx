@@ -1,12 +1,12 @@
 "use client";
 
-import { track } from "@kubo/analytics";
-import { Button } from "@kubo/ui/button";
-import { Callout } from "@kubo/ui/callout";
-import { Chip } from "@kubo/ui/chip";
-import { formatBRL } from "@kubo/ui/lib/format";
-import { cn } from "@kubo/ui/lib/utils";
-import { QuantityStepper } from "@kubo/ui/quantity-stepper";
+import { track } from "@eumini/analytics";
+import { Button } from "@eumini/ui/button";
+import { Callout } from "@eumini/ui/callout";
+import { Chip } from "@eumini/ui/chip";
+import { formatBRL } from "@eumini/ui/lib/format";
+import { cn } from "@eumini/ui/lib/utils";
+import { QuantityStepper } from "@eumini/ui/quantity-stepper";
 import { ShoppingBag, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

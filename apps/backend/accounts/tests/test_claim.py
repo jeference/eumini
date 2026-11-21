@@ -9,11 +9,11 @@ from orders.tests.helpers import place_order, size_id
 
 
 def _logged_in_with_cookie(user, visitor_client):
-    client = APIClient(HTTP_X_KUBO_CLIENT="web")
+    client = APIClient(HTTP_X_EUMINI_CLIENT="web")
     client.cookies[VISITOR_COOKIE] = visitor_client.visitor_token
     client.credentials(
         HTTP_AUTHORIZATION=f"Bearer {RefreshToken.for_user(user).access_token}",
-        HTTP_X_KUBO_CLIENT="web",
+        HTTP_X_EUMINI_CLIENT="web",
     )
     return client
 
@@ -53,7 +53,7 @@ def test_claim_requires_verified_email(db):
     from django.contrib.auth import get_user_model
 
     user = get_user_model().objects.create_user(email="x@exemplo.com", password="Senha-forte-123")
-    client = APIClient(HTTP_X_KUBO_CLIENT="web")
+    client = APIClient(HTTP_X_EUMINI_CLIENT="web")
     client.credentials(HTTP_AUTHORIZATION=f"Bearer {RefreshToken.for_user(user).access_token}")
     response = client.post("/api/me/claim/")
     assert response.status_code == 422

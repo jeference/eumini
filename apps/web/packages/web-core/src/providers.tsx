@@ -1,6 +1,6 @@
 "use client";
 
-import { ApiClientProvider, createQueryClient } from "@kubo/api-client/react";
+import { ApiClientProvider, createQueryClient } from "@eumini/api-client/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { type ReactNode, useState } from "react";
 

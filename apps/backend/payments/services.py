@@ -97,7 +97,7 @@ def pay_order(
             method=Charge.Method.PIX,
             amount=locked.total_cents,
             reference=str(locked.globalid),
-            description=f"Pedido Kubo {locked.number}",
+            description=f"Pedido EuMini {locked.number}",
             expires_in_seconds=seconds,
         )
         charge = Charge.objects.create(
@@ -132,7 +132,7 @@ def _create_card_charge(
         method=Charge.Method.CARD,
         amount=order.total_cents,
         reference=str(order.globalid),
-        description=f"Pedido Kubo {order.number}",
+        description=f"Pedido EuMini {order.number}",
         card_token=card_token,
         customer=customer,
     )

@@ -1,5 +1,5 @@
 {
-  "name": "@kubo/api-client",
+  "name": "@eumini/api-client",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -16,7 +16,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@kubo/api-types": "workspace:*",
+    "@eumini/api-types": "workspace:*",
     "openapi-fetch": "^0.13.5"
   },
   "peerDependencies": {

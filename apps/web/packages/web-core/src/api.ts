@@ -1,4 +1,4 @@
-import { type ApiClient, createApiClient } from "@kubo/api-client";
+import { type ApiClient, createApiClient } from "@eumini/api-client";
 
 import { apiBaseUrl } from "./env";
 import { useSession } from "./session";

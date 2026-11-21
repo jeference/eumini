@@ -1,7 +1,7 @@
-import { Card } from "@kubo/ui/card";
-import { Callout } from "@kubo/ui/callout";
-import type { Schemas } from "@kubo/api-client";
-import { formatBRL } from "@kubo/ui/lib/format";
+import { Card } from "@eumini/ui/card";
+import { Callout } from "@eumini/ui/callout";
+import type { Schemas } from "@eumini/api-client";
+import { formatBRL } from "@eumini/ui/lib/format";
 
 import { categoryLabel } from "@/features/catalog/categories";
 

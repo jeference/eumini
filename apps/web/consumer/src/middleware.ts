@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { REFRESH_COOKIE } from "@kubo/web-core/auth-constants";
+import { REFRESH_COOKIE } from "@eumini/web-core/auth-constants";
 
 /** Primeira barreira da área da conta. A autorização de verdade é sempre do backend. */
 export function middleware(request: NextRequest): NextResponse {

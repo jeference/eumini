@@ -1,6 +1,6 @@
 import createClient, { type Client, type Middleware } from "openapi-fetch";
 
-import type { paths } from "@kubo/api-types";
+import type { paths } from "@eumini/api-types";
 
 import { normalizeError } from "./errors";
 
@@ -16,9 +16,9 @@ export interface ApiClientConfig {
 }
 
 /** Marca a repetição depois de renovar: nunca é enviada duas vezes. */
-const RETRIED = "x-kubo-retried";
+const RETRIED = "x-eumini-retried";
 /** Sem este cabeçalho, o cookie de visitante não autoriza escrita (proteção contra CSRF). */
-export const CLIENT_HEADER = "X-Kubo-Client";
+export const CLIENT_HEADER = "X-EuMini-Client";
 
 /**
  * Cliente tipado pelos `paths` gerados: caminho, parâmetros e respostas são inferidos, então

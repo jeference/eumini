@@ -1,7 +1,7 @@
 "use client";
 
-import { type Schemas, unwrap } from "@kubo/api-client";
-import { qk, useApiClient } from "@kubo/api-client/react";
+import { type Schemas, unwrap } from "@eumini/api-client";
+import { qk, useApiClient } from "@eumini/api-client/react";
 import { useQuery } from "@tanstack/react-query";
 
 import type { Category } from "@/features/catalog/categories";

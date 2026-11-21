@@ -19,7 +19,7 @@ export function Creator() {
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-2 font-display text-xl font-semibold tracking-tight text-highlight lg:text-3xl">
               <Box className="size-6 lg:size-8" strokeWidth={2.2} aria-hidden />
-              kubo
+              eumini
             </span>
             <span className="hidden rounded-full bg-highlight px-2.5 py-0.5 text-xs font-medium text-accent sm:inline">
               protótipo

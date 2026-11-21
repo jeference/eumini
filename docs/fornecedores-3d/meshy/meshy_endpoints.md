@@ -705,7 +705,7 @@ Documented maximum `target_polycount` is **300,000**, so a 1.2M-face target cann
 | Input image preservation | `image_enhancement: false` keeps the exact input look (not `meshy-6-lite` or Smart Topology); `remove_lighting` — [Image to 3D](https://docs.meshy.ai/api/image-to-3d) | Documented |
 | Separate physical products | Creative Lab keychains, magnets, figures, lamps, keycaps, fidgets, some with mm parameters — see table above. Figure, Vinyl and Brick pages return GLB and OBJ only | Documented |
 
-**Cost ladder for the Kubo flow, from [Pricing](https://docs.meshy.ai/api/pricing)** (Image to 3D, credits per request):
+**Cost ladder for the EuMini flow, from [Pricing](https://docs.meshy.ai/api/pricing)** (Image to 3D, credits per request):
 
 | Step | Option | Credits |
 |---|---|---|
@@ -725,7 +725,7 @@ These are my reasoning, not Meshy statements:
 
 - The Jujubit 1.2M tier has no equivalent request parameter at Meshy. Whether `should_remesh: false` or Ultra exceeds 1.2M faces by itself cannot be determined from the docs. It would need a test or a vendor answer, and I ran no API calls.
 - For a "cheap preview, then higher quality after purchase, from the same input image" flow, the documented path is a **new** Image to 3D task using the stored image (or an in-retention Text or Image to Image `input_task_id`). Nothing documented ties it to the preview's shape, and no seed exists on that endpoint, so the final geometry may not match the preview. The web docs rate Image to 3D's "Consistency across generations" as High, relative to other methods — [generation method](https://docs.meshy.ai/webapp/guides/choosing/generation-method) [WEB]. That is not a guarantee.
-- A purchased model cannot be regenerated or post-processed by `input_task_id` after retention ends, so the buyer's source image and model files would need to be stored on Kubo's side — [Asset Retention](https://docs.meshy.ai/api/asset-retention).
+- A purchased model cannot be regenerated or post-processed by `input_task_id` after retention ends, so the buyer's source image and model files would need to be stored on EuMini's side — [Asset Retention](https://docs.meshy.ai/api/asset-retention).
 - A chain for a sized, repaired print file looks like Analyze → Repair (GLB) → Resize → Convert (STL or 3MF). Only each step's input acceptance is documented. Repair output is accepted as Analyze input. For Resize and Convert, the pages say `input_task_id` is "the Meshy task" without restricting type. Scale surviving Convert is not documented.
 - For color prints, Repair then Retexture then Multi-Color follows from the documented rules, but the effect of Retexture on a repaired mesh's watertightness is not documented.
 

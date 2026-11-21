@@ -58,7 +58,7 @@ Tripo sells API credits as flat pay-as-you-go at $0.01 per credit from $1, with 
 
 ### Inferences
 - Meshy's per-credit figures only hold if the whole monthly allowance is used, since plan credits do not roll over. Low or uneven sales volume raises the effective Meshy price. Tripo has no such effect.
-- Because Meshy's Terms contain an entire-agreement clause (s. 11.10), the Terms are the safer reading. Kubo should treat purchased credits as expiring after one year until Meshy confirms otherwise in writing.
+- Because Meshy's Terms contain an entire-agreement clause (s. 11.10), the Terms are the safer reading. EuMini should treat purchased credits as expiring after one year until Meshy confirms otherwise in writing.
 - The Ultra plan did not appear in the pricing table as fetched, although structured data, help articles and the rate-limit docs all list it. If Ultra cannot be bought from Brazil, the $0.0125 rate needs Studio 3x or 5x ($210 or $350 per month), and the concurrency limit would be 60 rather than 100.
 
 ### Gaps
@@ -137,7 +137,7 @@ Assumptions: single image; flagship general-purpose model at each provider (Trip
 
 Add for a printable export: Tripo convert 5 to 10 credits ($0.05 to $0.10); Meshy convert 1 credit ($0.0125 to $0.02).
 
-**Illustration for Kubo's flow: 10 previews plus one final model (computed)**
+**Illustration for EuMini's flow: 10 previews plus one final model (computed)**
 
 | Scenario | Preview unit cost | 10 previews | Final model | Total |
 |---|---|---|---|---|
@@ -201,7 +201,7 @@ Source: [Meshy rate limits](https://docs.meshy.ai/en/api/rate-limits)
 - A status page exists at [status.meshy.ai](https://status.meshy.ai/), linked from the Meshy site footer
 
 ### Inferences
-- Tripo's image generation limit of 1 is a likely bottleneck for Kubo's text/photo to 2D image step unless raised, or unless that step stays on another provider.
+- Tripo's image generation limit of 1 is a likely bottleneck for EuMini's text/photo to 2D image step unless raised, or unless that step stays on another provider.
 - At Meshy, 2D image tasks and 3D tasks compete for the same concurrency pool. At Tripo, they have separate pools. A burst of previews affects them differently.
 - A Meshy Ultra plan offers 100 concurrent tasks at $100 per month, while Tripo's published default is 10 for H-series. Tripo's real ceiling depends on a request whose outcome is not published.
 
@@ -214,7 +214,7 @@ Source: [Meshy rate limits](https://docs.meshy.ai/en/api/rate-limits)
 ## Licensing and IP
 
 ### Takeaway
-Both providers let paid users own and commercially exploit outputs, and neither requires attribution on paid plans. Tripo's help center explicitly approves 3D printing and print-on-demand. But both sets of terms have clauses that bear directly on Kubo's end-customer model: Tripo bars making the service available to end users without written consent, and Meshy bars reselling or redistributing the service or access to it and limits some access to internal use. Both place IP indemnity on the customer. Free tiers are unsuitable.
+Both providers let paid users own and commercially exploit outputs, and neither requires attribution on paid plans. Tripo's help center explicitly approves 3D printing and print-on-demand. But both sets of terms have clauses that bear directly on EuMini's end-customer model: Tripo bars making the service available to end users without written consent, and Meshy bars reselling or redistributing the service or access to it and limits some access to internal use. Both place IP indemnity on the customer. Free tiers are unsuitable.
 
 ### Cited Findings
 
@@ -248,15 +248,15 @@ Both providers let paid users own and commercially exploit outputs, and neither 
 - **Indemnification runs from customer to Meshy (s. 8)** for third-party claims from "unauthorized use", breach, or violation of law, "except where such damages are caused by Meshy's negligence or willful misconduct". No indemnity from Meshy was found. Mutual liability cap: fees paid or payable in the prior 12 months (s. 9) — [Meshy Terms](https://www.meshy.ai/terms-of-use)
 - Publicity: "Meshy may use Customer's name, logo and word marks to identify Customer as a customer", revocable by written notice (s. 3.6) — [Meshy Terms](https://www.meshy.ai/terms-of-use)
 
-### Inferences (flags for Kubo; not legal advice)
-- **Flag, Tripo s. 3.2 end-user clause: high.** Kubo's customers trigger generation through Kubo's interface. A plain reading could treat that as making the service available to "end users", so Kubo should get Holymolly's prior written authorization before launch. The help center's "print-on-demand: Yes" concerns use of outputs and does not waive this; its own table repeats the written-authorization restriction.
+### Inferences (flags for EuMini; not legal advice)
+- **Flag, Tripo s. 3.2 end-user clause: high.** EuMini's customers trigger generation through EuMini's interface. A plain reading could treat that as making the service available to "end users", so EuMini should get Holymolly's prior written authorization before launch. The help center's "print-on-demand: Yes" concerns use of outputs and does not waive this; its own table repeats the written-authorization restriction.
 - **Flag, Tripo s. 3.1 commercial-activity clause: medium.** Its examples are promotional (contests, advertising), but "commercial activities and/or sales" is broad and also needs written consent. Include it in the same written authorization request.
 - **Flag, Meshy s. 2.6(v) and s. 1.2: high.** Whether a customer-facing generator is "resell[ing] or redistribut[ing] [...] access to the Service" is ambiguous, particularly if the generated preview is effectively the product. The "internal use" wording in s. 1.2 points the same way, though it is qualified by "depending on your account type". The Enterprise page's reference to platforms suggests such use exists, likely under an Order Form. Ask for written confirmation.
 - **Flag, competition clauses at both providers: medium.** Meshy sells physical prints through Meshy Shop and offers Creative Lab merchandise endpoints, so a print marketplace may be argued to be a competitive product under s. 2.6(iv) and AUP s. 4. Tripo's site navigation also has a "Shop" link and its clause covers "products and services". The Tripo clause concerns using Outputs to compete, which is narrower in wording than Meshy's.
 - **Flag, Meshy s. 2.4 identifiers: medium.** Converting to STL, repairing, or slicing a mesh may strip metadata or alter any watermark. Ask Meshy whether such processing breaches the clause, and whether identifiers survive print preparation.
-- **Flag, indemnity at both: medium.** Kubo carries infringement risk from customer uploads and has no upstream IP protection. Back-to-back customer warranties and takedown handling would need to be in Kubo's own terms. Tripo's indemnity wording covers Inputs and Outputs expressly and looks broader; Meshy's has a negligence carve-out.
+- **Flag, indemnity at both: medium.** EuMini carries infringement risk from customer uploads and has no upstream IP protection. Back-to-back customer warranties and takedown handling would need to be in EuMini's own terms. Tripo's indemnity wording covers Inputs and Outputs expressly and looks broader; Meshy's has a negligence carve-out.
 - **Flag, what "paid" means: low to medium.** Tripo defines Free Users as those using the Services free of charge, but does not say how promotional API credits are classified. Outputs made with free test credits may fall under s. 5.2.1. Meshy's API requires a paid plan, so the free-plan concern does not arise there, but rights tied to the plan at generation time mean downgrades need checking.
-- **Flag, passing rights to partners and customers.** Both grant rights broad enough on their face to authorize print partners (Tripo: "authorize and license"; Meshy: ownership). Neither addresses hidden sub-contract printers specifically. Neither gives exclusivity, so Kubo should not promise customers a unique design.
+- **Flag, passing rights to partners and customers.** Both grant rights broad enough on their face to authorize print partners (Tripo: "authorize and license"; Meshy: ownership). Neither addresses hidden sub-contract printers specifically. Neither gives exclusivity, so EuMini should not promise customers a unique design.
 - **Flag, changes in terms.** Tripo may change terms "IN ITS SOLE DISCRETION AT ANY TIME" and allows its service to be suspended or terminated — [Tripo Terms](https://www.tripo3d.ai/terms). Meshy promises 7 days' notice, or 30 for material changes — [Meshy Terms](https://www.meshy.ai/terms-of-use).
 
 ### Gaps
@@ -311,15 +311,15 @@ Tripo's terms and API FAQ exclude paid-user inputs and outputs from training, an
 - Meshy jurisdiction: Meshy LLC, 111 West Evelyn Avenue, Suite 304, Sunnyvale, CA; California law; AAA-ICDR arbitration in San Francisco County (ss. 6.1, 10, 11.1) — [Meshy Terms](https://www.meshy.ai/terms-of-use)
 - Meshy subprocessors: categories only (security, advertising, hosting and IT providers), plus AWS — [Meshy Privacy](https://www.meshy.ai/privacy-policy), [Data and training FAQ](https://help.meshy.ai/en/articles/15724182-is-meshy-safe-and-private-data-and-training-faq)
 
-### Inferences (flags for Kubo; not legal advice)
-- **Flag, Meshy s. 2.2: high.** A customer's face photo is "data that could identify a specific person", so sending photos of real people through a self-serve plan appears to breach the contract on its face, regardless of consent. This goes to the core of Kubo's photo flow. Resolve it in writing, or through an Order and DPA.
-- **Flag, Tripo photo position: medium.** Tripo's policy acknowledges depicted people and allows others' data if "authorised", so it is less absolute. Still, the "should not submit your own personal information" wording and the help page's "faces" warning pull the other way, so Kubo needs consent and a contract position.
-- **Flag, controller and operator roles under LGPD: high.** Both privacy policies are written with the provider as controller for its users. Kubo would be sending third-party photos, and Tripo says it is the controller. Without a DPA, Kubo cannot easily show Tripo or Meshy acts as its operator. Tripo's "enterprise customer" sentence suggests the operator model requires an enterprise relationship. Photos can also be biometric-adjacent; whether that makes them sensitive data under the LGPD is a question for counsel.
-- **Flag, international transfer: medium.** Either route sends Brazilian customer photos abroad: to the US at Meshy, to Hong Kong-headquartered Tripo and to the US or other countries. Kubo would need its own Art. 33 basis and customer disclosure. Tripo's policy offers contract clause copies on request; Meshy's says nothing for Brazil.
-- **Flag, Meshy training opt-out: high priority and cheap to act on.** The contract permits training unless opted out. Kubo should send the opt-out email before any production traffic and get a confirmation, since the API page's "never" does not sit well with s. 2.9 and s. 11.10.
+### Inferences (flags for EuMini; not legal advice)
+- **Flag, Meshy s. 2.2: high.** A customer's face photo is "data that could identify a specific person", so sending photos of real people through a self-serve plan appears to breach the contract on its face, regardless of consent. This goes to the core of EuMini's photo flow. Resolve it in writing, or through an Order and DPA.
+- **Flag, Tripo photo position: medium.** Tripo's policy acknowledges depicted people and allows others' data if "authorised", so it is less absolute. Still, the "should not submit your own personal information" wording and the help page's "faces" warning pull the other way, so EuMini needs consent and a contract position.
+- **Flag, controller and operator roles under LGPD: high.** Both privacy policies are written with the provider as controller for its users. EuMini would be sending third-party photos, and Tripo says it is the controller. Without a DPA, EuMini cannot easily show Tripo or Meshy acts as its operator. Tripo's "enterprise customer" sentence suggests the operator model requires an enterprise relationship. Photos can also be biometric-adjacent; whether that makes them sensitive data under the LGPD is a question for counsel.
+- **Flag, international transfer: medium.** Either route sends Brazilian customer photos abroad: to the US at Meshy, to Hong Kong-headquartered Tripo and to the US or other countries. EuMini would need its own Art. 33 basis and customer disclosure. Tripo's policy offers contract clause copies on request; Meshy's says nothing for Brazil.
+- **Flag, Meshy training opt-out: high priority and cheap to act on.** The contract permits training unless opted out. EuMini should send the opt-out email before any production traffic and get a confirmation, since the API page's "never" does not sit well with s. 2.9 and s. 11.10.
 - **Flag, Tripo statement mismatch: medium.** The Terms and API FAQ give an unqualified no-training statement, while the September 2026 privacy policy reserves anonymised use of "text prompts and Outputs" for model development, "subject to any restrictions in our agreement with you". The legacy FAQ's "does not collect, store, or process users' personal data" also does not match the policy's description of Inputs. Ask which applies to API traffic.
 - **Flag, Tripo retention unknowns: high.** A literal "XXX" in the official FAQ means no published API retention period for input photos. Ask for a period in writing, and how the "scheduled deletion process" works.
-- **Operational consequence, Meshy 3 days:** Kubo must download outputs immediately and keep its own copy, and must store the input image itself for later high-quality regeneration. A customer buying more than 3 days after preview cannot rely on `input_task_id`.
+- **Operational consequence, Meshy 3 days:** EuMini must download outputs immediately and keep its own copy, and must store the input image itself for later high-quality regeneration. A customer buying more than 3 days after preview cannot rely on `input_task_id`.
 - Short Meshy output retention is also a privacy benefit, but it applies to output. Input-image retention is not stated for either provider.
 
 ### Gaps
@@ -334,7 +334,7 @@ Tripo's terms and API FAQ exclude paid-user inputs and outputs from training, an
 ## Content moderation and acceptable use
 
 ### Takeaway
-Both APIs filter inputs automatically and surface rejections as errors, and neither publishes the filter's criteria. Meshy has a specific AUP that mentions third-party images, publicity rights, and minors; Tripo relies on general Terms provisions. Both make the customer responsible for rights in uploaded images, so trademarked characters and real-person likeness risk falls on Kubo.
+Both APIs filter inputs automatically and surface rejections as errors, and neither publishes the filter's criteria. Meshy has a specific AUP that mentions third-party images, publicity rights, and minors; Tripo relies on general Terms provisions. Both make the customer responsible for rights in uploaded images, so trademarked characters and real-person likeness risk falls on EuMini.
 
 ### Cited Findings
 
@@ -356,9 +356,9 @@ Both APIs filter inputs automatically and surface rejections as errors, and neit
 - Meshy "reserve[s] the right to monitor your use", may delete User Content that violates the agreement (ss. 2.6, 3.2), and may suspend access (s. 5) — [Meshy Terms](https://www.meshy.ai/terms-of-use)
 - Its printing addendum shows its own stance: Meshy may "reject or cancel any orders" to enforce restrictions, and customers warrant rights in submitted content — [Meshy Terms addendum](https://www.meshy.ai/terms-of-use)
 
-### Inferences (flags for Kubo; not legal advice)
-- Passing automated moderation is not a rights clearance. Neither filter is described as detecting trademarks, copyrighted characters, or real people, so Kubo needs its own upload attestation, screening, and takedown process, especially for photos of minors or celebrities.
-- Because an account holder answers for all use, one customer's prohibited upload could put Kubo's single shared account at risk of suspension (Meshy s. 5; Tripo s. 3.1 and s. 10.3). Kubo's pre-screening also protects service continuity.
+### Inferences (flags for EuMini; not legal advice)
+- Passing automated moderation is not a rights clearance. Neither filter is described as detecting trademarks, copyrighted characters, or real people, so EuMini needs its own upload attestation, screening, and takedown process, especially for photos of minors or celebrities.
+- Because an account holder answers for all use, one customer's prohibited upload could put EuMini's single shared account at risk of suspension (Meshy s. 5; Tripo s. 3.1 and s. 10.3). EuMini's pre-screening also protects service continuity.
 - Meshy's AUP item on "unauthorized automated or scripting processes" sits oddly next to an API product. It seems aimed at community uploads, but could be included in a confirmation request.
 - Moderation failures need user-facing handling. Tripo's 2008 is a synchronous HTTP 400 in the docs, while internal bans surface as a failed task. Meshy's `moderation_unavailable` is transient and should be retried rather than shown as a content problem.
 
@@ -388,7 +388,7 @@ Tripo API purchases are by Stripe checkout, and Meshy self-serve is by card and 
 - Self-serve support: support@meshy.ai; legal notices to legal@meshy.ai — [Meshy Terms](https://www.meshy.ai/terms-of-use). The API console and auto-refill are described on the [Meshy API page](https://www.meshy.ai/api), with per-key monthly credit limits and IP allowlists in the [Developer Platform docs](https://docs.meshy.ai/en/api/developer-platform)
 
 ### Inferences
-- Written answers to Kubo's core questions (end-customer use, photos, resale of prints, training, retention, DPA) are likely to come only through business@tripo3d.ai and Meshy sales or legal@meshy.ai. These conversations are effectively a prerequisite at both providers for this business model.
+- Written answers to EuMini's core questions (end-customer use, photos, resale of prints, training, retention, DPA) are likely to come only through business@tripo3d.ai and Meshy sales or legal@meshy.ai. These conversations are effectively a prerequisite at both providers for this business model.
 - Tripo's gross-up language and its 5% per day late fee are worth noting for Brazilian remittances, although prepaid credits should make late fees unlikely. Brazilian tax on service imports was not researched and applies whichever provider is chosen.
 - Meshy's single-plan auto-renewal adds a commitment that Tripo's prepaid credits do not have.
 

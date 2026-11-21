@@ -9,7 +9,7 @@ from django.core import signing
 
 from integrations.ports import MediaStoragePort
 
-SIGNING_SALT = "kubo.media"
+SIGNING_SALT = "eumini.media"
 
 
 def _path(key: str) -> Path:

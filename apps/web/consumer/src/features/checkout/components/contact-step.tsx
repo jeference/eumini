@@ -1,7 +1,7 @@
 "use client";
 
-import { TextField } from "@kubo/ui/form";
-import { formatCpf } from "@kubo/ui/lib/format";
+import { TextField } from "@eumini/ui/form";
+import { formatCpf } from "@eumini/ui/lib/format";
 import { useFormContext } from "react-hook-form";
 
 import type { CheckoutValues } from "@/features/checkout/schemas";

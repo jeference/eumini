@@ -46,7 +46,7 @@ def client_for_visitor():
     from accounts.services.visitors import create_visitor
 
     visitor, token = create_visitor(ip_hash="iphash")
-    client = APIClient(HTTP_X_KUBO_CLIENT="web")
+    client = APIClient(HTTP_X_EUMINI_CLIENT="web")
     client.cookies[VISITOR_COOKIE] = token
     client.visitor = visitor
     client.visitor_token = token
@@ -76,10 +76,10 @@ def user(db):
 def user_client(user):
     from rest_framework_simplejwt.tokens import RefreshToken
 
-    client = APIClient(HTTP_X_KUBO_CLIENT="web")
+    client = APIClient(HTTP_X_EUMINI_CLIENT="web")
     client.credentials(
         HTTP_AUTHORIZATION=f"Bearer {RefreshToken.for_user(user).access_token}",
-        HTTP_X_KUBO_CLIENT="web",
+        HTTP_X_EUMINI_CLIENT="web",
     )
     client.user = user
     return client

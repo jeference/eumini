@@ -1,4 +1,4 @@
-import "@kubo/design-tokens/styles/tokens.css";
+import "@eumini/design-tokens/styles/tokens.css";
 import "./globals.css";
 
 import type { Metadata, Viewport } from "next";
@@ -13,7 +13,7 @@ const sans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const display = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
 
 export const metadata: Metadata = {
-  title: { default: "Kubo: crie e receba sua peça impressa em 3D", template: "%s · Kubo" },
+  title: { default: "EuMini: crie e receba sua peça impressa em 3D", template: "%s · EuMini" },
   description:
     "Descreva o que você imagina ou envie uma foto. A gente cria o modelo com IA, e você recebe a peça impressa em 3D em casa.",
   manifest: "/manifest.webmanifest",

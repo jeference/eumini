@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@kubo/ui/button";
-import { EmptyState } from "@kubo/ui/empty-state";
-import { formatDate } from "@kubo/ui/lib/format";
-import { CREATION_STATUS } from "@kubo/ui/lib/status";
-import { Skeleton } from "@kubo/ui/skeleton";
-import { StatusBadge } from "@kubo/ui/status-badge";
-import { useSession } from "@kubo/web-core/session";
+import { Button } from "@eumini/ui/button";
+import { EmptyState } from "@eumini/ui/empty-state";
+import { formatDate } from "@eumini/ui/lib/format";
+import { CREATION_STATUS } from "@eumini/ui/lib/status";
+import { Skeleton } from "@eumini/ui/skeleton";
+import { StatusBadge } from "@eumini/ui/status-badge";
+import { useSession } from "@eumini/web-core/session";
 import { ImageIcon, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";

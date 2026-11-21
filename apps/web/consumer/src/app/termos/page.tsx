@@ -8,7 +8,7 @@ export default function TermsPage() {
   return (
     <LegalPage title="Termos de Uso">
       <p>
-        Ao usar a Kubo, você concorda com estes termos. Eles valem para a criação de imagens e
+        Ao usar a EuMini, você concorda com estes termos. Eles valem para a criação de imagens e
         modelos com inteligência artificial e para a compra das peças impressas.
       </p>
       <h2>O que você cria</h2>
@@ -22,7 +22,7 @@ export default function TermsPage() {
         pessoas que aparecem nela. Não envie fotos de terceiros sem autorização.
       </p>
       <p>
-        É proibido usar a Kubo para criar conteúdo ilegal, sexual envolvendo menores, que viole
+        É proibido usar a EuMini para criar conteúdo ilegal, sexual envolvendo menores, que viole
         direitos autorais, marcas ou a imagem de outras pessoas. Podemos recusar ou cancelar pedidos
         com esse tipo de conteúdo, com devolução do valor pago.
       </p>

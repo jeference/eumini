@@ -1,7 +1,7 @@
 [project]
-name = "kubo-prototipo-backend"
+name = "eumini-prototipo-backend"
 version = "0.1.0"
-description = "Kubo — protótipo da experiência de criação do modelo 3D (backend)"
+description = "EuMini — protótipo da experiência de criação do modelo 3D (backend)"
 requires-python = ">=3.12"
 dependencies = [
     "Django>=5.2,<5.3",

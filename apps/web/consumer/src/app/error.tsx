@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@kubo/ui/button";
-import { EmptyState } from "@kubo/ui/empty-state";
+import { Button } from "@eumini/ui/button";
+import { EmptyState } from "@eumini/ui/empty-state";
 
 export default function ErrorPage({ reset }: { reset: () => void }) {
   return (

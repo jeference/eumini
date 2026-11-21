@@ -1,7 +1,7 @@
 "use client";
 
-import { Toaster } from "@kubo/ui/sonner";
-import { CoreProviders } from "@kubo/web-core/providers";
+import { Toaster } from "@eumini/ui/sonner";
+import { CoreProviders } from "@eumini/web-core/providers";
 import type { ReactNode } from "react";
 
 export function Providers({ children }: Readonly<{ children: ReactNode }>) {

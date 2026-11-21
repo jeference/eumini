@@ -1,4 +1,4 @@
-import type { StatusTone } from "@kubo/design-tokens";
+import type { StatusTone } from "@eumini/design-tokens";
 
 import { cn } from "../lib/utils";
 
