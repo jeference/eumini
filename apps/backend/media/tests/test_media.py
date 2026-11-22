@@ -26,6 +26,8 @@ def test_purged_asset_has_no_url():
 
 
 def _photo_with_metadata(image_format: str, size=(2000, 1000)) -> bytes:
+    if image_format == "MPO":
+        return _iphone_mpo(size)
     exif = Image.Exif()
     exif[ExifTags.Base.Make] = "Camera do cliente"
     exif[ExifTags.Base.Orientation] = 6
@@ -37,6 +39,27 @@ def _photo_with_metadata(image_format: str, size=(2000, 1000)) -> bytes:
         buffer, format=image_format, exif=exif.tobytes(), icc_profile=icc_profile
     )
     return buffer.getvalue()
+
+
+def _iphone_mpo(size) -> bytes:
+    exif = Image.Exif()
+    exif[ExifTags.Base.Make] = "Camera do cliente"
+    exif[ExifTags.Base.Orientation] = 6
+    exif.get_ifd(ExifTags.IFD.GPSInfo)[ExifTags.GPS.GPSLatitudeRef] = "S"
+    icc_profile = ImageCms.ImageCmsProfile(ImageCms.createProfile("sRGB")).tobytes()
+    gain_map = Image.new("L", (size[0] // 4, size[1] // 4), 128).convert("RGB")
+    buffer = io.BytesIO()
+    Image.new("RGB", size, "red").save(
+        buffer,
+        format="MPO",
+        save_all=True,
+        append_images=[gain_map],
+        exif=exif.tobytes(),
+        icc_profile=icc_profile,
+    )
+    raw = buffer.getvalue()
+    assert Image.open(io.BytesIO(raw)).format == "MPO"
+    return raw
 
 
 def test_prepare_photo_limits_normalized_size_and_validates_type():
@@ -80,6 +103,8 @@ def test_prepare_photo_enlarges_small_photos_for_the_classifier():
         # HEIC (iPhone) e AVIF viram JPEG: os navegadores fora o Safari não mostram HEIC.
         ("HEIF", "image/jpeg", "JPEG"),
         ("AVIF", "image/jpeg", "JPEG"),
+        # JPEG do iPhone com o mapa de HDR como segunda imagem: fica só a foto principal.
+        ("MPO", "image/jpeg", "JPEG"),
     ],
 )
 def test_prepare_photo_keeps_original_without_metadata(image_format, mime, original_format):
@@ -108,3 +133,11 @@ def test_prepare_photo_keeps_transparency_of_heic_as_png():
     original = Image.open(io.BytesIO(prepared.original))
     assert original.format == "PNG"
     assert original.mode == "RGBA"
+
+
+def test_prepare_photo_keeps_only_the_main_image_of_an_mpo():
+    prepared = services.prepare_photo(_iphone_mpo((2000, 1000)))
+    original = Image.open(io.BytesIO(prepared.original))
+    assert original.format == "JPEG"
+    assert getattr(original, "n_frames", 1) == 1
+    assert original.getpixel((0, 0)) == pytest.approx((254, 0, 0), abs=2)

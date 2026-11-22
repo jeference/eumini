@@ -18,7 +18,9 @@ _EXTENSIONS = {"image/png": "png", "image/jpeg": "jpg", "image/webp": "webp"}
 _PHOTO_MIMES = {"PNG": "image/png", "JPEG": "image/jpeg", "WEBP": "image/webp"}
 # HEIC (iPhone, alguns Android) e AVIF são aceitos, mas o original vira JPEG, ou PNG se tiver
 # transparência: qualquer ferramenta lê, e os navegadores fora o Safari não mostram HEIC.
-_CONVERTED_FORMATS = ("HEIF", "AVIF")
+# MPO é o JPEG que o iPhone envia com uma segunda imagem embutida (o mapa de HDR): fica só a
+# foto principal, num JPEG comum.
+_CONVERTED_FORMATS = ("HEIF", "AVIF", "MPO")
 _ORIGINAL_SAVE_OPTIONS = {"PNG": {}, "JPEG": {"quality": 95}, "WEBP": {"quality": 95}}
 PHOTO_FORMATS_MESSAGE = "Envie uma foto em JPG, PNG, WEBP, HEIC ou AVIF."
 # Depois da conversão a imagem é RGB(A): um perfil de cor de outro espaço a deixaria errada.
