@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "common.middleware.TrustedClientIpMiddleware",
     "common.middleware.RequestContextMiddleware",
     "django.middleware.common.CommonMiddleware",
 ]
@@ -89,6 +90,9 @@ USE_TZ = True
 
 # --- API ---
 NUM_PROXIES = env.int("NUM_PROXIES", default=1)
+# Cabeçalho com o IP do visitante gravado pela borda (produção: CF-Connecting-IP, com
+# NUM_PROXIES=0). Só é seguro quando todo acesso passa pela borda, que sobrescreve o valor.
+CLIENT_IP_HEADER = env("CLIENT_IP_HEADER", default="")
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",

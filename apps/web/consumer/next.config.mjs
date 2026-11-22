@@ -24,6 +24,7 @@ const contentSecurityPolicy = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  poweredByHeader: false,
   // Só na imagem Docker: no Windows, o modo standalone exige permissão para criar symlinks.
   output: process.env.NEXT_STANDALONE ? "standalone" : undefined,
   transpilePackages: [
@@ -40,6 +41,17 @@ const nextConfig = {
   async rewrites() {
     const django = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
     return [{ source: "/api/:path*", destination: `${django}/api/:path*/` }];
+  },
+  // Um endereço só: www.<domínio> vai para <domínio>, preservando o caminho.
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www\\.(?<domain>.+)" }],
+        destination: "https://:domain/:path*",
+        permanent: true,
+      },
+    ];
   },
   async headers() {
     const security = [

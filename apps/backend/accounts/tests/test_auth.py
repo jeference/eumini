@@ -119,6 +119,18 @@ def test_password_reset_changes_password_and_kills_sessions(anon, user):
     assert login.status_code == 200
 
 
+def test_password_change_kills_existing_sessions(anon, user):
+    tokens = anon.post("/api/auth/login/", {"email": user.email, "password": PASSWORD}).data
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {tokens['access']}")
+    response = client.post(
+        "/api/auth/password/change/",
+        {"old_password": PASSWORD, "new_password": "Outra-senha-456"},
+    )
+    assert response.status_code == 200
+    assert anon.post("/api/auth/refresh/", {"refresh": tokens["refresh"]}).status_code == 401
+
+
 def test_me_requires_account(anon, visitor_client, user_client):
     assert anon.get("/api/me/").status_code == 401
     assert visitor_client.get("/api/me/").status_code in (401, 403)

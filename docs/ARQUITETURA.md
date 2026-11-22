@@ -709,7 +709,8 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 
 - Rate limit por IP e por e-mail (com hash) em autenticação, **incluindo o refresh**; por visitante em geração, cotação e criação de pedidos.
 - **Contadores em cache compartilhado** (`DatabaseCache`), porque o cache padrão por processo não funciona com vários workers.
-- Em produção: SSL obrigatório, HSTS, cookies seguros, Referrer-Policy e CSP.
+- Em produção: HTTPS obrigatório e HSTS na borda (Cloudflare), cookies seguros, Referrer-Policy e CSP.
+- **IP do visitante:** em produção vem de `CF-Connecting-IP`, que a Cloudflare sobrescreve. O `TrustedClientIpMiddleware` grava esse IP em `REMOTE_ADDR` (`CLIENT_IP_HEADER`, com `NUM_PROXIES=0`), então o `client_ip` e os limites do DRF enxergam o mesmo valor. O BFF repassa o cabeçalho em todas as chamadas, inclusive no refresh.
 - Segredos só em variáveis de ambiente, com `.env.example` por app.
 - Uploads: tipo real verificado e imagem reprocessada no servidor.
 
@@ -742,13 +743,19 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 
 | Item | Decisão |
 |---|---|
-| **Ambientes** | Local (IA real; pagamento e frete simulados até existirem as chaves), homologação (gateway em modo de teste e frete em sandbox), produção |
-| **Empacotamento** | Docker, com imagens para `web` (gunicorn), `worker`, `scheduler` e `consumer` (Next) |
-| **Hospedagem** | VPS com Docker Compose, Postgres gerenciado e storage S3 compatível [Proposta] |
+| **Ambientes** | Local (desenvolvimento e homologação) e produção. Uma homologação em servidor próprio pode vir depois, com os mesmos arquivos, nunca na máquina da produção |
+| **Hospedagem** | Um VPS (Hostinger KVM 2, Campinas, Ubuntu 26.04 LTS) com Docker Compose: `postgres`, `web` (gunicorn), `worker`, `scheduler`, `consumer` (Next) e `cloudflared`. Arquivos em [`infra/`](../infra/) |
+| **Exposição** | O firewall da Hostinger só deixa entrar a porta 22 (SSH só com chave, só o usuário `deploy`, sem root). O site não usa porta: chega pelo Cloudflare Tunnel (`eumini.com`, e `www` redireciona). HTTPS obrigatório, TLS 1.2+ e HSTS na zona da Cloudflare |
+| **Antes do lançamento** | A produção roda aberta com as mesmas chaves e serviços do desenvolvimento (AbacatePay dev, Gmail, bucket `kubo-media-dev`, frete simulado). O teto diário de IA e os limites por IP contêm abuso. No lançamento: zerar o banco e trocar as chaves |
+| **Servidor** | Criado do zero pelo `infra/server/post-install.sh` (post-install script da Hostinger): patches automáticos (reboot às 04:00), Docker com `live-restore`, swap e usuário `deploy`. Segredos da aplicação gerados no próprio servidor (`bootstrap-secrets.sh`) |
+| **Banco** | Postgres no mesmo VPS. Um gerenciado na mesma região quando o faturamento justificar: muda só a `DATABASE_URL` |
+| **Deploy** | Do PC: `make deploy` envia o código por SSH e o servidor gera as imagens (`eumini-backend` e `eumini-consumer`, com os `NEXT_PUBLIC_*` no build), aplica as migrações e sobe a versão, esperando ficar saudável. Imagens dos últimos 7 dias ficam para voltar versão. O GitHub não tem acesso ao servidor |
+| **Backup** | Diário às 03:00: `pg_dump` criptografado com `age` (o servidor só tem a chave pública; a privada fica com o dono) em `backups/db/` do bucket da aplicação, com 30 dias de retenção. No lançamento, um bucket próprio com credencial que só grava |
 | **CI** | Backend: ruff, verificação contra `__all__`, migrações, pytest, geração de schema. Web: lint, typecheck, teste, build |
-| **Migrações** | Executadas no deploy, antes de subir a nova versão |
-| **Backup** | Backup diário do banco com teste de restauração. Versionamento no bucket privado |
+| **Teste local da produção** | `make prod-local` constrói as imagens e sobe tudo, menos o túnel, em `http://127.0.0.1:3100` |
 | **Desenvolvimento** | `make db` sobe um Postgres local sem Docker, na porta 5433 |
+
+**Para escalar:** primeiro um plano maior de VPS; com mais de uma máquina, as imagens passam a ser geradas no CI e publicadas num registro; depois mais réplicas de `worker` (já dividem as tarefas com `SKIP LOCKED`), o banco gerenciado e mais máquinas atrás da Cloudflare. As mídias já ficam no S3, fora do servidor.
 
 ---
 
@@ -779,7 +786,7 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 | 3 | Dados de cliente exigidos pelo gateway e pela nota fiscal | Confirmar |
 | 4 | Conta no Melhor Envio e serviços oferecidos (PAC, SEDEX, transportadoras) | Definir e testar em sandbox |
 | 5 | Prazos de retenção e redação de termos | Revisão jurídica |
-| 6 | Hospedagem e domínios definitivos. Os arquivos Docker existem, mas não foram executados | Decidir e testar antes de homologação |
+| 6 | Hospedagem e domínios definitivos | Decidido: VPS da Hostinger com Cloudflare Tunnel em `eumini.com` (seção [Ambientes e deploy](#ambientes-e-deploy)). Falta subir e verificar |
 | 7 | Limites de cota e teto de gasto | Ajustar com dados reais |
 | 8 | Modelo e provedor do classificador, e modelo de reserva | Jev 1.14, direto na TypeSafe, aprovado no [teste de 19/11](classificador/README.md): 46 de 47 casos certos. Faltam o modelo de reserva, a comparação com OpenAI e Google, e um segundo conjunto de casos |
 | 9 | Valores da tabela de preços por categoria | Provisórios no PRD; definitivos antes de produção |

@@ -1,4 +1,12 @@
-/** Só caminhos internos: impede redirecionamento para outro site. */
+/**
+ * Só caminhos internos: impede redirecionamento para outro site.
+ *
+ * Além de "//", o navegador trata "\" como "/" ("/\site.com" vira "//site.com"), e ignora
+ * tabulações e quebras de linha no meio do endereço. Por isso a barra invertida e caracteres de
+ * controle invalidam o valor inteiro.
+ */
 export function safeNext(value: string | null, fallback = "/criacoes"): string {
-  return value && value.startsWith("/") && !value.startsWith("//") ? value : fallback;
+  if (!value || !value.startsWith("/") || value.startsWith("//")) return fallback;
+  if (/[\\\u0000-\u001f\u007f]/.test(value)) return fallback;
+  return value;
 }

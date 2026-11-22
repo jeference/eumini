@@ -8,3 +8,7 @@ apps/backend/_pgdata
 prototipo
 docs
 .git
+testes_impressoes
+infra
+**/.env.*
+!**/.env.example

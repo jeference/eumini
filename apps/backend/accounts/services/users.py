@@ -45,6 +45,8 @@ def change_password(*, user, old_password: str, new_password: str) -> None:
     validate_password_strength(new_password, user=user)
     user.set_password(new_password)
     user.save(update_fields=["password", "updated_at"])
+    # Quem trocou a senha por suspeita de invasão espera derrubar as outras sessões.
+    blacklist_all_tokens(user)
 
 
 def update_profile(*, user, first_name: str | None = None, phone: str | None = None):

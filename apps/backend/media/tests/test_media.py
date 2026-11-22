@@ -52,6 +52,15 @@ def test_prepare_photo_limits_normalized_size_and_validates_type():
         services.prepare_photo(gif.getvalue())
 
 
+def test_prepare_photo_rejects_huge_resolution_before_decoding(monkeypatch):
+    monkeypatch.setattr(services, "PHOTO_MAX_PIXELS", 100 * 100)
+    buffer = io.BytesIO()
+    Image.new("RGB", (101, 100)).save(buffer, format="PNG")
+    with pytest.raises(GuardFailed) as exc:
+        services.prepare_photo(buffer.getvalue())
+    assert exc.value.code == "photo_too_large"
+
+
 def test_prepare_photo_enlarges_small_photos_for_the_classifier():
     buffer = io.BytesIO()
     Image.new("RGB", (231, 300)).save(buffer, format="PNG")

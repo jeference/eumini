@@ -19,6 +19,9 @@ _PHOTO_MIMES = {"PNG": "image/png", "JPEG": "image/jpeg", "WEBP": "image/webp"}
 _ORIGINAL_SAVE_OPTIONS = {"PNG": {}, "JPEG": {"quality": 95}, "WEBP": {"quality": 95}}
 # Depois da conversão a imagem é RGB(A): um perfil de cor de outro espaço a deixaria errada.
 _RGB_COMPATIBLE_MODES = ("RGB", "RGBA", "P")
+# Teto de resolução da foto: 50 MP cobre as câmeras de celular comuns (12 a 50 MP) e limita a
+# memória de cada envio, que é decodificado e copiado algumas vezes.
+PHOTO_MAX_PIXELS = 50_000_000
 
 
 @dataclass(frozen=True)
@@ -77,6 +80,10 @@ def prepare_photo(raw: bytes) -> PreparedPhoto:
         image = Image.open(io.BytesIO(raw))
         if image.format not in _PHOTO_MIMES:
             raise GuardFailed("Envie uma foto em PNG, JPG ou WEBP.", code="photo_invalid")
+        # O open só lê o cabeçalho. Um arquivo pequeno pode declarar centenas de milhões de
+        # pixels e ocupar gigabytes ao ser decodificado: recusa antes do load.
+        if image.width * image.height > PHOTO_MAX_PIXELS:
+            raise GuardFailed("A foto tem resolução grande demais.", code="photo_too_large")
         image.load()
     except (UnidentifiedImageError, OSError, Image.DecompressionBombError) as exc:
         raise GuardFailed("Não conseguimos ler essa foto.", code="photo_invalid") from exc

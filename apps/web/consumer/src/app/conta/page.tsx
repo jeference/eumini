@@ -104,10 +104,10 @@ function PasswordForm() {
           body: { old_password: current, new_password: next },
         }),
       ),
+    // Trocar a senha encerra todas as sessões, inclusive esta: entra de novo com a nova.
     onSuccess: () => {
-      toast.success("Senha alterada.");
-      setCurrent("");
-      setNext("");
+      toast.success("Senha alterada. Entre de novo com a nova senha.");
+      void signOutAndRedirect("/entrar");
     },
     onError: (error) => handleFormError(error),
   });

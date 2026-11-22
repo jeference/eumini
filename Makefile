@@ -9,7 +9,7 @@ PY := .venv/bin/python
 endif
 PNPM ?= npx --yes pnpm@9.15.9
 
-.PHONY: install db backend backend-tunnel simulate-pix verification-code worker scheduler frontend types migrate makemigrations test test-backend test-web lint fmt build
+.PHONY: install db backend backend-tunnel simulate-pix verification-code worker scheduler frontend types migrate makemigrations test test-backend test-web lint fmt build prod-local prod-local-down deploy
 
 install:
 	cd $(BACKEND) && uv venv --python 3.12 .venv && uv pip install --python $(PY) -e ".[dev]"
@@ -86,3 +86,19 @@ fmt:
 
 build:
 	$(PNPM) --filter @eumini/consumer build
+
+# --- Produção (infra/) ---
+# Testa a produção na própria máquina: gera as imagens e sobe tudo, menos o túnel, com o site
+# em http://127.0.0.1:3100. Precisa de infra/.env e infra/.env.app de teste.
+PROD_LOCAL := docker compose -f compose.yml -f compose.local.yml
+prod-local:
+	cd infra && $(PROD_LOCAL) up -d --build --wait postgres
+	cd infra && $(PROD_LOCAL) run --rm --build migrate
+	cd infra && $(PROD_LOCAL) up -d --build --wait web worker scheduler consumer
+
+prod-local-down:
+	cd infra && $(PROD_LOCAL) down
+
+# Publica o código desta pasta na produção (SSH com a chave em ~/.eumini).
+deploy:
+	bash infra/deploy.sh
