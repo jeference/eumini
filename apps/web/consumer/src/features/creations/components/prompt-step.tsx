@@ -54,7 +54,10 @@ export function PromptStep({ category }: { category: Category }) {
   function attachPhoto(file: File | undefined) {
     if (!file) return;
     if (!isAcceptedPhoto(file)) {
-      toast.error("Envie uma foto em JPG, PNG, WEBP, HEIC ou AVIF.");
+      const extension = file.name.includes(".") ? file.name.split(".").pop() : "sem extensão";
+      toast.error(
+        `Envie uma foto em JPG, PNG, WEBP, HEIC ou AVIF. Imagem enviada em ${extension} (${file.type || "sem tipo"}).`,
+      );
       return;
     }
     if (file.size > MAX_PHOTO_BYTES) {

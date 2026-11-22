@@ -83,7 +83,9 @@ def prepare_photo(raw: bytes) -> PreparedPhoto:
     try:
         image = Image.open(io.BytesIO(raw))
         if image.format not in _PHOTO_MIMES and image.format not in _CONVERTED_FORMATS:
-            raise GuardFailed(PHOTO_FORMATS_MESSAGE, code="photo_invalid")
+            raise GuardFailed(
+                f"{PHOTO_FORMATS_MESSAGE} Imagem enviada em {image.format}.", code="photo_invalid"
+            )
         # O open só lê o cabeçalho. Um arquivo pequeno pode declarar centenas de milhões de
         # pixels e ocupar gigabytes ao ser decodificado: recusa antes do load.
         if image.width * image.height > PHOTO_MAX_PIXELS:
