@@ -1,8 +1,12 @@
 const isProduction = process.env.NODE_ENV === "production";
 
 // Cartão: o abacatepay.js carrega o provedor dele (Rinne), que carrega o Evervault. O Evervault
-// desenha os campos do cartão em iframes e cada um fala com a própria API.
-const cardScripts = "https://abacatepay.com https://pkgs.rinne.com.br https://*.evervault.com";
+// desenha os campos do cartão em iframes e cada um fala com a própria API. O abacatepay.com
+// redireciona para www.abacatepay.com, que redireciona para assets.abacatepay.com, e a CSP vale
+// para cada etapa do redirecionamento.
+const cardScripts =
+  "https://abacatepay.com https://www.abacatepay.com https://assets.abacatepay.com " +
+  "https://pkgs.rinne.com.br https://*.evervault.com";
 const cardApis = "https://api.abacatepay.com https://*.rinne.com.br https://*.evervault.com";
 
 const contentSecurityPolicy = [
