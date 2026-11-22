@@ -11,7 +11,10 @@ dependencies = [
     "django-environ>=0.11",
     "psycopg[binary]>=3.2",
     "boto3>=1.34",
-    "Pillow>=10.0",
+    # 11.3+ lê AVIF sem plugin.
+    "Pillow>=11.3",
+    # Lê HEIC, o formato das fotos do iPhone.
+    "pillow-heif>=1.0",
     "structlog>=24.0",
     "requests>=2.31",
     "cryptography>=42.0",

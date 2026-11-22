@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from conftest import creation_payload, drain_worker, make_ready_creation
+from conftest import creation_payload, drain_worker, make_ready_creation, photo_upload
 from creations.models import CreationInput, ProviderTask, QuotaReservation
 from media.models import Asset
 
@@ -46,6 +46,16 @@ def test_create_stores_original_photo_without_exposing_it(visitor_client):
     detail = visitor_client.get(f"/api/creations/{response.data['id']}/")
     assert source.original_photo.key not in detail.content.decode()
     assert "original_photo" not in detail.data
+
+
+def test_create_accepts_iphone_heic_photo(visitor_client):
+    photo = photo_upload(size=(400, 300), image_format="HEIF", name="IMG_0001.HEIC")
+    response = _create(visitor_client, photo=photo)
+    assert response.status_code == 202, response.data
+    source = CreationInput.objects.get(creation__globalid=response.data["id"])
+    assert source.original_photo.mime == "image/jpeg"
+    assert source.original_photo.key.endswith(".jpg")
+    assert source.photo.mime == "image/png"
 
 
 def test_create_requires_photo(visitor_client):

@@ -16,7 +16,11 @@ from media.models import Asset
 
 _EXTENSIONS = {"image/png": "png", "image/jpeg": "jpg", "image/webp": "webp"}
 _PHOTO_MIMES = {"PNG": "image/png", "JPEG": "image/jpeg", "WEBP": "image/webp"}
+# HEIC (iPhone, alguns Android) e AVIF são aceitos, mas o original vira JPEG, ou PNG se tiver
+# transparência: qualquer ferramenta lê, e os navegadores fora o Safari não mostram HEIC.
+_CONVERTED_FORMATS = ("HEIF", "AVIF")
 _ORIGINAL_SAVE_OPTIONS = {"PNG": {}, "JPEG": {"quality": 95}, "WEBP": {"quality": 95}}
+PHOTO_FORMATS_MESSAGE = "Envie uma foto em JPG, PNG, WEBP, HEIC ou AVIF."
 # Depois da conversão a imagem é RGB(A): um perfil de cor de outro espaço a deixaria errada.
 _RGB_COMPATIBLE_MODES = ("RGB", "RGBA", "P")
 # Teto de resolução da foto: 50 MP cobre as câmeras de celular comuns (12 a 50 MP) e limita a
@@ -78,8 +82,8 @@ def prepare_photo(raw: bytes) -> PreparedPhoto:
         raise GuardFailed("A foto deve ter no máximo 10 MB.", code="photo_too_large")
     try:
         image = Image.open(io.BytesIO(raw))
-        if image.format not in _PHOTO_MIMES:
-            raise GuardFailed("Envie uma foto em PNG, JPG ou WEBP.", code="photo_invalid")
+        if image.format not in _PHOTO_MIMES and image.format not in _CONVERTED_FORMATS:
+            raise GuardFailed(PHOTO_FORMATS_MESSAGE, code="photo_invalid")
         # O open só lê o cabeçalho. Um arquivo pequeno pode declarar centenas de milhões de
         # pixels e ocupar gigabytes ao ser decodificado: recusa antes do load.
         if image.width * image.height > PHOTO_MAX_PIXELS:
@@ -89,8 +93,11 @@ def prepare_photo(raw: bytes) -> PreparedPhoto:
         raise GuardFailed("Não conseguimos ler essa foto.", code="photo_invalid") from exc
     source_format = image.format
     icc_profile = image.info.get("icc_profile") if image.mode in _RGB_COMPATIBLE_MODES else None
+    # No HEIC o leitor já aplica a rotação e zera a orientação do EXIF: aqui não gira de novo.
     image = ImageOps.exif_transpose(image)
     has_alpha = image.mode in ("RGBA", "LA") or "transparency" in image.info
+    if source_format in _CONVERTED_FORMATS:
+        source_format = "PNG" if has_alpha else "JPEG"
     image = image.convert("RGBA" if has_alpha else "RGB")
     # Uma imagem nova recebe só os pixels: EXIF (com GPS), XMP e afins ficam para trás.
     clean = Image.new(image.mode, image.size)

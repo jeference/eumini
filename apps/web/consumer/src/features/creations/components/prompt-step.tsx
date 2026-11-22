@@ -4,7 +4,7 @@ import { Button } from "@eumini/ui/button";
 import { Textarea } from "@eumini/ui/input";
 import { formatBRL } from "@eumini/ui/lib/format";
 import { cn } from "@eumini/ui/lib/utils";
-import { ImagePlus, Sparkles, X } from "lucide-react";
+import { CircleCheck, ImagePlus, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -16,6 +16,17 @@ import { useStartCreation } from "@/features/creations/hooks";
 import { messageOf } from "@/lib/errors";
 
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+// HEIC é o formato das fotos do iPhone; o servidor converte. Fora do Safari, um .heic costuma
+// chegar sem tipo, então a extensão também vale.
+const PHOTO_ACCEPT =
+  "image/png,image/jpeg,image/webp,image/heic,image/heif,image/avif,.heic,.heif,.avif";
+const PHOTO_TYPE = /^image\/(png|jpeg|webp|heic|heif|heic-sequence|heif-sequence|avif)$/;
+const PHOTO_EXTENSION = /\.(png|jpe?g|webp|heic|heif|avif)$/i;
+
+function isAcceptedPhoto(file: File) {
+  if (file.type && file.type !== "application/octet-stream") return PHOTO_TYPE.test(file.type);
+  return PHOTO_EXTENSION.test(file.name);
+}
 
 /** Envio da foto, a partir da página de uma categoria. */
 export function PromptStep({ category }: { category: Category }) {
@@ -42,8 +53,8 @@ export function PromptStep({ category }: { category: Category }) {
 
   function attachPhoto(file: File | undefined) {
     if (!file) return;
-    if (!/^image\/(png|jpeg|webp)$/.test(file.type)) {
-      toast.error("Envie uma foto em PNG, JPG ou WEBP.");
+    if (!isAcceptedPhoto(file)) {
+      toast.error("Envie uma foto em JPG, PNG, WEBP, HEIC ou AVIF.");
       return;
     }
     if (file.size > MAX_PHOTO_BYTES) {
@@ -98,7 +109,7 @@ export function PromptStep({ category }: { category: Category }) {
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/png,image/jpeg,image/webp"
+            accept={PHOTO_ACCEPT}
             aria-label="Enviar foto"
             className="sr-only"
             onChange={(event) => {
@@ -162,7 +173,10 @@ function PhotoPicker({
   onRemove: () => void;
 }) {
   const [url, setUrl] = useState<string | null>(null);
+  // Fora do Safari o navegador não desenha HEIC: no lugar da prévia, mostra que a foto foi anexada.
+  const [previewFailed, setPreviewFailed] = useState(false);
   useEffect(() => {
+    setPreviewFailed(false);
     if (!file) {
       setUrl(null);
       return;
@@ -182,9 +196,20 @@ function PhotoPicker({
         title="Criamos a imagem da miniatura a partir da sua foto"
         className="flex size-full flex-col items-center justify-center gap-3 overflow-hidden rounded-3xl border border-line bg-surface text-sm font-medium transition-colors hover:border-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
-        {url ? (
+        {url && !previewFailed ? (
           // eslint-disable-next-line @next/next/no-img-element -- prévia local do arquivo do cliente
-          <img src={url} alt="Foto enviada" className="size-full object-cover" />
+          <img
+            src={url}
+            alt="Foto enviada"
+            className="size-full object-cover"
+            onError={() => setPreviewFailed(true)}
+          />
+        ) : file ? (
+          <>
+            <CircleCheck className="size-7 text-accent" aria-hidden />
+            Foto anexada
+            <span className="max-w-[85%] truncate text-xs font-normal text-muted">{file.name}</span>
+          </>
         ) : (
           <>
             <ImagePlus className="size-7" aria-hidden />

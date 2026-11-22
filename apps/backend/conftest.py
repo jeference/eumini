@@ -95,11 +95,11 @@ def drain_worker(max_rounds: int = 20) -> None:
             return
 
 
-def photo_upload(size=(64, 64)):
+def photo_upload(size=(64, 64), image_format="PNG", name="foto.png"):
     buffer = io.BytesIO()
-    Image.new("RGB", size, "white").save(buffer, format="PNG")
+    Image.new("RGB", size, "white").save(buffer, format=image_format)
     buffer.seek(0)
-    buffer.name = "foto.png"
+    buffer.name = name
     return buffer
 
 

@@ -32,8 +32,9 @@ def _photo_with_metadata(image_format: str, size=(2000, 1000)) -> bytes:
     exif.get_ifd(ExifTags.IFD.GPSInfo)[ExifTags.GPS.GPSLatitudeRef] = "S"
     icc_profile = ImageCms.ImageCmsProfile(ImageCms.createProfile("sRGB")).tobytes()
     buffer = io.BytesIO()
+    # Em bytes: com o objeto Exif o pillow-heif não grava a rotação no HEIC, como o iPhone faz.
     Image.new("RGB", size, "red").save(
-        buffer, format=image_format, exif=exif, icc_profile=icc_profile
+        buffer, format=image_format, exif=exif.tobytes(), icc_profile=icc_profile
     )
     return buffer.getvalue()
 
@@ -71,10 +72,17 @@ def test_prepare_photo_enlarges_small_photos_for_the_classifier():
 
 
 @pytest.mark.parametrize(
-    ("image_format", "mime"),
-    [("JPEG", "image/jpeg"), ("PNG", "image/png"), ("WEBP", "image/webp")],
+    ("image_format", "mime", "original_format"),
+    [
+        ("JPEG", "image/jpeg", "JPEG"),
+        ("PNG", "image/png", "PNG"),
+        ("WEBP", "image/webp", "WEBP"),
+        # HEIC (iPhone) e AVIF viram JPEG: os navegadores fora o Safari não mostram HEIC.
+        ("HEIF", "image/jpeg", "JPEG"),
+        ("AVIF", "image/jpeg", "JPEG"),
+    ],
 )
-def test_prepare_photo_keeps_original_without_metadata(image_format, mime):
+def test_prepare_photo_keeps_original_without_metadata(image_format, mime, original_format):
     raw = _photo_with_metadata(image_format)
     assert Image.open(io.BytesIO(raw)).getexif().get_ifd(ExifTags.IFD.GPSInfo)
 
@@ -82,7 +90,7 @@ def test_prepare_photo_keeps_original_without_metadata(image_format, mime):
 
     original = Image.open(io.BytesIO(prepared.original))
     assert prepared.original_mime == mime
-    assert original.format == image_format
+    assert original.format == original_format
     # A orientação do EXIF é aplicada aos pixels antes de ser descartada.
     assert original.size == (1000, 2000)
     assert original.info.get("icc_profile")
@@ -90,3 +98,13 @@ def test_prepare_photo_keeps_original_without_metadata(image_format, mime):
         image = Image.open(io.BytesIO(data))
         assert not image.getexif()
         assert b"Camera do cliente" not in data
+
+
+def test_prepare_photo_keeps_transparency_of_heic_as_png():
+    buffer = io.BytesIO()
+    Image.new("RGBA", (400, 300), (255, 0, 0, 0)).save(buffer, format="HEIF")
+    prepared = services.prepare_photo(buffer.getvalue())
+    assert prepared.original_mime == "image/png"
+    original = Image.open(io.BytesIO(prepared.original))
+    assert original.format == "PNG"
+    assert original.mode == "RGBA"

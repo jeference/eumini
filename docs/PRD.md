@@ -170,7 +170,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | ID | Requisito | Prioridade |
 |---|---|---|
 | RF-CRI-01 | Criar a partir de uma foto, que é obrigatória, com pedido de alteração opcional (até 1.000 caracteres) | P0 |
-| RF-CRI-02 | Aceitar PNG, JPG e WEBP de até 10 MB [Proposta], corrigindo a orientação da foto | P0 |
+| RF-CRI-02 | Aceitar JPG, PNG, WEBP, HEIC (iPhone) e AVIF de até 10 MB [Proposta], corrigindo a orientação da foto; HEIC e AVIF são convertidos no servidor | P0 |
 | RF-CRI-03 | Gerar todas as figuras num estilo único, sem seletor de estilo | P0 |
 | RF-CRI-04 | Gerar uma imagem por solicitação | P0 |
 | RF-CRI-05 | Abrir a compra assim que a imagem fica pronta e classificada, sem etapa de 3D | P0 |
