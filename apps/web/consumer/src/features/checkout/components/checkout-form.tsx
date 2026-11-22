@@ -516,20 +516,10 @@ export function CheckoutForm() {
   }
 
   const shippingCents = selectedQuote?.price_cents ?? null;
-  const next = onlyItem ? `/checkout?item=${onlyItem}` : "/checkout";
 
   return (
     <div className="mx-auto max-w-5xl">
       <h1 className="font-display text-3xl font-semibold tracking-tight">Finalizar compra</h1>
-      {!user && (
-        <p className="mt-2 text-sm text-muted">
-          Não precisa de conta: enviamos o acompanhamento para o seu e-mail.{" "}
-          <Link href={`/entrar?next=${encodeURIComponent(next)}`} className="text-accent underline">
-            Já tenho conta
-          </Link>
-        </p>
-      )}
-
       <Steps steps={STEP_ITEMS} current={step} onSelect={goTo} className="mt-6 max-w-xl" />
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
