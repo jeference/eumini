@@ -2,7 +2,9 @@
 # Instalação do servidor de produção da EuMini (Ubuntu 26.04 LTS).
 #
 # Roda uma vez, como root, como "post-install script" da Hostinger ao recriar o VPS. Antes do
-# envio, o marcador __DEPLOY_SSH_PUBKEY__ é trocado pela chave pública de quem administra.
+# envio, os marcadores são trocados pelas chaves públicas:
+#   __DEPLOY_SSH_PUBKEY__  quem administra (shell completo)
+#   __CI_SSH_PUBKEY__      GitHub Actions (só roda o /opt/eumini/receive.sh, sem shell nem túnel)
 # A saída fica em /post_install.log.
 #
 # Exposição: o firewall da Hostinger só deixa entrar a porta 22 (SSH só com chave, só o usuário
@@ -10,6 +12,7 @@
 set -euo pipefail
 
 DEPLOY_SSH_PUBKEY="__DEPLOY_SSH_PUBKEY__"
+CI_SSH_PUBKEY="__CI_SSH_PUBKEY__"
 export DEBIAN_FRONTEND=noninteractive
 step() { echo "==> $(date -Is) $*"; }
 
@@ -51,7 +54,13 @@ systemctl restart docker
 step "Usuário deploy (único que entra por SSH) e pasta da aplicação"
 id deploy >/dev/null 2>&1 || useradd --create-home --shell /bin/bash --groups docker,systemd-journal deploy
 install -d -o deploy -g deploy -m 700 /home/deploy/.ssh
-echo "${DEPLOY_SSH_PUBKEY}" > /home/deploy/.ssh/authorized_keys
+{
+  echo "${DEPLOY_SSH_PUBKEY}"
+  # Sem a chave do CI (marcador não trocado), o deploy fica só pelo PC.
+  case "${CI_SSH_PUBKEY}" in
+    ssh-*) echo "restrict,command=\"/opt/eumini/receive.sh\" ${CI_SSH_PUBKEY}" ;;
+  esac
+} > /home/deploy/.ssh/authorized_keys
 chown deploy:deploy /home/deploy/.ssh/authorized_keys
 chmod 600 /home/deploy/.ssh/authorized_keys
 install -d -o deploy -g deploy -m 750 /opt/eumini

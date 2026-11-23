@@ -7,7 +7,8 @@
 # as imagens lá mesmo) e dois arquivos de segredos fora do git:
 #   .env      variáveis do próprio compose (TAG, senha do banco, token do túnel, NEXT_PUBLIC_*)
 #   .env.app  configuração do Django (chaves de API, e-mail, S3...)
-# Modelos: .env.example e .env.app.example. O deploy é o infra/deploy.sh (do PC).
+# Modelos: .env.example e .env.app.example. O deploy é o infra/deploy.sh (GitHub Actions após o
+# CI na main, ou do PC em emergência).
 # Localmente, SRC_DIR fica no padrão (a raiz do repositório): make prod-local.
 
 x-logging: &logging

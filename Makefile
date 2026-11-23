@@ -99,6 +99,7 @@ prod-local:
 prod-local-down:
 	cd infra && $(PROD_LOCAL) down
 
-# Publica o código desta pasta na produção (SSH com a chave em ~/.eumini).
+# Publica o código desta pasta na produção (SSH com a chave em ~/.eumini). Só para emergência:
+# o normal é o deploy automático do GitHub Actions depois do CI na main.
 deploy:
 	bash infra/deploy.sh

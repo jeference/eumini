@@ -1,6 +1,6 @@
 #!/bin/bash
 # Gera as imagens a partir do código em src/ e sobe a nova versão. Roda no servidor, em
-# /opt/eumini, como deploy. Chamado pelo infra/deploy.sh (do PC).
+# /opt/eumini, como deploy. Chamado pelo receive.sh, a cada deploy.
 set -euo pipefail
 cd /opt/eumini
 

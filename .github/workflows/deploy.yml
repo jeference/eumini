@@ -1,0 +1,55 @@
+name: Deploy
+
+# Publica na produção o commit que passou no CI na main. Também dá para refazer à mão
+# (Actions → Deploy → Run workflow), sempre a partir da main.
+#
+# Os secrets ficam no environment `production`, liberado só para a main:
+#   VPS_SSH_KEY      chave privada do CI (no servidor, só roda o receive.sh)
+#   VPS_HOST         deploy@<IP>
+#   VPS_KNOWN_HOSTS  host key da VPS (saída do ssh-keyscan, conferida)
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Um deploy por vez; se chegarem vários, fica na fila só o mais novo.
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+      - name: Chave SSH e host key da VPS
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          umask 077
+          printf '%s\n' "$VPS_SSH_KEY" > "$RUNNER_TEMP/eumini_ci"
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > "$RUNNER_TEMP/eumini_known_hosts"
+
+      - name: Deploy
+        env:
+          EUMINI_CI: "1"
+          EUMINI_HOST: ${{ secrets.VPS_HOST }}
+          EUMINI_KEY: ${{ runner.temp }}/eumini_ci
+          EUMINI_KNOWN_HOSTS: ${{ runner.temp }}/eumini_known_hosts
+        run: bash infra/deploy.sh
