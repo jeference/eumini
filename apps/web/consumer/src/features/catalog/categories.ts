@@ -18,7 +18,11 @@ type CategoryInfo = {
 
 const image = (category: Category) => `${env.assetsUrl}/categories/${category}-v1.webp`;
 
-/** Na ordem da vitrine. Casal e Pessoa + Pet são uma peça só (RN-35). */
+/**
+ * Na ordem da vitrine no celular. No desktop a grade preenche por coluna, então fica
+ * Pessoa | Pet em cima e Casal | Pessoa + Pet embaixo. Casal e Pessoa + Pet são uma peça só
+ * (RN-35).
+ */
 export const CATEGORIES: CategoryInfo[] = [
   {
     id: "person",
@@ -29,20 +33,20 @@ export const CATEGORIES: CategoryInfo[] = [
     hint: "Uma pessoa, de corpo inteiro.",
   },
   {
-    id: "pet",
-    image: image("pet"),
-    slug: "pet",
-    label: "Pet",
-    title: "Envie a foto do seu pet",
-    hint: "Seu cachorro, gato ou outro bichinho.",
-  },
-  {
     id: "couple",
     image: image("couple"),
     slug: "casal",
     label: "Casal",
     title: "Envie a foto do casal",
     hint: "Duas pessoas, juntas numa peça só.",
+  },
+  {
+    id: "pet",
+    image: image("pet"),
+    slug: "pet",
+    label: "Pet",
+    title: "Envie a foto do seu pet",
+    hint: "Seu cachorro, gato ou outro bichinho.",
   },
   {
     id: "person_pet",

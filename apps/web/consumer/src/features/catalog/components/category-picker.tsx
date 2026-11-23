@@ -23,7 +23,7 @@ export function CategoryPicker() {
       <p className="mt-2 text-center text-muted">
         Escolha, envie uma foto e veja a sua miniatura em segundos.
       </p>
-      <ul className="mt-6 grid auto-rows-fr gap-3 sm:mt-8 sm:grid-cols-2">
+      <ul className="mt-6 grid auto-rows-fr gap-3 sm:mt-8 sm:grid-flow-col sm:grid-cols-2 sm:grid-rows-2">
         {CATEGORIES.map((category) => {
           const price = fromPrice(category.id);
           return (
