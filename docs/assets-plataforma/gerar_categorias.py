@@ -35,7 +35,7 @@ from catalog import prompts as P  # noqa: E402  (módulo sem Django)
 
 RUNWARE_URL = "https://api.runware.ai/v1"
 TAMANHO = 1024
-LADO_FINAL = 256  # 4x os 64 px exibidos na home
+LADO_FINAL = 256  # cerca de 3x os 80 px exibidos na home
 VERSAO = 1
 SAIDA = BASE / "categorias"
 GERACAO = SAIDA / "geracao"
