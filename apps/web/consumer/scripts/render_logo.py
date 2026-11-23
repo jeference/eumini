@@ -1,11 +1,11 @@
-"""Renderiza a logo 3D da EuMini: o traço de um cubo amarelo neon com um E nas faces laterais.
+"""Renderiza a logo 3D da EuMini: o traço de um cubo amarelo neon com EU nas faces laterais.
 
-O cubo gira como um peão, em torno do eixo vertical, para o E ficar sempre em pé como uma
-letra. A câmera fica um pouco acima, então a face de cima aparece, e ela não leva E porque
+O cubo gira como um peão, em torno do eixo vertical, para o EU ficar sempre em pé como
+letras. A câmera fica um pouco acima, então a face de cima aparece, e ela não leva EU porque
 ele giraria deitado. As faces são transparentes, mas escondem o que está atrás delas.
 Como 90 graus nesse eixo levam o cubo nele mesmo, esse trecho já fecha o loop sem emenda.
 
-O "uMini" ao lado do cubo é desenhado com tubos da mesma grossura das arestas, sob a mesma
+O "Mini" ao lado do cubo é desenhado com tubos da mesma grossura das arestas, sob a mesma
 luz, e tem uma pequena profundidade em âmbar, para parecer feito do mesmo material. Ele usa
 a mesma escala do cubo: as duas imagens têm a altura de um quadro, então basta alinhar uma
 ao lado da outra pelo centro.
@@ -26,7 +26,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[1] / "public" / "brand"
 SIZE = 72  # O cubo acompanha o tamanho da fonte do header, que não passa de 36 px em telas 2x.
 SUPERSAMPLE = 5
 FRAMES = 45
-STILL_FRAME = 12  # Para quem pede menos movimento: um pouco virado, com o E legível.
+STILL_FRAME = 12  # Para quem pede menos movimento: um pouco virado, com o EU legível.
 SECONDS_PER_LOOP = 4.5  # Uma volta inteira leva o quádruplo disso.
 
 EDGE_RADIUS = 0.15
@@ -53,7 +53,7 @@ YELLOW_RAMP = np.array(
 RAMP_STOPS = np.array([0.0, 0.42, 0.72, 1.0])
 
 # Linhas das letras, em unidades do cubo e a partir do centro do quadro. O "M" tem a altura
-# e a base do E quando a face está de frente, para o E e o "uMini" lerem como uma palavra só.
+# e a base do EU quando a face está de frente, para o EU e o "Mini" lerem como uma palavra só.
 WORD_BOTTOM = -0.72
 WORD_X_HEIGHT = 0.01
 WORD_ASCENDER = 0.41
@@ -61,9 +61,7 @@ WORD_DOT = 0.50  # Alto o bastante para o pingo do i não grudar na haste em tel
 WORD_BOWL = (WORD_X_HEIGHT - WORD_BOTTOM) / 2
 WORD_MIDDLE = WORD_BOTTOM + WORD_BOWL
 WORD_GAP = 2 * EDGE_RADIUS + 0.20  # De centro a centro de traço, entre uma letra e a próxima.
-WORD_U_LEFT = 0.32
-WORD_U_RIGHT = WORD_U_LEFT + 2 * WORD_BOWL
-WORD_M_LEFT = WORD_U_RIGHT + WORD_GAP
+WORD_M_LEFT = 0.32
 WORD_M_RIGHT = WORD_M_LEFT + 0.95
 WORD_M_VALLEY = -0.30  # Onde as diagonais do M se encontram.
 WORD_I1 = WORD_M_RIGHT + WORD_GAP
@@ -76,13 +74,22 @@ WORD_DEPTH_COLOR = YELLOW_RAMP[0]  # O mesmo âmbar das faces mais escuras do cu
 WORD_WIDTH = WORD_I2 + EDGE_RADIUS + WORD_DEPTH_X + 0.02
 WORD_SCALE = 2  # Mais pixels que o cubo: a imagem é parada e pesa pouco.
 
-LETTER_RADIUS = 0.14
+# O EU ocupa a face toda, então o traço é um pouco mais fino que as arestas, para as duas
+# letras caberem entre elas sem encostar nas arestas nem uma na outra.
+LETTER_RADIUS = 0.12
+LETTER_TOP, LETTER_BOTTOM = 0.54, -0.54
+E_STEM, E_ARM, E_MIDDLE_ARM = -0.62, -0.22, -0.30
+U_LEFT, U_RIGHT = 0.12, 0.62
+U_BOWL = (U_RIGHT - U_LEFT) / 2
+U_CENTER = ((U_LEFT + U_RIGHT) / 2, LETTER_BOTTOM + U_BOWL)
 LETTER_SEGMENTS = np.array(
     [
-        [[-0.34, -0.54], [-0.34, 0.54]],  # Haste
-        [[-0.34, 0.54], [0.36, 0.54]],  # Braço de cima
-        [[-0.34, 0.00], [0.24, 0.00]],  # Braço do meio
-        [[-0.34, -0.54], [0.36, -0.54]],  # Braço de baixo
+        [[E_STEM, LETTER_BOTTOM], [E_STEM, LETTER_TOP]],  # Haste do E
+        [[E_STEM, LETTER_TOP], [E_ARM, LETTER_TOP]],  # Braço de cima
+        [[E_STEM, 0.00], [E_MIDDLE_ARM, 0.00]],  # Braço do meio
+        [[E_STEM, LETTER_BOTTOM], [E_ARM, LETTER_BOTTOM]],  # Braço de baixo
+        [[U_LEFT, LETTER_TOP], [U_LEFT, U_CENTER[1]]],  # Hastes do U, até o começo do fundo
+        [[U_RIGHT, LETTER_TOP], [U_RIGHT, U_CENTER[1]]],
     ]
 )
 
@@ -123,7 +130,7 @@ def edges(p):
 
 
 def letter_distance(p):
-    """Distância até o E, medida no plano da face lateral mais próxima de cada ponto."""
+    """Distância até o EU, medida no plano da face lateral mais próxima de cada ponto."""
     dominant = np.argmax(np.abs(p), axis=1)
     rows = np.arange(len(p))
     sign = np.sign(p[rows, dominant])
@@ -137,8 +144,11 @@ def letter_distance(p):
         dx, dy = bx - ax, by - ay
         t = np.clip(((u - ax) * dx + (v - ay) * dy) / (dx * dx + dy * dy), 0, 1)
         distances.append(np.hypot(u - ax - t * dx, v - ay - t * dy))
+    # Fundo do U: a metade de baixo de um círculo.
+    bowl = np.abs(np.hypot(u - U_CENTER[0], v - U_CENTER[1]) - U_BOWL)
+    distances.append(np.where(v < U_CENTER[1], bowl, np.inf))
     distance = np.min(distances, axis=0) - LETTER_RADIUS
-    distance[dominant == 1] = np.inf  # As faces de cima e de baixo não levam E.
+    distance[dominant == 1] = np.inf  # As faces de cima e de baixo não levam EU.
     return distance
 
 
@@ -208,7 +218,7 @@ def render_frame(angle):
     t = trace(origin, direction)
     hit = np.where(~np.isnan(t))[0]
     p = origin[hit] + direction[hit] * t[hit, None]
-    # Fora do E, quem acerta a face fica transparente: ela só esconde o que está atrás.
+    # Fora do EU, quem acerta a face fica transparente: ela só esconde o que está atrás.
     painted = (edges(p) < 0.004) | (letter_distance(p) < 0)
 
     rgba = np.zeros((full * full, 4))
@@ -241,10 +251,10 @@ def offset_to_circle(x, y, cx):
     return vx - vx / length * WORD_BOWL, vy - vy / length * WORD_BOWL
 
 
-def offset_to_half_circle(x, y, cx, lower):
-    """Metade de baixo (o fundo do u) ou de cima (o arco do n) do círculo da letra."""
+def offset_to_upper_half_circle(x, y, cx):
+    """Metade de cima do círculo da letra: o arco do n."""
     vx, vy = offset_to_circle(x, y, cx)
-    keep = y < WORD_MIDDLE if lower else y >= WORD_MIDDLE
+    keep = y >= WORD_MIDDLE
     return np.where(keep, vx, np.inf), np.where(keep, vy, np.inf)
 
 
@@ -259,10 +269,6 @@ def word_centerline_offset(x, y):
     """Vetor do ponto mais próximo do traço das letras até cada ponto da imagem."""
     m_center = (WORD_M_LEFT + WORD_M_RIGHT) / 2
     parts = [
-        # u
-        offset_to_segment(x, y, WORD_U_LEFT, WORD_X_HEIGHT, WORD_U_LEFT, WORD_MIDDLE),
-        offset_to_half_circle(x, y, (WORD_U_LEFT + WORD_U_RIGHT) / 2, lower=True),
-        offset_to_segment(x, y, WORD_U_RIGHT, WORD_X_HEIGHT, WORD_U_RIGHT, WORD_BOTTOM),
         # M
         offset_to_segment(x, y, WORD_M_LEFT, WORD_BOTTOM, WORD_M_LEFT, WORD_ASCENDER),
         offset_to_segment(x, y, WORD_M_LEFT, WORD_ASCENDER, m_center, WORD_M_VALLEY),
@@ -272,7 +278,7 @@ def word_centerline_offset(x, y):
         *i_parts(x, y, WORD_I1),
         # n
         offset_to_segment(x, y, WORD_N_LEFT, WORD_X_HEIGHT, WORD_N_LEFT, WORD_BOTTOM),
-        offset_to_half_circle(x, y, (WORD_N_LEFT + WORD_N_RIGHT) / 2, lower=False),
+        offset_to_upper_half_circle(x, y, (WORD_N_LEFT + WORD_N_RIGHT) / 2),
         offset_to_segment(x, y, WORD_N_RIGHT, WORD_MIDDLE, WORD_N_RIGHT, WORD_BOTTOM),
         # i
         *i_parts(x, y, WORD_I2),

@@ -19,13 +19,15 @@ export function SiteHeader() {
           aria-label="EuMini"
           className="flex items-center text-xl lg:text-3xl"
         >
-          {/* O cubo é o E da marca e o "uMini" é feito das mesmas arestas, na mesma escala. */}
+          {/* O cubo leva o EU da marca e o "Mini" é feito das mesmas arestas. As duas imagens saem
+              na mesma escala; aqui o cubo cresce e o "Mini" encolhe, para o EU puxar a leitura, e o
+              "Mini" desce para perto da base do cubo, sem encostar nela. */}
           <picture className="shrink-0">
             <source srcSet="/brand/eumini-cube-still.webp" media="(prefers-reduced-motion: reduce)" />
-            <img src="/brand/eumini-cube.webp" alt="" width={72} height={72} className="size-[1em]" />
+            <img src="/brand/eumini-cube.webp" alt="" width={72} height={72} className="size-[1.2em]" />
           </picture>
           {/* eslint-disable-next-line @next/next/no-img-element -- tamanho em em, junto com o cubo */}
-          <img src="/brand/eumini-word.webp" alt="" width={208} height={144} className="h-[1em] w-auto" />
+          <img src="/brand/eumini-word.webp" alt="" width={157} height={144} className="h-[0.85em] w-auto translate-y-[0.18em]" />
         </Link>
         <nav className="flex items-center gap-1 text-sm font-medium text-white sm:gap-2">
           <Link href="/criacoes" className="rounded-full px-3 py-2 hover:bg-white/15">
