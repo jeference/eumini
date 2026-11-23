@@ -521,7 +521,26 @@ A tabela é conferida com impressões reais antes do lançamento ([PRD](PRD.md#c
 
 ## 15. Storage e acesso
 
-**Um bucket privado por ambiente** (`eumini-media-dev` e `eumini-media-prod`, em `sa-east-1`): fotos, imagens e arquivos de produção, sempre por URL assinada. Imagens de exemplo das categorias são arquivos estáticos do próprio app. O adapter local, com arquivos servidos por `/api/media/<token>/` e token assinado, continua disponível para os testes.
+**Um bucket privado por ambiente** (`eumini-media-dev` e `eumini-media-prod`, em `sa-east-1`): fotos, imagens e arquivos de produção, sempre por URL assinada. O adapter local, com arquivos servidos por `/api/media/<token>/` e token assinado, continua disponível para os testes.
+
+### O que fica em cada prefixo
+
+| Prefixo | O que é | Quem grava | Expurgo |
+|---|---|---|---|
+| `original/` | Foto enviada, como veio (sem metadados) | API, no envio | Pela retenção abaixo |
+| `photo/` | Foto normalizada (PNG até 1.024 px), usada na geração e na classificação | API, no envio | Pela retenção abaixo |
+| `image/` | Imagens geradas da figura | Worker | Pela retenção abaixo |
+| `backups/db/` | `pg_dump` diário criptografado | `infra/server/backup.sh` | 30 dias, pelo próprio script |
+
+### Imagens da plataforma: bucket público
+
+As imagens que a própria plataforma mostra ficam em outro bucket, **`eumini-assets`** (`sa-east-1`). Hoje são as miniaturas das categorias na home, em `categories/<categoria>-v<n>.webp`.
+
+- **Público só para leitura:** a política libera `GetObject`, sem listagem e sem ACLs. O navegador carrega direto de `https://eumini-assets.s3.sa-east-1.amazonaws.com/...` (`env.assetsUrl` em `@eumini/web-core`), sem passar pela API.
+- **Nunca recebe arquivo de cliente.** A aplicação não tem acesso a ele: só o `provision_s3.py --upload-assets` grava, com a sessão do `aws login`.
+- **Um só para todos os ambientes:** as imagens são as mesmas em desenvolvimento e produção.
+- **Cache permanente:** cada arquivo vai com `Cache-Control: public, max-age=31536000, immutable`. Como o nome leva versão, trocar uma imagem é subir `-v2` e apontar o frontend para ele.
+- **Originais:** os arquivos e o script que gerou os das categorias ficam em [`docs/assets-plataforma/`](assets-plataforma/).
 
 O script `apps/backend/scripts/provision_s3.py` cria e mantém essa configuração:
 

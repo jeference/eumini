@@ -5,6 +5,7 @@ Usa a sessão do AWS CLI (`aws login`), que precisa poder administrar S3 e IAM.
     python scripts/provision_s3.py                                    # buckets e usuários IAM
     python scripts/provision_s3.py --create-key dev --env-file .env   # chave da aplicação
     python scripts/provision_s3.py --upload-local dev                 # envia o _media/ local
+    python scripts/provision_s3.py --upload-assets                    # imagens da plataforma
 
 A secret da chave vai direto para o arquivo indicado e nunca aparece no terminal.
 """
@@ -29,6 +30,17 @@ NONCURRENT_VERSION_DAYS = 7
 LOCAL_MEDIA_FOLDERS = ("photo", "image")
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 AWS_CLI_WINDOWS = Path(r"C:\Program Files\Amazon\AWSCLIV2\aws.exe")
+
+
+# Bucket público, um só para todos os ambientes, com as imagens da própria plataforma (as das
+# categorias da home, por exemplo). Nunca recebe arquivo de cliente, e a aplicação não tem
+# acesso a ele: só este script grava, com a sessão do `aws login`.
+ASSETS_BUCKET = "eumini-assets"
+# Prefixo no bucket -> pasta com os originais no repositório.
+ASSET_FOLDERS = {"categories": BACKEND_DIR.parent.parent / "docs/assets-plataforma/categorias"}
+ASSET_TYPES = {".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg"}
+# Os nomes levam versão (`person-v1.webp`): trocar a imagem é subir outro nome.
+ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable"
 
 
 class ProvisionError(Exception):
@@ -75,6 +87,20 @@ def tls_only_policy(bucket: str) -> dict:
             }
         ],
     }
+
+
+def public_read_policy(bucket: str) -> dict:
+    policy = tls_only_policy(bucket)
+    policy["Statement"].append(
+        {
+            "Sid": "PublicReadObjects",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": f"arn:aws:s3:::{bucket}/*",
+        }
+    )
+    return policy
 
 
 def app_policy(bucket: str) -> dict:
@@ -151,6 +177,74 @@ def ensure_bucket(s3, bucket: str) -> None:
         },
     )
     print(f"Bucket {bucket}: configurado em {REGION}.")
+
+
+def ensure_assets_bucket(s3) -> None:
+    """Leitura pública por política (só GetObject, sem listar); ACLs continuam desligadas."""
+    bucket = ASSETS_BUCKET
+    try:
+        s3.create_bucket(
+            Bucket=bucket,
+            CreateBucketConfiguration={"LocationConstraint": REGION},
+            ObjectOwnership="BucketOwnerEnforced",
+        )
+        s3.get_waiter("bucket_exists").wait(Bucket=bucket)
+    except s3.exceptions.BucketAlreadyOwnedByYou:
+        pass
+
+    s3.put_public_access_block(
+        Bucket=bucket,
+        PublicAccessBlockConfiguration={
+            "BlockPublicAcls": True,
+            "IgnorePublicAcls": True,
+            "BlockPublicPolicy": False,
+            "RestrictPublicBuckets": False,
+        },
+    )
+    s3.put_bucket_ownership_controls(
+        Bucket=bucket,
+        OwnershipControls={"Rules": [{"ObjectOwnership": "BucketOwnerEnforced"}]},
+    )
+    s3.put_bucket_encryption(
+        Bucket=bucket,
+        ServerSideEncryptionConfiguration={
+            "Rules": [
+                {
+                    "ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"},
+                    "BlockedEncryptionTypes": {"EncryptionType": ["SSE-C"]},
+                }
+            ]
+        },
+    )
+    try:
+        s3.put_bucket_policy(Bucket=bucket, Policy=json.dumps(public_read_policy(bucket)))
+    except ClientError as exc:
+        if exc.response["Error"]["Code"] != "AccessDenied":
+            raise
+        raise ProvisionError(
+            "A conta bloqueia buckets públicos (Block Public Access da conta). Libere "
+            "'BlockPublicPolicy' e 'RestrictPublicBuckets' na conta e rode de novo: os buckets "
+            "de mídia continuam fechados pelo bloqueio de cada um."
+        ) from exc
+    print(f"Bucket {bucket}: público para leitura, em {REGION}.")
+
+
+def upload_assets(s3) -> None:
+    sent = 0
+    for prefix, folder in ASSET_FOLDERS.items():
+        for path in sorted(folder.iterdir()):
+            content_type = ASSET_TYPES.get(path.suffix.lower())
+            if not path.is_file() or content_type is None:
+                continue
+            s3.upload_file(
+                str(path),
+                ASSETS_BUCKET,
+                f"{prefix}/{path.name}",
+                ExtraArgs={"ContentType": content_type, "CacheControl": ASSET_CACHE_CONTROL},
+            )
+            print(f"https://{ASSETS_BUCKET}.s3.{REGION}.amazonaws.com/{prefix}/{path.name}")
+            sent += 1
+    print(f"Imagens da plataforma: {sent} arquivos enviados para {ASSETS_BUCKET}.")
 
 
 def ensure_app_user(iam, env: str) -> None:
@@ -239,10 +333,13 @@ def provision(args: argparse.Namespace) -> None:
     for env in ENVIRONMENTS:
         ensure_bucket(s3, bucket_name(env))
         ensure_app_user(iam, env)
+    ensure_assets_bucket(s3)
     if args.create_key:
         create_app_key(iam, args.create_key, args.env_file)
     if args.upload_local:
         upload_local_media(s3, args.upload_local)
+    if args.upload_assets:
+        upload_assets(s3)
 
 
 def main() -> int:
@@ -250,6 +347,9 @@ def main() -> int:
     parser.add_argument("--create-key", choices=ENVIRONMENTS, help="cria a chave da aplicação")
     parser.add_argument("--env-file", type=Path, help="arquivo que recebe a chave")
     parser.add_argument("--upload-local", choices=ENVIRONMENTS, help="envia o _media/ local")
+    parser.add_argument(
+        "--upload-assets", action="store_true", help="envia as imagens da plataforma"
+    )
     args = parser.parse_args()
     if args.create_key and not args.env_file:
         parser.error("--create-key exige --env-file")

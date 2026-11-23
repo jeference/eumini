@@ -1,4 +1,5 @@
 import type { Schemas } from "@eumini/api-client";
+import { env } from "@eumini/web-core/env";
 
 export type Category = Schemas["CategoryEnum"];
 export type RejectionReason = Schemas["RejectionReasonEnum"];
@@ -11,12 +12,17 @@ type CategoryInfo = {
   /** Título da página de entrada. */
   title: string;
   hint: string;
+  /** Miniatura de exemplo na vitrine, no bucket público da plataforma. */
+  image: string;
 };
+
+const image = (category: Category) => `${env.assetsUrl}/categories/${category}-v1.webp`;
 
 /** Na ordem da vitrine. Casal e Pessoa + Pet são uma peça só (RN-35). */
 export const CATEGORIES: CategoryInfo[] = [
   {
     id: "person",
+    image: image("person"),
     slug: "pessoa",
     label: "Pessoa",
     title: "Envie a foto da pessoa",
@@ -24,6 +30,7 @@ export const CATEGORIES: CategoryInfo[] = [
   },
   {
     id: "pet",
+    image: image("pet"),
     slug: "pet",
     label: "Pet",
     title: "Envie a foto do seu pet",
@@ -31,6 +38,7 @@ export const CATEGORIES: CategoryInfo[] = [
   },
   {
     id: "couple",
+    image: image("couple"),
     slug: "casal",
     label: "Casal",
     title: "Envie a foto do casal",
@@ -38,6 +46,7 @@ export const CATEGORIES: CategoryInfo[] = [
   },
   {
     id: "person_pet",
+    image: image("person_pet"),
     slug: "pessoa-pet",
     label: "Pessoa + Pet",
     title: "Envie a foto de você com seu pet",

@@ -3,18 +3,11 @@
 import { track } from "@eumini/analytics";
 import { Card } from "@eumini/ui/card";
 import { formatBRL } from "@eumini/ui/lib/format";
-import { ArrowRight, type LucideIcon, PawPrint, User, Users } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { CATEGORIES, type Category } from "@/features/catalog/categories";
 import { useProducts } from "@/features/catalog/hooks";
-
-const ICONS: Record<Category, LucideIcon[]> = {
-  person: [User],
-  pet: [PawPrint],
-  couple: [Users],
-  person_pet: [User, PawPrint],
-};
 
 /** Vitrine: cada categoria leva à sua página de envio de foto. */
 export function CategoryPicker() {
@@ -41,11 +34,14 @@ export function CategoryPicker() {
                   onClick={() => track("category_selected", { category: category.id })}
                   className="group flex items-center gap-4 p-4 transition-colors hover:border-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:p-5"
                 >
-                  <span className="flex size-14 shrink-0 items-center justify-center gap-0.5 rounded-2xl bg-accent-soft text-accent">
-                    {ICONS[category.id].map((Icon, index) => (
-                      <Icon key={index} className="size-6" aria-hidden />
-                    ))}
-                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- vem do bucket público, já no tamanho */}
+                  <img
+                    src={category.image}
+                    alt=""
+                    width={64}
+                    height={64}
+                    className="size-16 shrink-0 rounded-2xl border border-line bg-white object-cover"
+                  />
                   <span className="min-w-0 flex-1">
                     <span className="block font-display text-lg font-semibold">
                       {category.label}
