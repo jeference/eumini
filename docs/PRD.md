@@ -286,7 +286,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RN-19 | No lançamento, os meios de pagamento são PIX e cartão de crédito à vista. Não guardamos o cartão nem o celular. |
 | RN-20 | O pedido só é confirmado por notificação do gateway, conferida junto a ele. Nada informado pelo navegador confirma pagamento. |
 
-**Tabela de preços sugerida (RN-11).** A base é a **Tabela de preços (RN-11).** Valores tirados da análise de custo das impressões reais. Combinação sem preço não é vendida.
+**Tabela de preços (RN-11).** Valores tirados da análise de custo das impressões reais. Combinação sem preço não é vendida.
 
 | Categoria | 4 cm | 6 cm | 8 cm | 10 cm |
 |---|---|---|---|---|
@@ -295,7 +295,11 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | Casal | R$ 129,90 | R$ 179,90 | R$ 239,90 | - |
 | Pessoa + Pet | R$ 129,90 | R$ 169,90 | R$ 219,90 | - |
 
- RN-21 | O pedido fica ligado ao e-mail do checkout. Ele só passa para uma conta depois que aquele e-mail é verificado. |
+### Pedido e pós-venda
+
+| ID | Regra |
+|---|---|
+| RN-21 | O pedido fica ligado ao e-mail do checkout. Ele só passa para uma conta depois que aquele e-mail é verificado. |
 | RN-22 | O reembolso pela API do gateway é sempre do **valor integral da cobrança**. Por isso, todo reembolso é do pedido inteiro. Até o app de parceiros existir, ele é feito direto no painel do gateway, e o pedido é atualizado automaticamente. |
 | RN-23 | Política de cancelamento e troca [Proposta, depende do jurídico]: cancelamento sem custo enquanto o pedido não estiver em produção; reposição ou reembolso em caso de defeito ou dano, informado em até 7 dias após a entrega, com fotos. |
 | RN-24 | O cliente nunca vê quem produziu a peça. Parceiros, quando existirem, não verão e-mail nem CPF do cliente. |
