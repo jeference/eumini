@@ -19,15 +19,15 @@ def test_products_are_public_with_price_table(anon):
     assert response.status_code == 200
     assert [p["category"] for p in response.data] == ["person", "pet", "couple", "person_pet"]
     assert _prices(response.data) == {
-        "person": [("6cm", 9990), ("8cm", 14490), ("10cm", 18990), ("12cm", 22990)],
-        "pet": [("4cm", 6590), ("6cm", 10990), ("8cm", 15990)],
-        "couple": [("6cm", 14990), ("8cm", 21990)],
-        "person_pet": [("6cm", 12990), ("8cm", 18990), ("10cm", 24990), ("12cm", 29990)],
+        "person": [("6cm", 12990), ("8cm", 15990), ("10cm", 18990)],
+        "pet": [("4cm", 12990), ("6cm", 16990), ("8cm", 22990)],
+        "couple": [("4cm", 12990), ("6cm", 17990), ("8cm", 23990)],
+        "person_pet": [("4cm", 12990), ("6cm", 16990), ("8cm", 21990)],
     }
     assert {p["category"]: p["from_price_cents"] for p in response.data} == {
-        "person": 9990,
-        "pet": 6590,
-        "couple": 14990,
+        "person": 12990,
+        "pet": 12990,
+        "couple": 12990,
         "person_pet": 12990,
     }
     assert response.data[0]["label"] == "Pessoa"

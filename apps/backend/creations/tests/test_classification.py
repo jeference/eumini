@@ -72,7 +72,7 @@ def test_version_category_sets_the_price(visitor_client, settings):
         {"creation_id": detail["id"], "size_id": size_id(visitor_client, "6cm"), "quantity": 1},
     )
     assert response.status_code == 201, response.data
-    assert (response.data["category"], response.data["unit_price_cents"]) == ("couple", 14990)
+    assert (response.data["category"], response.data["unit_price_cents"]) == ("couple", 17990)
 
 
 def test_size_not_sold_in_the_category(visitor_client, settings):
@@ -80,7 +80,7 @@ def test_size_not_sold_in_the_category(visitor_client, settings):
     detail = make_ready_creation(visitor_client)
     response = visitor_client.post(
         "/api/cart/items/",
-        {"creation_id": detail["id"], "size_id": size_id(visitor_client, "12cm"), "quantity": 1},
+        {"creation_id": detail["id"], "size_id": size_id(visitor_client, "10cm"), "quantity": 1},
     )
     assert response.status_code == 422
     assert response.data["code"] == "size_not_sold"
@@ -103,7 +103,7 @@ def test_edit_that_changes_the_category_changes_the_price(visitor_client, settin
         "/api/cart/items/",
         {"creation_id": detail["id"], "size_id": size_id(visitor_client), "quantity": 1},
     ).data
-    assert (item["category"], item["unit_price_cents"]) == ("person_pet", 12990)
+    assert (item["category"], item["unit_price_cents"]) == ("person_pet", 16990)
 
 
 def test_version_outside_the_categories_cannot_be_bought(visitor_client, settings):

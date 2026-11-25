@@ -275,7 +275,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | ID | Regra |
 |---|---|
 | RN-10 | O preço depende da **categoria da versão e do tamanho**, é calculado no servidor e aparece junto com a imagem. |
-| RN-11 | Tabela de preços [Proposta, valores provisórios a ajustar antes de produção]: ver abaixo. No mesmo tamanho, a ordem é Pessoa < Pet < Pessoa + Pet < Casal, e peças com duas figuras sempre custam mais que as de uma. |
+| RN-11 | Tabela de preços definida pela amostragem de custo de impressão: ver abaixo. Toda categoria começa em R$ 129,90 no menor tamanho. |
 | RN-12 | **Tamanho é a maior dimensão da peça**, em todas as categorias [Proposta]. |
 | RN-13 | **Compra só com a imagem:** o cliente compra sem ver um modelo 3D. O 3D é feito depois do pagamento, na preparação de impressão. |
 | RN-14 | Sem malha antes da compra, não há como medir o custo de cada peça. **O preço de cada categoria e tamanho precisa cobrir as peças mais pesadas** [Proposta, a calibrar com impressões reais]. |
@@ -286,22 +286,16 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | RN-19 | No lançamento, os meios de pagamento são PIX e cartão de crédito à vista. Não guardamos o cartão nem o celular. |
 | RN-20 | O pedido só é confirmado por notificação do gateway, conferida junto a ele. Nada informado pelo navegador confirma pagamento. |
 
-**Tabela de preços sugerida (RN-11).** A base é a tabela de Pessoa, multiplicada por um fator por categoria e arredondada para ",90". Os tamanhos de cada categoria são os da Pockella.
+**Tabela de preços sugerida (RN-11).** A base é a **Tabela de preços (RN-11).** Valores tirados da análise de custo das impressões reais. Combinação sem preço não é vendida.
 
-| Categoria | Fator | 4 cm | 6 cm | 8 cm | 10 cm | 12 cm |
-|---|---|---|---|---|---|---|
-| Pessoa | 1,0 | - | R$ 99,90 | R$ 144,90 | R$ 189,90 | R$ 229,90 |
-| Pet | 1,1 | R$ 65,90 | R$ 109,90 | R$ 159,90 | - | - |
-| Pessoa + Pet | 1,3 | - | R$ 129,90 | R$ 189,90 | R$ 249,90 | R$ 299,90 |
-| Casal | 1,5 | - | R$ 149,90 | R$ 219,90 | - | - |
+| Categoria | 4 cm | 6 cm | 8 cm | 10 cm |
+|---|---|---|---|---|
+| Pessoa | - | R$ 129,90 | R$ 159,90 | R$ 189,90 |
+| Pet | R$ 129,90 | R$ 169,90 | R$ 229,90 | - |
+| Casal | R$ 129,90 | R$ 179,90 | R$ 239,90 | - |
+| Pessoa + Pet | R$ 129,90 | R$ 169,90 | R$ 219,90 | - |
 
-A Pockella cobra pelo Pet mais que o dobro da Pessoa e mais que Pessoa + Pet. A EuMini não segue isso, porque um pet do mesmo tamanho não gasta o dobro de material e porque a combinação mais barata que a figura isolada vira brecha de preço.
-
-### Pedido e pós-venda
-
-| ID | Regra |
-|---|---|
-| RN-21 | O pedido fica ligado ao e-mail do checkout. Ele só passa para uma conta depois que aquele e-mail é verificado. |
+ RN-21 | O pedido fica ligado ao e-mail do checkout. Ele só passa para uma conta depois que aquele e-mail é verificado. |
 | RN-22 | O reembolso pela API do gateway é sempre do **valor integral da cobrança**. Por isso, todo reembolso é do pedido inteiro. Até o app de parceiros existir, ele é feito direto no painel do gateway, e o pedido é atualizado automaticamente. |
 | RN-23 | Política de cancelamento e troca [Proposta, depende do jurídico]: cancelamento sem custo enquanto o pedido não estiver em produção; reposição ou reembolso em caso de defeito ou dano, informado em até 7 dias após a entrega, com fotos. |
 | RN-24 | O cliente nunca vê quem produziu a peça. Parceiros, quando existirem, não verão e-mail nem CPF do cliente. |

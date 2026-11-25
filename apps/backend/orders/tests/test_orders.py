@@ -14,9 +14,9 @@ def test_create_order_freezes_values_and_masks_cpf(visitor_client):
     assert response.status_code == 201, response.data
     data = response.data
     assert data["status"] == "pending_payment"
-    assert data["subtotal_cents"] == 2 * 9990
+    assert data["subtotal_cents"] == 2 * 12990
     assert data["shipping_cents"] == quote["price_cents"]
-    assert data["total_cents"] == 2 * 9990 + quote["price_cents"]
+    assert data["total_cents"] == 2 * 12990 + quote["price_cents"]
     assert data["delivery_days"] == quote["delivery_days"]
     assert data["cpf_masked"] == "***.***.***-25"
     assert "cpf" not in data
@@ -24,10 +24,10 @@ def test_create_order_freezes_values_and_masks_cpf(visitor_client):
     assert "52998224725" not in order.cpf_encrypted
     item = order.items.get()
     assert item.prompt_text == "um dragão azul"
-    assert (item.category, item.unit_price_cents) == ("person", 9990)
+    assert (item.category, item.unit_price_cents) == ("person", 12990)
 
     ProductPrice.objects.filter(category="person", size__code="6cm").update(price_cents=1)
-    assert visitor_client.get(f"/api/orders/{data['id']}/").data["subtotal_cents"] == 2 * 9990
+    assert visitor_client.get(f"/api/orders/{data['id']}/").data["subtotal_cents"] == 2 * 12990
 
 
 def test_idempotency_returns_same_order(visitor_client):
