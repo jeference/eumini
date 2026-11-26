@@ -1,0 +1,4 @@
+{% autoescape off %}O pedido {{ number }} foi atribuído a você: {{ pieces }} peça{{ pieces|pluralize }} para imprimir.
+Prazo para postar: {{ post_by|date:"d/m/Y" }}.
+
+Ver o pedido: {{ order_url }}{% endautoescape %}

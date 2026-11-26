@@ -1,7 +1,8 @@
 """Identidade: conta (User) e visitante (Visitor).
 
-Papéis são linhas em `Role`, a única fonte de autorização. Ser cliente não é papel: deriva
-da posse de criações e pedidos. Não há tipos de conta separados nem painel administrativo.
+Papéis da equipe são linhas em `Role`. Ser cliente não é papel: deriva da posse de criações e
+pedidos. Ser parceiro também não: deriva de `fulfillment.PartnerMember`. Não há tipos de conta
+separados.
 """
 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
@@ -44,8 +45,6 @@ class Role(BaseModel):
     class Name(models.TextChoices):
         STAFF = "staff", "Equipe"
         ADMIN = "admin", "Administrador"
-        PARTNER_OWNER = "partner_owner", "Dono de parceiro"
-        PARTNER_OPERATOR = "partner_operator", "Operador de parceiro"
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_roles")
     name = models.CharField(max_length=24, choices=Name.choices)
@@ -66,6 +65,7 @@ class VerificationCode(BaseModel):
     class Kind(models.TextChoices):
         EMAIL_VERIFICATION = "email_verification", "Verificação de e-mail"
         PASSWORD_RESET = "password_reset", "Redefinição de senha"
+        PARTNER_INVITE = "partner_invite", "Convite de parceiro"
 
     class State(models.TextChoices):
         ISSUED = "issued", "Emitido"

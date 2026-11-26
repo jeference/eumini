@@ -14,7 +14,13 @@ from integrations.adapters.typesafe_questions import MIN_SIDE as PHOTO_MIN_SIDE
 from integrations.ports import get_media_storage_port
 from media.models import Asset
 
-_EXTENSIONS = {"image/png": "png", "image/jpeg": "jpg", "image/webp": "webp"}
+_EXTENSIONS = {
+    "image/png": "png",
+    "image/jpeg": "jpg",
+    "image/webp": "webp",
+    "application/pdf": "pdf",
+    "model/3mf": "3mf",
+}
 _PHOTO_MIMES = {"PNG": "image/png", "JPEG": "image/jpeg", "WEBP": "image/webp"}
 # HEIC (iPhone, alguns Android) e AVIF são aceitos, mas o original vira JPEG, ou PNG se tiver
 # transparência: qualquer ferramenta lê, e os navegadores fora o Safari não mostram HEIC.
@@ -56,14 +62,20 @@ def read(asset: Asset) -> bytes:
     return data
 
 
-def signed_url(asset: Asset | None) -> str:
+def signed_url(asset: Asset | None, *, filename: str = "") -> str:
+    """URL temporária do arquivo. Com `filename`, abre como download com esse nome."""
     if asset is None or asset.purged_at is not None:
         return ""
     return get_media_storage_port().signed_url(
         key=asset.key,
         ttl_seconds=settings.BUSINESS["SIGNED_URL_TTL_SECONDS"],
         content_type=asset.mime,
+        filename=filename,
     )
+
+
+def extension_of(asset: Asset) -> str:
+    return _EXTENSIONS.get(asset.mime, "bin")
 
 
 def purge(asset: Asset) -> None:

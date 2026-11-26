@@ -18,9 +18,9 @@ A EuMini transforma uma foto em um objeto físico, impresso em 3D. O cliente env
 
 **O catálogo segue o da Pockella:** quatro figuras, **Pessoa, Pet, Casal e Pessoa + Pet**, num único estilo. O cliente entra pela categoria que quer, mas quem decide a categoria é um classificador, que lê a foto antes de gerar. A categoria define os tamanhos e o preço. Fotos fora das quatro categorias são recusadas com orientação, e o interesse fica registrado para decidir quais categorias abrir depois.
 
-A plataforma terá dois lados: o **app do cliente** e, no futuro, o **app dos parceiros**, que imprimem e enviam os pedidos. O cliente compra da EuMini e não vê quem imprimiu.
+A plataforma terá três apps: o **app do cliente**, o **app de parceiros** ([PRD](PRD-parceiros.md)), de quem imprime e posta os pedidos, e o **app Staff** ([PRD](PRD-staff.md)), da equipe da EuMini, que trata os pedidos e os atribui aos parceiros. O cliente compra da EuMini e não vê quem imprimiu.
 
-**O MVP entrega o app do cliente, do primeiro prompt até o pedido pago.** **Este app não tem nenhuma funcionalidade de operação:** tratar pedidos, baixar arquivos, atualizar status e informar rastreio pertencem ao app de parceiros. Os dados já ficam organizados para ele.
+**Este documento cobre o app do cliente, do primeiro prompt até o pedido pago.** **Ele não tem nenhuma funcionalidade de operação:** tratar pedidos, baixar arquivos, atualizar status e informar rastreio pertencem aos apps Staff e de parceiros. Os dados já ficam organizados para eles.
 
 ### Problema
 
@@ -47,14 +47,13 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 - Tornar persistente tudo que hoje se perde ao recarregar a página.
 - Cobrar com segurança e dar ao cliente visibilidade do pedido.
 - Registrar prompts, imagens, modelos, custos e eventos desde o primeiro dia.
-- Deixar dados e estrutura prontos para o app dos parceiros, sem construí-lo agora.
+- Deixar dados e estrutura prontos para os apps Staff e de parceiros, que têm PRDs próprios.
 
 ### Não-objetivos
 
 - **Qualquer modelo 3D no app do cliente:** sem geração 3D, visualizador 3D ou estimativa de custo pela malha antes da compra.
 - **Tudo que acontece depois do pagamento e exige automação:** geração do modelo 3D, validação e reparo da malha, redução a 4 cores, arquivo de impressão, atribuição automática a parceiros.
-- App de parceiros e repasse financeiro a parceiros.
-- **Qualquer funcionalidade de operação neste app:** ela fica toda no app de parceiros.
+- **Qualquer funcionalidade de operação ou de parceiros neste app:** ela fica nos apps [Staff](PRD-staff.md) e [de parceiros](PRD-parceiros.md).
 - Troca de cor pelo cliente.
 - **Escolha de estilo:** a figura sai num estilo único.
 - **Categorias além das quatro:** grupos de 3 ou mais pessoas, mais de um pet, objetos e personagens.
@@ -71,8 +70,8 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 |---|---|---|
 | **Visitante** | Chegou por curiosidade ou para presentear alguém. Não quer criar conta | Criar e comprar rápido, pelo celular, e entender o preço cedo |
 | **Cliente com conta** | Voltou, ou quer acessar suas criações em outro dispositivo | Ver criações e pedidos em um só lugar |
-| **Operação EuMini** (futuro, no app de parceiros) | Equipe que trata os pedidos | Ver pedidos pagos, baixar os arquivos, atualizar status e rastreio, cancelar e reembolsar |
-| **Parceiro** (futuro, no app de parceiros) | Empresa ou pessoa que imprime | Ver pedidos atribuídos, baixar arquivos, informar produção e envio |
+| **Operação EuMini** (no [app Staff](PRD-staff.md)) | Equipe que trata os pedidos | Ver pedidos pagos, subir o arquivo de impressão, atribuir a parceiros, registrar etiqueta e entrega, pagar os parceiros |
+| **Parceiro** (no [app de parceiros](PRD-parceiros.md)) | Pessoa que imprime | Ver pedidos atribuídos, baixar arquivos, informar produção e postagem, ver os ganhos |
 
 ---
 
@@ -84,7 +83,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | **Continuidade** | Retomar criação ao recarregar, "Minhas criações", excluir | Galeria pública, Remix, templates |
 | **Compra** | Tamanho, quantidade, carrinho, Comprar agora, cotação de frete, PIX, cartão de crédito à vista, acompanhamento do pedido | Parcelamento, cartão salvo, cupons, assinatura, venda de arquivo, realidade aumentada |
 | **Conta** | Opcional, com transferência de criações e pedidos ao entrar | Login social |
-| **Operação** | Nada neste app | Pedidos, arquivos, status, rastreio, cancelamento, reembolso, preços, atribuição e arquivo de impressão: tudo no app de parceiros |
+| **Operação** | Nada neste app | Pedidos, arquivos, status, rastreio, atribuição, repasse e arquivo de impressão: nos apps [Staff](PRD-staff.md) e [de parceiros](PRD-parceiros.md) |
 
 ### O que reaproveitamos dos concorrentes
 
@@ -159,7 +158,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 
 ### 5.3 Depois do pagamento
 
-O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confirmado**. Os status seguintes (Em produção, Enviado, Entregue) e o rastreio aparecem para o cliente assim que são informados pelo app de parceiros, fora deste app.
+O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confirmado**. Os status seguintes (Em produção, Enviado, Entregue) e o rastreio aparecem para o cliente assim que são informados pelos apps Staff e de parceiros, fora deste app.
 
 ---
 
@@ -300,7 +299,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | ID | Regra |
 |---|---|
 | RN-21 | O pedido fica ligado ao e-mail do checkout. Ele só passa para uma conta depois que aquele e-mail é verificado. |
-| RN-22 | O reembolso pela API do gateway é sempre do **valor integral da cobrança**. Por isso, todo reembolso é do pedido inteiro. Até o app de parceiros existir, ele é feito direto no painel do gateway, e o pedido é atualizado automaticamente. |
+| RN-22 | O reembolso pela API do gateway é sempre do **valor integral da cobrança**. Por isso, todo reembolso é do pedido inteiro. Até o app Staff ganhar o reembolso (P1 no [PRD dele](PRD-staff.md)), ele é feito direto no painel do gateway, e o pedido é atualizado automaticamente. |
 | RN-23 | Política de cancelamento e troca [Proposta, depende do jurídico]: cancelamento sem custo enquanto o pedido não estiver em produção; reposição ou reembolso em caso de defeito ou dano, informado em até 7 dias após a entrega, com fotos. |
 | RN-24 | O cliente nunca vê quem produziu a peça. Parceiros, quando existirem, não verão e-mail nem CPF do cliente. |
 
@@ -309,7 +308,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 | ID | Regra |
 |---|---|
 | RN-26 | Recusas do provedor viram mensagens amigáveis. Passar pelo filtro do provedor não significa que o conteúdo é permitido. |
-| RN-27 | Personagens e marcas são barrados antes da compra pelo classificador (RN-31). Se algum passar, o pedido com conteúdo que viole direitos de terceiros pode ser recusado e reembolsado. Vale também para ilustração de outro autor, que o classificador não barra. A ferramenta para isso fica no app de parceiros. |
+| RN-27 | Personagens e marcas são barrados antes da compra pelo classificador (RN-31). Se algum passar, o pedido com conteúdo que viole direitos de terceiros pode ser recusado e reembolsado. Vale também para ilustração de outro autor, que o classificador não barra. A ferramenta para isso fica no app Staff. |
 | RN-28 | **Arquivos ligados a pedidos nunca são apagados automaticamente.** |
 | RN-29 | O arquivo de produção não é enviado ao navegador do cliente. |
 
@@ -317,7 +316,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 
 ## 8. Dados a preservar
 
-Mesmo sem o app de parceiros, o MVP guarda desde o primeiro dia:
+Mesmo sem os apps Staff e de parceiros, o MVP guarda desde o primeiro dia:
 
 | Dado | Por que importa |
 |---|---|
@@ -329,7 +328,7 @@ Mesmo sem o app de parceiros, o MVP guarda desde o primeiro dia:
 | Pedidos com tudo congelado no momento da compra | Produção, atendimento e contabilidade |
 | Evento imutável a cada mudança de status | Auditoria e métricas de funil |
 | Lançamentos financeiros imutáveis | Conciliação e repasse futuro a parceiros |
-| Parceiro, atribuição e tarefa de produção por item | Entrada do app de parceiros sem refazer a base |
+| Parceiro, atribuição e tarefa de produção por item | Entrada dos apps Staff e de parceiros sem refazer a base |
 
 A retenção de arquivos tem prazos próprios, porque fotos e rostos são dados pessoais. Os prazos propostos estão na [arquitetura](ARQUITETURA.md#15-storage-e-acesso) e dependem de validação jurídica.
 
@@ -366,7 +365,7 @@ Não há metas numéricas ainda: as primeiras semanas servem para formar a linha
 | **Abuso da geração aberta** | Alto: gasto sem venda | Cotas, limite por IP e teto global |
 | **Margem incorreta.** O preço é fixo por categoria e tamanho, e nenhuma peça é medida antes da compra. Uma peça maciça, ou a purga das 4 cores, pode custar mais que o previsto | Alto: venda com prejuízo, sem ninguém perceber | Calibrar a tabela com impressões reais e acompanhar o custo de cada pedido |
 | **Peça muito pequena.** 4 cm em FDM com várias cores pode não ser viável | Médio | Testar antes de lançar. Tamanhos inviáveis ficam inativos |
-| **Pedido pago sem tratamento.** Este app não tem operação: sem o app de parceiros, nenhuma tela do sistema mostra pedidos, entrega os arquivos ou registra o rastreio, e o cliente fica parado em "Confirmado" | **Crítico** | O app de parceiros é o próximo passo depois do app do cliente, e vendas reais só começam com a operação pronta |
+| **Pedido pago sem tratamento.** Este app não tem operação: sem os apps Staff e de parceiros, nenhuma tela do sistema mostra pedidos, entrega os arquivos ou registra o rastreio, e o cliente fica parado em "Confirmado" | **Crítico** | Os apps Staff e de parceiros são o próximo passo depois do app do cliente, e vendas reais só começam com a operação pronta |
 | **Sem parcelamento, a conversão cai** em compras de maior valor | Médio | Medir o abandono no pagamento. O gateway parcela em até 12x |
 | **Provedor único de IA** na geração e na classificação | Médio | Toda integração fica isolada, permitindo trocar de provedor, e cada uma tem um modelo de reserva |
 
@@ -392,7 +391,7 @@ Estas notas são pontos de leitura, não aconselhamento jurídico.
 - [ ] Amostras reais impressas a partir de imagens geradas, em cada categoria e tamanho oferecidos, com tamanhos inviáveis desativados. Casal e Pessoa + Pet impressos numa peça única.
 - [ ] Classificador escolhido no teste comparativo, acertando os casos difíceis do estudo da Pockella.
 - [ ] Prompt de cada categoria aprovado contra os designs da Pockella.
-- [ ] **Operação do app de parceiros pronta**, construída depois de concluído o app do cliente.
+- [ ] **Apps Staff e de parceiros prontos**, construídos depois de concluído o app do cliente.
 - [ ] Definido como a imagem vira peça: geração 3D, reparo, cores e fatiamento.
 - [ ] Tabela de preços por categoria conferida com o custo das impressões e com os valores definitivos.
 - [ ] Prazo de produção confirmado.
@@ -406,9 +405,9 @@ Estas notas são pontos de leitura, não aconselhamento jurídico.
 
 ## 11. Depois do MVP
 
-**O próximo passo definido é o app de parceiros**, começando quando o app do cliente estiver pronto.
+**O próximo passo definido são os apps Staff e de parceiros**, começando quando o app do cliente estiver pronto.
 
-1. **App de parceiros, incluindo toda a operação** (lista abaixo).
+1. **Apps [Staff](PRD-staff.md) e [de parceiros](PRD-parceiros.md)**, com toda a operação.
 
 Os demais itens têm ordem sugerida, a confirmar com os dados do MVP:
 
@@ -440,24 +439,9 @@ O prompt final é a soma: estilo, mais o bloco da categoria, mais o bloco do tem
 
 Cada template ganha uma página de entrada própria ("Seu pet no Natal"), com o mesmo envio de foto e o tema já escolhido, como a Jujubit faz com cerca de 30 templates. Depois, o tema pode ser aplicado também a uma criação existente, como uma edição pronta.
 
-### O que o app de parceiros precisa cobrir
+### Operação e parceiros
 
-**Para a operação da EuMini:**
-
-- Listar e filtrar pedidos por status, data e e-mail.
-- Ver no pedido a imagem comprada, o prompt, a categoria, o tamanho e o endereço.
-- Consultar as classificações e a lista de espera.
-- Baixar a imagem de cada item e, quando existir, o modelo, com registro de acesso.
-- Avançar o status do pedido e registrar transportadora e rastreio.
-- Cancelar e reembolsar o pedido inteiro, com motivo.
-- Gerenciar preços e tamanhos ativos.
-- Consultar criações e tarefas, com custo, tempo e erro.
-- Ver alertas de pagamento sem pedido, pagamento em duplicidade e teto de gasto atingido.
-- Atender solicitações de remoção de conteúdo.
-
-**Para os parceiros:**
-
-- Ver os pedidos atribuídos, baixar arquivos e informar produção e envio.
+O que cada app cobre está nos PRDs próprios: [app Staff](PRD-staff.md) e [app de parceiros](PRD-parceiros.md). No MVP deles, o 3D e o fatiamento, a compra da etiqueta e o PIX do repasse são feitos fora do sistema, e os apps registram o resultado.
 
 ### Atenção aos fornecedores
 
@@ -480,7 +464,7 @@ Cada template ganha uma página de entrada própria ("Seu pet no Natal"), com o 
 | **Visitante** | Cliente sem conta, identificado por uma sessão no navegador |
 | **Cota** | Limite diário de gerações por sessão ou conta |
 | **Teto de gasto** | Limite diário de gasto com IA em toda a plataforma |
-| **Operação** | Equipe interna da EuMini que trata os pedidos, pelo app de parceiros |
+| **Operação** | Equipe interna da EuMini que trata os pedidos, pelo app Staff |
 | **Parceiro** | Quem imprime e envia. Invisível para o cliente |
 | **FDM** | Impressão 3D por filamento derretido |
 | **PIX copia e cola** | Código de pagamento que o cliente cola no app do banco |

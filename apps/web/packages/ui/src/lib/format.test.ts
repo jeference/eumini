@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatBRL, formatCep, formatCpf, formatPhone } from "./format";
+import { formatBRL, formatCep, formatCpf, formatDay, formatPhone } from "./format";
 
 describe("formatação", () => {
   it("converte centavos em reais", () => {
@@ -14,5 +14,9 @@ describe("formatação", () => {
     expect(formatCpf("5299")).toBe("529.9");
     expect(formatPhone("11999998888")).toBe("(11) 99999-8888");
     expect(formatPhone("1133334444")).toBe("(11) 3333-4444");
+  });
+
+  it("mostra uma data sem hora no próprio dia", () => {
+    expect(formatDay("2026-11-30")).toContain("30");
   });
 });

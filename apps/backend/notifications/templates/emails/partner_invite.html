@@ -1,0 +1,7 @@
+{% extends "emails/base.html" %}
+{% block content %}
+<p>Olá! A EuMini cadastrou <strong>{{ partner_name }}</strong> como parceiro de impressão.</p>
+<p>Crie sua senha para ver as impressões atribuídas a você. O convite vale por {{ ttl_hours }} horas.</p>
+<p style="margin:24px 0"><a href="{{ invite_url }}" style="background:#faff00;color:#7c3aed;border:1px solid #7c3aed;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:bold">Criar minha senha</a></p>
+<p style="color:#6b6b6b;font-size:13px">Se você não esperava este convite, ignore este e-mail.</p>
+{% endblock %}

@@ -8,7 +8,7 @@ from drf_spectacular.utils import OpenApiTypes, extend_schema
 from rest_framework.views import APIView
 
 from common.permissions import IsPublic
-from integrations.adapters.media_local import SIGNING_SALT
+from integrations.adapters.media_local import SIGNING_SALT, attachment_disposition
 from integrations.ports import get_media_storage_port
 
 
@@ -28,4 +28,6 @@ class MediaView(APIView):
             raise Http404
         response = HttpResponse(data, content_type=payload.get("c") or "application/octet-stream")
         response["Cache-Control"] = "private, max-age=300"
+        if payload.get("f"):
+            response["Content-Disposition"] = attachment_disposition(payload["f"])
         return response

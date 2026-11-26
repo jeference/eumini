@@ -781,6 +781,371 @@ paths:
               schema:
                 $ref: '#/components/schemas/DetailResponse'
           description: ''
+  /api/partner/earnings/:
+    get:
+      operationId: partner_earnings_retrieve
+      tags:
+      - partner
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerBalance'
+          description: ''
+  /api/partner/earnings/entries/:
+    get:
+      operationId: partner_earnings_entries_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - partner
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPartnerEntryList'
+          description: ''
+  /api/partner/invite/accept/:
+    post:
+      operationId: partner_invite_accept_create
+      tags:
+      - partner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteAcceptRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InviteAcceptRequest'
+        required: true
+      responses:
+        '204':
+          description: No response body
+  /api/partner/me/:
+    get:
+      operationId: partner_me_retrieve
+      tags:
+      - partner
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerMe'
+          description: ''
+  /api/partner/orders/:
+    get:
+      operationId: partner_orders_list
+      parameters:
+      - in: query
+        name: group
+        schema:
+          type: string
+          enum:
+          - awaiting_label
+          - cancelled
+          - in_production
+          - posted
+          - to_post
+          - to_print
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - partner
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPartnerOrderListList'
+          description: ''
+  /api/partner/orders/{order_id}/:
+    get:
+      operationId: partner_orders_retrieve
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - partner
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerOrderDetail'
+          description: ''
+  /api/partner/orders/{order_id}/issues/:
+    post:
+      operationId: partner_orders_issues_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - partner
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IssueCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerOrderDetail'
+          description: ''
+  /api/partner/orders/{order_id}/items/{item_id}/download/:
+    post:
+      operationId: partner_orders_items_download_create
+      parameters:
+      - in: path
+        name: item_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - partner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DownloadRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DownloadRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Download'
+          description: ''
+  /api/partner/orders/{order_id}/label/download/:
+    post:
+      operationId: partner_orders_label_download_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - partner
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Download'
+          description: ''
+  /api/partner/orders/{order_id}/post/:
+    post:
+      operationId: partner_orders_post_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - partner
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerOrderDetail'
+          description: ''
+  /api/partner/orders/{order_id}/ready/:
+    post:
+      operationId: partner_orders_ready_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - partner
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReadyRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerOrderDetail'
+          description: ''
+  /api/partner/orders/{order_id}/refuse/:
+    post:
+      operationId: partner_orders_refuse_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - partner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefuseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RefuseRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '204':
+          description: No response body
+  /api/partner/orders/{order_id}/start/:
+    post:
+      operationId: partner_orders_start_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - partner
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerOrderDetail'
+          description: ''
+  /api/partner/orders/summary/:
+    get:
+      operationId: partner_orders_summary_retrieve
+      tags:
+      - partner
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerOrderSummary'
+          description: ''
+  /api/partner/payouts/:
+    get:
+      operationId: partner_payouts_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - partner
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPartnerPayoutList'
+          description: ''
   /api/quota/:
     get:
       operationId: quota_retrieve
@@ -1305,6 +1670,23 @@ components:
           type: string
       required:
       - detail
+    Download:
+      type: object
+      properties:
+        url:
+          type: string
+        filename:
+          type: string
+      required:
+      - filename
+      - url
+    DownloadRequestRequest:
+      type: object
+      properties:
+        file:
+          $ref: '#/components/schemas/FileEnum'
+      required:
+      - file
     EditRequestRequest:
       type: object
       properties:
@@ -1337,6 +1719,14 @@ components:
           additionalProperties: {}
       required:
       - name
+    FileEnum:
+      enum:
+      - 3mf
+      - image
+      type: string
+      description: |-
+        * `3mf` - 3MF
+        * `image` - Imagem de referência
     ImageVersion:
       type: object
       properties:
@@ -1386,6 +1776,38 @@ components:
       - origin
       - parent_id
       - rejection_reason
+    InviteAcceptRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        code:
+          type: string
+          minLength: 6
+          maxLength: 6
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+      required:
+      - code
+      - email
+      - password
+    IssueCreateRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        photo:
+          type: string
+          format: binary
+      required:
+      - text
     LoginRequest:
       type: object
       properties:
@@ -1851,6 +2273,440 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OrderList'
+    PaginatedPartnerEntryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartnerEntry'
+    PaginatedPartnerOrderListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartnerOrderList'
+    PaginatedPartnerPayoutList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartnerPayout'
+    PartnerBalance:
+      type: object
+      properties:
+        to_receive_cents:
+          type: integer
+        paid_cents:
+          type: integer
+      required:
+      - paid_cents
+      - to_receive_cents
+    PartnerEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        kind:
+          allOf:
+          - $ref: '#/components/schemas/PartnerEntryKindEnum'
+          readOnly: true
+        amount_cents:
+          type: integer
+          readOnly: true
+        note:
+          type: string
+          readOnly: true
+        order_number:
+          type: string
+          readOnly: true
+        category:
+          type: string
+          readOnly: true
+        size_label:
+          type: string
+          readOnly: true
+        quantity:
+          type: integer
+          nullable: true
+          readOnly: true
+        is_paid:
+          type: boolean
+          readOnly: true
+        payout_id:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount_cents
+      - category
+      - created_at
+      - id
+      - is_paid
+      - kind
+      - note
+      - order_number
+      - payout_id
+      - quantity
+      - size_label
+    PartnerEntryKindEnum:
+      enum:
+      - earning
+      - adjustment
+      type: string
+      description: |-
+        * `earning` - Ganho
+        * `adjustment` - Ajuste
+    PartnerIssue:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+        photo_url:
+          type: string
+          readOnly: true
+        resolved_at:
+          type: string
+          format: date-time
+          nullable: true
+        resolution_note:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - created_at
+      - id
+      - photo_url
+      - resolution_note
+      - resolved_at
+      - text
+    PartnerItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        image_url:
+          type: string
+          readOnly: true
+        category:
+          type: string
+        size_label:
+          type: string
+        longest_side_mm:
+          type: integer
+        quantity:
+          type: integer
+        status:
+          $ref: '#/components/schemas/ProductionJobStatusEnum'
+        production_file:
+          allOf:
+          - $ref: '#/components/schemas/ProductionFileInfo'
+          nullable: true
+          readOnly: true
+      required:
+      - category
+      - id
+      - image_url
+      - longest_side_mm
+      - production_file
+      - quantity
+      - size_label
+      - status
+    PartnerLabel:
+      type: object
+      properties:
+        carrier:
+          type: string
+        tracking_code:
+          type: string
+        shipped_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - carrier
+      - shipped_at
+      - tracking_code
+    PartnerMe:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        origin_postal_code:
+          type: string
+        pix_key_masked:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - name
+      - origin_postal_code
+      - pix_key_masked
+    PartnerOrderDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        number:
+          type: string
+        group:
+          allOf:
+          - $ref: '#/components/schemas/PartnerOrderGroupEnum'
+          readOnly: true
+        post_by:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+        is_overdue:
+          type: boolean
+          readOnly: true
+        is_due_soon:
+          type: boolean
+          readOnly: true
+        piece_count:
+          type: integer
+          readOnly: true
+        thumbnail_url:
+          type: string
+          readOnly: true
+        assigned_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartnerItem'
+          readOnly: true
+        label:
+          allOf:
+          - $ref: '#/components/schemas/PartnerLabel'
+          nullable: true
+          readOnly: true
+        photos:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartnerPhoto'
+          readOnly: true
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartnerIssue'
+          readOnly: true
+      required:
+      - assigned_at
+      - group
+      - id
+      - is_due_soon
+      - is_overdue
+      - issues
+      - items
+      - label
+      - number
+      - photos
+      - piece_count
+      - post_by
+      - thumbnail_url
+    PartnerOrderGroupEnum:
+      enum:
+      - to_print
+      - in_production
+      - awaiting_label
+      - to_post
+      - posted
+      - cancelled
+      type: string
+      description: |-
+        * `to_print` - Para imprimir
+        * `in_production` - Em produção
+        * `awaiting_label` - Aguardando etiqueta
+        * `to_post` - Para postar
+        * `posted` - Postados
+        * `cancelled` - Cancelados
+    PartnerOrderList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        number:
+          type: string
+        group:
+          allOf:
+          - $ref: '#/components/schemas/PartnerOrderGroupEnum'
+          readOnly: true
+        post_by:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+        is_overdue:
+          type: boolean
+          readOnly: true
+        is_due_soon:
+          type: boolean
+          readOnly: true
+        piece_count:
+          type: integer
+          readOnly: true
+        thumbnail_url:
+          type: string
+          readOnly: true
+        assigned_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+      required:
+      - assigned_at
+      - group
+      - id
+      - is_due_soon
+      - is_overdue
+      - number
+      - piece_count
+      - post_by
+      - thumbnail_url
+    PartnerOrderSummary:
+      type: object
+      properties:
+        to_print:
+          type: integer
+        in_production:
+          type: integer
+        awaiting_label:
+          type: integer
+        to_post:
+          type: integer
+        posted:
+          type: integer
+        cancelled:
+          type: integer
+        overdue:
+          type: integer
+      required:
+      - awaiting_label
+      - cancelled
+      - in_production
+      - overdue
+      - posted
+      - to_post
+      - to_print
+    PartnerPayout:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        paid_on:
+          type: string
+          format: date
+          readOnly: true
+        amount_cents:
+          type: integer
+          readOnly: true
+        note:
+          type: string
+          readOnly: true
+        entry_count:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount_cents
+      - created_at
+      - entry_count
+      - id
+      - note
+      - paid_on
+    PartnerPhoto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - created_at
+      - id
+      - url
     PasswordChangeRequest:
       type: object
       properties:
@@ -1942,6 +2798,33 @@ components:
       - label
       - longest_side_mm
       - price_cents
+    ProductionFileInfo:
+      type: object
+      properties:
+        version:
+          type: integer
+        uploaded_at:
+          type: string
+          format: date-time
+      required:
+      - uploaded_at
+      - version
+    ProductionJobStatusEnum:
+      enum:
+      - unassigned
+      - assigned
+      - in_production
+      - ready_to_ship
+      - shipped
+      - cancelled
+      type: string
+      description: |-
+        * `unassigned` - Sem parceiro
+        * `assigned` - Atribuída
+        * `in_production` - Em produção
+        * `ready_to_ship` - Pronta para envio
+        * `shipped` - Enviada
+        * `cancelled` - Cancelada
     ProviderTask:
       type: object
       properties:
@@ -2055,6 +2938,16 @@ components:
       required:
       - item_ids
       - postal_code
+    ReadyRequest:
+      type: object
+      properties:
+        photos:
+          type: array
+          items:
+            type: string
+            format: binary
+      required:
+      - photos
     RefreshTokenRequestRequest:
       type: object
       properties:
@@ -2063,6 +2956,15 @@ components:
           minLength: 1
       required:
       - refresh
+    RefuseRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+      required:
+      - reason
     RegisterRequest:
       type: object
       properties:

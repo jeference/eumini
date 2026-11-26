@@ -35,3 +35,20 @@ class IsActor(BasePermission):
 
     def has_permission(self, request, view):
         return actor_from_request(request).is_identified
+
+
+class IsPartnerMember(BasePermission):
+    """Conta ligada a um parceiro ativo, conferida a cada requisição.
+
+    Guarda o parceiro em `request.partner` para a view. Parceiro desativado perde o acesso
+    na hora, mesmo com o token ainda válido.
+    """
+
+    message = "Esta conta não é de um parceiro ativo."
+
+    def has_permission(self, request, view):
+        from fulfillment.services import partner_for
+
+        partner = partner_for(getattr(request, "user", None))
+        request.partner = partner
+        return partner is not None

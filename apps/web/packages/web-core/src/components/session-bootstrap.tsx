@@ -5,23 +5,26 @@ import { useApiClient } from "@eumini/api-client/react";
 import { useEffect } from "react";
 
 import { refreshSession } from "../api";
-import { useSession } from "../session";
+import { type SessionMode, useSession } from "../session";
 
 /**
- * Ao carregar: garante o cookie de visitante e tenta restaurar a conta pelo cookie de refresh.
- * Não renderiza nada. Só decide se quem está aqui é conta ou visitante.
+ * Ao carregar: tenta restaurar a conta pelo cookie de refresh e, no modo `visitor`, garante o
+ * cookie de visitante. Não renderiza nada. Só decide se quem está aqui é conta ou visitante.
  */
-export function SessionBootstrap() {
+export function SessionBootstrap({ mode = "visitor" }: { mode?: SessionMode }) {
   const api = useApiClient();
 
   useEffect(() => {
     let active = true;
+    useSession.getState().setMode(mode);
 
-    void fetch("/bff/visitor", { method: "POST" })
-      .catch(() => undefined)
-      .finally(() => {
-        if (active) useSession.getState().setVisitorReady();
-      });
+    if (mode === "visitor") {
+      void fetch("/bff/visitor", { method: "POST" })
+        .catch(() => undefined)
+        .finally(() => {
+          if (active) useSession.getState().setVisitorReady();
+        });
+    }
 
     void (async () => {
       const token = await refreshSession();
@@ -40,7 +43,7 @@ export function SessionBootstrap() {
     return () => {
       active = false;
     };
-  }, [api]);
+  }, [api, mode]);
 
   return null;
 }

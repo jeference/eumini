@@ -9,7 +9,7 @@ PY := .venv/bin/python
 endif
 PNPM ?= npx --yes pnpm@9.15.9
 
-.PHONY: install db backend backend-tunnel simulate-pix verification-code worker scheduler frontend types migrate makemigrations test test-backend test-web lint fmt build prod-local prod-local-down deploy
+.PHONY: install db backend backend-tunnel simulate-pix verification-code worker scheduler frontend frontend-partners types migrate makemigrations test test-backend test-web lint fmt build prod-local prod-local-down deploy
 
 install:
 	cd $(BACKEND) && uv venv --python 3.12 .venv && uv pip install --python $(PY) -e ".[dev]"
@@ -56,6 +56,10 @@ scheduler:
 frontend:
 	$(PNPM) --filter @eumini/consumer dev
 
+# App de parceiros, em http://localhost:3001.
+frontend-partners:
+	$(PNPM) --filter @eumini/partners dev
+
 migrate:
 	cd $(BACKEND) && $(PY) manage.py migrate
 
@@ -86,15 +90,17 @@ fmt:
 
 build:
 	$(PNPM) --filter @eumini/consumer build
+	$(PNPM) --filter @eumini/partners build
 
 # --- Produção (infra/) ---
 # Testa a produção na própria máquina: gera as imagens e sobe tudo, menos o túnel, com o site
-# em http://127.0.0.1:3100. Precisa de infra/.env e infra/.env.app de teste.
+# em http://127.0.0.1:3100 e o app de parceiros em http://127.0.0.1:3101. Precisa de infra/.env
+# e infra/.env.app de teste.
 PROD_LOCAL := docker compose -f compose.yml -f compose.local.yml
 prod-local:
 	cd infra && $(PROD_LOCAL) up -d --build --wait postgres
 	cd infra && $(PROD_LOCAL) run --rm --build migrate
-	cd infra && $(PROD_LOCAL) up -d --build --wait web worker scheduler consumer
+	cd infra && $(PROD_LOCAL) up -d --build --wait web worker scheduler consumer partners
 
 prod-local-down:
 	cd infra && $(PROD_LOCAL) down

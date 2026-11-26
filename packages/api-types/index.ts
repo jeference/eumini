@@ -494,6 +494,246 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/partner/earnings/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["partner_earnings_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/earnings/entries/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["partner_earnings_entries_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/invite/accept/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["partner_invite_accept_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/me/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["partner_me_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/orders/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["partner_orders_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/orders/{order_id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["partner_orders_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/orders/{order_id}/issues/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["partner_orders_issues_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/orders/{order_id}/items/{item_id}/download/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["partner_orders_items_download_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/orders/{order_id}/label/download/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["partner_orders_label_download_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/orders/{order_id}/post/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["partner_orders_post_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/orders/{order_id}/ready/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["partner_orders_ready_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/orders/{order_id}/refuse/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["partner_orders_refuse_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/orders/{order_id}/start/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["partner_orders_start_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/orders/summary/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["partner_orders_summary_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/partner/payouts/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["partner_payouts_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/quota/": {
         parameters: {
             query?: never;
@@ -747,6 +987,13 @@ export interface components {
         DetailResponse: {
             detail: string;
         };
+        Download: {
+            url: string;
+            filename: string;
+        };
+        DownloadRequestRequest: {
+            file: components["schemas"]["FileEnum"];
+        };
         EditRequestRequest: {
             /** Format: uuid */
             version_id: string;
@@ -762,6 +1009,12 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /**
+         * @description * `3mf` - 3MF
+         *     * `image` - Imagem de referência
+         * @enum {string}
+         */
+        FileEnum: "3mf" | "image";
         ImageVersion: {
             /** Format: uuid */
             readonly id: string;
@@ -775,6 +1028,17 @@ export interface components {
             readonly rejection_reason: components["schemas"]["RejectionReasonEnum"] | components["schemas"]["BlankEnum"];
             /** Format: date-time */
             readonly created_at: string;
+        };
+        InviteAcceptRequest: {
+            /** Format: email */
+            email: string;
+            code: string;
+            password: string;
+        };
+        IssueCreateRequest: {
+            text: string;
+            /** Format: binary */
+            photo?: string;
         };
         LoginRequest: {
             /** Format: email */
@@ -954,6 +1218,181 @@ export interface components {
             previous?: string | null;
             results: components["schemas"]["OrderList"][];
         };
+        PaginatedPartnerEntryList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=4
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=2
+             */
+            previous?: string | null;
+            results: components["schemas"]["PartnerEntry"][];
+        };
+        PaginatedPartnerOrderListList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=4
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=2
+             */
+            previous?: string | null;
+            results: components["schemas"]["PartnerOrderList"][];
+        };
+        PaginatedPartnerPayoutList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=4
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=2
+             */
+            previous?: string | null;
+            results: components["schemas"]["PartnerPayout"][];
+        };
+        PartnerBalance: {
+            to_receive_cents: number;
+            paid_cents: number;
+        };
+        PartnerEntry: {
+            /** Format: uuid */
+            readonly id: string;
+            readonly kind: components["schemas"]["PartnerEntryKindEnum"];
+            readonly amount_cents: number;
+            readonly note: string;
+            readonly order_number: string;
+            readonly category: string;
+            readonly size_label: string;
+            readonly quantity: number | null;
+            readonly is_paid: boolean;
+            /** Format: uuid */
+            readonly payout_id: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        /**
+         * @description * `earning` - Ganho
+         *     * `adjustment` - Ajuste
+         * @enum {string}
+         */
+        PartnerEntryKindEnum: "earning" | "adjustment";
+        PartnerIssue: {
+            /** Format: uuid */
+            id: string;
+            text: string;
+            readonly photo_url: string;
+            /** Format: date-time */
+            resolved_at: string | null;
+            resolution_note: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        PartnerItem: {
+            /** Format: uuid */
+            id: string;
+            readonly image_url: string;
+            category: string;
+            size_label: string;
+            longest_side_mm: number;
+            quantity: number;
+            status: components["schemas"]["ProductionJobStatusEnum"];
+            readonly production_file: components["schemas"]["ProductionFileInfo"] | null;
+        };
+        PartnerLabel: {
+            carrier: string;
+            tracking_code: string;
+            /** Format: date-time */
+            shipped_at: string | null;
+        };
+        PartnerMe: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            origin_postal_code: string;
+            readonly pix_key_masked: string;
+        };
+        PartnerOrderDetail: {
+            /** Format: uuid */
+            id: string;
+            number: string;
+            readonly group: components["schemas"]["PartnerOrderGroupEnum"];
+            /** Format: date */
+            readonly post_by: string | null;
+            readonly is_overdue: boolean;
+            readonly is_due_soon: boolean;
+            readonly piece_count: number;
+            readonly thumbnail_url: string;
+            /** Format: date-time */
+            readonly assigned_at: string | null;
+            readonly items: components["schemas"]["PartnerItem"][];
+            readonly label: components["schemas"]["PartnerLabel"] | null;
+            readonly photos: components["schemas"]["PartnerPhoto"][];
+            readonly issues: components["schemas"]["PartnerIssue"][];
+        };
+        /**
+         * @description * `to_print` - Para imprimir
+         *     * `in_production` - Em produção
+         *     * `awaiting_label` - Aguardando etiqueta
+         *     * `to_post` - Para postar
+         *     * `posted` - Postados
+         *     * `cancelled` - Cancelados
+         * @enum {string}
+         */
+        PartnerOrderGroupEnum: "to_print" | "in_production" | "awaiting_label" | "to_post" | "posted" | "cancelled";
+        PartnerOrderList: {
+            /** Format: uuid */
+            id: string;
+            number: string;
+            readonly group: components["schemas"]["PartnerOrderGroupEnum"];
+            /** Format: date */
+            readonly post_by: string | null;
+            readonly is_overdue: boolean;
+            readonly is_due_soon: boolean;
+            readonly piece_count: number;
+            readonly thumbnail_url: string;
+            /** Format: date-time */
+            readonly assigned_at: string | null;
+        };
+        PartnerOrderSummary: {
+            to_print: number;
+            in_production: number;
+            awaiting_label: number;
+            to_post: number;
+            posted: number;
+            cancelled: number;
+            overdue: number;
+        };
+        PartnerPayout: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: date */
+            readonly paid_on: string;
+            readonly amount_cents: number;
+            readonly note: string;
+            readonly entry_count: number;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        PartnerPhoto: {
+            /** Format: uuid */
+            id: string;
+            readonly url: string;
+            /** Format: date-time */
+            created_at: string;
+        };
         PasswordChangeRequest: {
             old_password: string;
             new_password: string;
@@ -987,6 +1426,21 @@ export interface components {
             is_default: boolean;
             price_cents: number;
         };
+        ProductionFileInfo: {
+            version: number;
+            /** Format: date-time */
+            uploaded_at: string;
+        };
+        /**
+         * @description * `unassigned` - Sem parceiro
+         *     * `assigned` - Atribuída
+         *     * `in_production` - Em produção
+         *     * `ready_to_ship` - Pronta para envio
+         *     * `shipped` - Enviada
+         *     * `cancelled` - Cancelada
+         * @enum {string}
+         */
+        ProductionJobStatusEnum: "unassigned" | "assigned" | "in_production" | "ready_to_ship" | "shipped" | "cancelled";
         ProviderTask: {
             /** Format: uuid */
             readonly id: string;
@@ -1032,8 +1486,14 @@ export interface components {
             postal_code: string;
             item_ids: string[];
         };
+        ReadyRequest: {
+            photos: string[];
+        };
         RefreshTokenRequestRequest: {
             refresh: string;
+        };
+        RefuseRequest: {
+            reason: string;
         };
         RegisterRequest: {
             /** Format: email */
@@ -1917,6 +2377,345 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DetailResponse"];
+                };
+            };
+        };
+    };
+    partner_earnings_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartnerBalance"];
+                };
+            };
+        };
+    };
+    partner_earnings_entries_list: {
+        parameters: {
+            query?: {
+                /** @description Um número de página dentro do conjunto de resultados paginado. */
+                page?: number;
+                /** @description Número de resultados a serem retornados por página. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedPartnerEntryList"];
+                };
+            };
+        };
+    };
+    partner_invite_accept_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InviteAcceptRequest"];
+                "multipart/form-data": components["schemas"]["InviteAcceptRequest"];
+            };
+        };
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    partner_me_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartnerMe"];
+                };
+            };
+        };
+    };
+    partner_orders_list: {
+        parameters: {
+            query?: {
+                group?: "awaiting_label" | "cancelled" | "in_production" | "posted" | "to_post" | "to_print";
+                /** @description Um número de página dentro do conjunto de resultados paginado. */
+                page?: number;
+                /** @description Número de resultados a serem retornados por página. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedPartnerOrderListList"];
+                };
+            };
+        };
+    };
+    partner_orders_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartnerOrderDetail"];
+                };
+            };
+        };
+    };
+    partner_orders_issues_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["IssueCreateRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartnerOrderDetail"];
+                };
+            };
+        };
+    };
+    partner_orders_items_download_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                item_id: string;
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DownloadRequestRequest"];
+                "multipart/form-data": components["schemas"]["DownloadRequestRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Download"];
+                };
+            };
+        };
+    };
+    partner_orders_label_download_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Download"];
+                };
+            };
+        };
+    };
+    partner_orders_post_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartnerOrderDetail"];
+                };
+            };
+        };
+    };
+    partner_orders_ready_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["ReadyRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartnerOrderDetail"];
+                };
+            };
+        };
+    };
+    partner_orders_refuse_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefuseRequest"];
+                "multipart/form-data": components["schemas"]["RefuseRequest"];
+            };
+        };
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    partner_orders_start_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartnerOrderDetail"];
+                };
+            };
+        };
+    };
+    partner_orders_summary_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartnerOrderSummary"];
+                };
+            };
+        };
+    };
+    partner_payouts_list: {
+        parameters: {
+            query?: {
+                /** @description Um número de página dentro do conjunto de resultados paginado. */
+                page?: number;
+                /** @description Número de resultados a serem retornados por página. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedPartnerPayoutList"];
                 };
             };
         };

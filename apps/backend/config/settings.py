@@ -130,6 +130,9 @@ REST_FRAMEWORK = {
         "order_track": "30/min",
         "order_track_resend": "5/hour",
         "events": "240/min",
+        "partner_read": "240/min",
+        "partner_write": "60/min",
+        "partner_invite": "10/min",
     },
 }
 
@@ -146,6 +149,9 @@ SPECTACULAR_SETTINGS = {
         "ChargeStatusEnum": "payments.models.Charge.Status",
         "CategoryEnum": "catalog.categories.Category",
         "RejectionReasonEnum": "catalog.categories.RejectionReason",
+        "ProductionJobStatusEnum": "fulfillment.models.ProductionJob.Status",
+        "PartnerEntryKindEnum": "fulfillment.models.PartnerEntry.Kind",
+        "PartnerOrderGroupEnum": "fulfillment.models.PartnerOrderGroup",
     },
 }
 
@@ -188,6 +194,12 @@ BUSINESS = {
     "PIX_RENEWAL_WINDOW_HOURS": 24,
     "SHIPPING_QUOTE_TTL_MINUTES": 30,
     "PRODUCTION_DAYS": 7,  # RN-16
+    # App de parceiros.
+    "PARTNER_INVITE_TTL_HOURS": 72,
+    "PARTNER_READY_PHOTOS_MAX": 5,
+    "PARTNER_LABEL_MAX_BYTES": 5 * 1024 * 1024,
+    "PRODUCTION_FILE_MAX_BYTES": 100 * 1024 * 1024,
+    "PARTNER_DUE_SOON_DAYS": 2,
     "TERMS_VERSION": "2026-11",
     # RN-37: versão do texto de consentimento da lista de espera.
     "WAITLIST_CONSENT_VERSION": "2026-11-20",
@@ -200,6 +212,7 @@ BUSINESS = {
 
 INTERNAL_PARTNER_POSTAL_CODE = env("INTERNAL_PARTNER_POSTAL_CODE", default="01001000")
 CONSUMER_APP_URL = env("CONSUMER_APP_URL", default="http://localhost:3000").rstrip("/")
+PARTNERS_APP_URL = env("PARTNERS_APP_URL", default="http://localhost:3001").rstrip("/")
 
 # Chave Fernet. Em DEBUG, derivada da SECRET_KEY para o projeto subir sem configuração.
 FIELD_ENCRYPTION_KEY = env("FIELD_ENCRYPTION_KEY", default="")

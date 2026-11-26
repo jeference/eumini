@@ -1,0 +1,6 @@
+{% autoescape off %}Olá! A EuMini cadastrou {{ partner_name }} como parceiro de impressão.
+
+Crie sua senha para ver as impressões atribuídas a você. O convite vale por {{ ttl_hours }} horas:
+{{ invite_url }}
+
+Se você não esperava este convite, ignore este e-mail.{% endautoescape %}

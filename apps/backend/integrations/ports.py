@@ -186,7 +186,10 @@ class MediaStoragePort(ABC):
     def delete(self, *, key: str) -> None: ...
 
     @abstractmethod
-    def signed_url(self, *, key: str, ttl_seconds: int, content_type: str = "") -> str: ...
+    def signed_url(
+        self, *, key: str, ttl_seconds: int, content_type: str = "", filename: str = ""
+    ) -> str:
+        """URL temporária. Com `filename`, o navegador baixa o arquivo com esse nome."""
 
 
 # --- E-mail ---

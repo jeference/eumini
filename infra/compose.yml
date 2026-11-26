@@ -91,12 +91,27 @@ services:
     security_opt: [no-new-privileges:true]
     logging: *logging
 
+  # App de parceiros, em parceiros.eumini.com (rota pública do túnel para http://partners:3000).
+  partners:
+    image: eumini-partners:${TAG:?defina TAG}
+    build:
+      context: ${SRC_DIR:-..}
+      dockerfile: apps/web/partners/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://web:8000
+        NEXT_PUBLIC_SUPPORT_EMAIL: ${NEXT_PUBLIC_SUPPORT_EMAIL:-}
+    depends_on:
+      web: { condition: service_healthy }
+    restart: unless-stopped
+    security_opt: [no-new-privileges:true]
+    logging: *logging
+
   cloudflared:
     image: cloudflare/cloudflared:2026.10.7
     command: tunnel --no-autoupdate run
     environment:
       TUNNEL_TOKEN: ${TUNNEL_TOKEN:?}
-    depends_on: [consumer]
+    depends_on: [consumer, partners]
     restart: unless-stopped
     read_only: true
     security_opt: [no-new-privileges:true]
