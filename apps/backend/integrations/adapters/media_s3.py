@@ -6,6 +6,7 @@ from functools import cached_property
 
 from django.conf import settings
 
+from integrations.adapters.media_local import attachment_disposition
 from integrations.ports import MediaStoragePort
 
 
@@ -43,7 +44,12 @@ class S3MediaAdapter(MediaStoragePort):
     def delete(self, *, key: str) -> None:
         self._client.delete_object(Bucket=self._bucket, Key=key)
 
-    def signed_url(self, *, key: str, ttl_seconds: int, content_type: str = "") -> str:
+    def signed_url(
+        self, *, key: str, ttl_seconds: int, content_type: str = "", filename: str = ""
+    ) -> str:
+        params = {"Bucket": self._bucket, "Key": key}
+        if filename:
+            params["ResponseContentDisposition"] = attachment_disposition(filename)
         return self._client.generate_presigned_url(
-            "get_object", Params={"Bucket": self._bucket, "Key": key}, ExpiresIn=ttl_seconds
+            "get_object", Params=params, ExpiresIn=ttl_seconds
         )

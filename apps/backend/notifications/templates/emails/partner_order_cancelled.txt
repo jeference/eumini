@@ -1,0 +1,4 @@
+{% autoescape off %}O pedido {{ number }} foi cancelado. Não imprima nem poste.
+Se você já começou a imprimir, fale com a EuMini.
+
+Ver o pedido: {{ order_url }}{% endautoescape %}

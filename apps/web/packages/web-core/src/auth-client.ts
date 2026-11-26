@@ -18,11 +18,14 @@ async function postBff<T>(path: string, body: unknown): Promise<T> {
   return data as T;
 }
 
-/** Depois de entrar: carrega o usuário e traz para a conta o que foi feito como visitante. */
+/**
+ * Depois de entrar: carrega o usuário e, no modo `visitor`, traz para a conta o que foi feito
+ * como visitante. No modo `account` não há visitante para trazer.
+ */
 async function completeSignIn(access: string) {
   useSession.getState().setAccessToken(access);
   const api = getApiClient();
-  unwrap(await api.POST("/api/me/claim/"));
+  if (useSession.getState().mode === "visitor") unwrap(await api.POST("/api/me/claim/"));
   const user = unwrap(await api.GET("/api/me/"));
   useSession.getState().setSession(access, user);
 }

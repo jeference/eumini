@@ -13,6 +13,14 @@ export function formatDate(value: string): string {
   return DATE.format(new Date(value));
 }
 
+/**
+ * Data sem hora ("2026-11-30"), como um prazo. `new Date` leria meia-noite em UTC, que em
+ * Brasília ainda é o dia anterior: aqui o dia é lido ao meio-dia de Brasília.
+ */
+export function formatDay(value: string): string {
+  return DATE.format(new Date(`${value}T12:00:00-03:00`));
+}
+
 export function formatCep(value: string): string {
   const digits = value.replace(/\D/g, "").slice(0, 8);
   return digits.length > 5 ? `${digits.slice(0, 5)}-${digits.slice(5)}` : digits;

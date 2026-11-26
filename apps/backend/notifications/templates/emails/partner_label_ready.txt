@@ -1,0 +1,4 @@
+{% autoescape off %}A etiqueta do pedido {{ number }} está pronta.
+Baixe, imprima, cole na embalagem e poste. Depois, marque o pedido como postado.
+
+Baixar a etiqueta: {{ order_url }}{% endautoescape %}

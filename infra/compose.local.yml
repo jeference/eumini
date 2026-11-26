@@ -1,6 +1,9 @@
-# Só no teste local: expõe o site em 127.0.0.1:3100, já que aqui não há túnel.
+# Só no teste local: expõe o site em 127.0.0.1:3100 e o app de parceiros em 127.0.0.1:3101,
+# já que aqui não há túnel.
 #   make prod-local
 # Nunca use no servidor: lá nenhuma porta é publicada.
 services:
   consumer:
     ports: ["127.0.0.1:3100:3000"]
+  partners:
+    ports: ["127.0.0.1:3101:3000"]

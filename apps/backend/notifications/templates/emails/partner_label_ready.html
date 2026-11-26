@@ -1,0 +1,6 @@
+{% extends "emails/base.html" %}
+{% block content %}
+<p>A etiqueta do pedido <strong>{{ number }}</strong> está pronta.</p>
+<p>Baixe, imprima, cole na embalagem e poste. Depois, marque o pedido como postado.</p>
+<p style="margin:24px 0"><a href="{{ order_url }}" style="background:#faff00;color:#7c3aed;border:1px solid #7c3aed;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:bold">Baixar a etiqueta</a></p>
+{% endblock %}

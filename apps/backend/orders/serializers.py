@@ -137,7 +137,8 @@ class ShipmentInfoSerializer(serializers.Serializer):
 
 
 def _latest_shipment(order):
-    return order.shipments.order_by("-created_at").first()
+    """Só o envio já postado: a etiqueta anexada antes da postagem não é do cliente ainda."""
+    return order.shipments.filter(shipped_at__isnull=False).order_by("-created_at").first()
 
 
 class OrderListSerializer(GlobalIdSerializer):

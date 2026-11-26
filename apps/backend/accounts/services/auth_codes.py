@@ -32,7 +32,9 @@ def _generate_code() -> str:
     return f"{secrets.randbelow(10**6):06d}"
 
 
-def issue_code(*, user, kind: str, enforce_cooldown: bool = True) -> str:
+def issue_code(
+    *, user, kind: str, enforce_cooldown: bool = True, ttl: timedelta | None = None
+) -> str:
     """Cria um código de uso único. O texto puro só sai por e-mail."""
     if enforce_cooldown:
         cooldown = settings.BUSINESS["ACCOUNT_CODE_RESEND_COOLDOWN_SECONDS"]
@@ -48,7 +50,7 @@ def issue_code(*, user, kind: str, enforce_cooldown: bool = True) -> str:
         kind=kind,
         code_hash=sha256_hex(plaintext),
         expires_at=timezone.now()
-        + timedelta(minutes=settings.BUSINESS["ACCOUNT_CODE_TTL_MINUTES"]),
+        + (ttl or timedelta(minutes=settings.BUSINESS["ACCOUNT_CODE_TTL_MINUTES"])),
     )
     return plaintext
 

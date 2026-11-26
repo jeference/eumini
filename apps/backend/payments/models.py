@@ -61,13 +61,11 @@ class LedgerEntry(AppendOnlyModel):
         PRODUCT_REVENUE = "product_revenue", "Receita de produto"
         SHIPPING_COLLECTED = "shipping_collected", "Frete recebido"
         REFUND = "refund", "Reembolso"
-        PARTNER_PAYABLE = "partner_payable", "A pagar ao parceiro"
 
     class Account(models.TextChoices):
         CUSTOMER = "customer", "Cliente"
         PLATFORM = "platform", "Plataforma"
         SHIPPING = "shipping", "Frete a repassar"
-        PARTNER = "partner", "Parceiro"
 
     order = models.ForeignKey("orders.Order", on_delete=models.PROTECT, related_name="ledger")
     charge = models.ForeignKey(Charge, on_delete=models.PROTECT, related_name="ledger")

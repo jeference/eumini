@@ -12,7 +12,7 @@
 
 ## 1. Visão geral e princípios
 
-Um **monólito modular** em Django atende por API aos apps Next.js. O MVP tem um app, o do cliente, e o app de parceiros entra depois sobre o mesmo backend e os mesmos dados. Um worker separado executa as gerações de IA, que são lentas. **O MVP só gera imagens:** o cliente compra a partir do 2D, e o modelo 3D fica para a preparação de impressão, depois do pagamento. **Funcionalidades de operação não existem neste app nem em painel à parte:** todas ficam no app de parceiros.
+Um **monólito modular** em Django atende por API aos apps Next.js. O MVP tem um app, o do cliente, e os apps Staff e de parceiros entram depois sobre o mesmo backend e os mesmos dados. Um worker separado executa as gerações de IA, que são lentas. **O MVP só gera imagens:** o cliente compra a partir do 2D, e o modelo 3D fica para a preparação de impressão, depois do pagamento. **Funcionalidades de operação não existem neste app nem em painel à parte:** ficam nos apps [Staff](PRD-staff.md) e [de parceiros](PRD-parceiros.md).
 
 ```mermaid
 flowchart LR
@@ -30,7 +30,8 @@ flowchart LR
     P -->|webhook| A
     A --> F[Cotação de frete]
     A --> E[E-mail]
-    PA[App de parceiros e operação<br/>futuro] -.-> A
+    PA[App de parceiros<br/>futuro] -.-> A
+    SF[App Staff<br/>futuro] -.-> A
 ```
 
 ### Regras do projeto
@@ -56,7 +57,8 @@ flowchart LR
 |---|---|---|
 | `apps/backend` | API, webhooks, worker e tarefas agendadas | MVP |
 | `apps/web/consumer` | Clientes | MVP |
-| `apps/web/partners` | Parceiros e toda a operação interna | Próximo passo, quando o app do cliente estiver pronto |
+| `apps/web/partners` | Parceiros que imprimem ([PRD](PRD-parceiros.md)), em `parceiros.eumini.com` | Construído. Recebe pedidos quando o app Staff existir |
+| `apps/web/staff` | Equipe da EuMini, toda a operação interna ([PRD](PRD-staff.md)) | Próximo passo |
 
 Cada app web tem domínio próprio, portanto cookies e sessões são independentes. O Next reescreve `/api/*` para o Django, então o navegador fala sempre com a mesma origem e não há CORS a configurar.
 
@@ -84,7 +86,8 @@ apps/
   backend/
   web/
     consumer/                 app do cliente
-    partners/                 futuro
+    partners/                 futuro: app de parceiros
+    staff/                    futuro: app Staff
     packages/
       ui/                     componentes visuais, nunca importa web-core
       web-core/               sessão, auth, BFF, guards, layout base
@@ -172,19 +175,18 @@ Quem ainda está com a sessão de visitante que fez o pedido também pode vê-lo
 
 | Papel | Situação | Uso |
 |---|---|---|
-| `staff` | Reservado | Operação no app de parceiros |
+| `staff` | Reservado | Operação no app Staff |
 | `admin` | Reservado | Inclui `staff`. Gerencia preços e parâmetros |
-| `partner_owner` | Reservado | Dono de um parceiro |
-| `partner_operator` | Reservado | Membro operacional de um parceiro |
 
 - **Cliente não é papel.** Ser dono de uma criação ou de um pedido deriva da relação.
+- **Parceiro também não é papel.** Vem de `PartnerMember`: a conta ligada a um `Partner` ativo entra no app de parceiros. `IsPartnerMember` confere isso a cada requisição, então desativar o parceiro corta o acesso na hora, mesmo com o token ainda válido.
 - **Uma tabela `User` para todos.** Não há tipos de conta separados. Papéis são concedidos por ação administrativa, e o token não carrega papéis: eles vêm de `/api/me/`.
 
 **Camadas no backend:**
 
 1. Padrão global `DenyAll`.
-2. Classes de capacidade combináveis por endpoint: `IsActorOwner` no MVP; `IsStaff` e `IsPartnerMember` com o app de parceiros.
-3. `scope_queryset`, que limita cada consulta ao que o ator pode ver.
+2. Classes de capacidade por endpoint: `IsActor` e `IsAuthenticatedUser` no app do cliente, `IsPartnerMember` no de parceiros e `IsStaff` com o app Staff.
+3. Escopo no service, que limita cada consulta ao que o ator pode ver (`orders_for`, `partner_orders`). Recurso de outro ator responde 404.
 4. Guards da máquina de estados nos services.
 5. Regras de visibilidade de dados pessoais nos serializers.
 
@@ -218,6 +220,7 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 | `ProviderTask` | creation, tipo (`classify`, `generate`, `edit`), provedor, modelo, status, tentativas, próxima tentativa, prompt renderizado, versão do prompt, parâmetros, custo em USD, início e fim, erro, trava (`locked_until`) | ● |
 | `QuotaReservation` | ator, hash do IP, tipo, dia, estado (`reserved`, `consumed`, `released`), tarefa | ● |
 | `Asset` | bucket, chave, tipo, MIME, tamanho, sha256, visibilidade, classe de retenção, expurgado em | ● |
+| `AssetDownload` | asset, usuário, contexto. Append-only: cada download de arquivo de produção (RN-PAR-10) | ● |
 
 ### Catálogo (`catalog`)
 
@@ -249,17 +252,24 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 | `WebhookEvent` | provedor, id do evento, único por par; tipo, carga, status de processamento | ● |
 | `LedgerEntry` | order, charge, tipo, conta de débito, conta de crédito, valor, referência. Append-only | ● |
 
-**Tipos de lançamento:** `product_revenue`, `shipping_collected`, `refund`. Reservado para o futuro: `partner_payable`. Correções são sempre lançamentos compensatórios e saldos são sempre derivados.
+**Tipos de lançamento:** `product_revenue`, `shipping_collected`, `refund`. Correções são sempre lançamentos compensatórios e saldos são sempre derivados. O que o parceiro tem a receber não fica aqui: o `LedgerEntry` pertence a uma cobrança do cliente, e o ganho é por item. Ele fica no extrato do parceiro (`PartnerEntry`, abaixo).
 
 ### Produção (`fulfillment`)
 
 | Entidade | Campos principais | Uso |
 |---|---|---|
-| `Partner` | nome, status, CEP de origem | ● Um registro: a própria EuMini |
-| `PartnerMember` | partner, user | ○ |
-| `ProductionJob` | order item, partner (nulo, atribuível), status, atribuído em | ● |
-| `ProductionFile` | job, tipo (GLB, STL, 3MF), versão, asset | ○ Até a preparação de impressão existir |
-| `Shipment` | order, partner, transportadora, código de rastreio, postado em, entregue em | ○ Lido pelo cliente, preenchido pelo app de parceiros |
+| `Partner` | nome, status, CEP de origem, chave PIX, interno | ● O interno (a própria EuMini) dá a origem do frete |
+| `PartnerMember` | partner, user | ● O login do parceiro |
+| `ProductionJob` | order item, partner (nulo, atribuível), status, atribuído em, prazo de postagem, ganho congelado na atribuição | ● |
+| `ProductionFile` | job, tipo (3MF), versão, asset. A versão mais alta é a que vale | ● Subido pela equipe |
+| `Shipment` | order, partner, transportadora, código de rastreio, etiqueta (PDF), postado em, entregue em | ● O cliente só vê depois de postado |
+| `ProductionPhoto` | order, partner, asset: as peças prontas | ● |
+| `ProductionIssue` | order, partner, texto, foto, resolvido em, nota | ● |
+| `PartnerRate` | categoria, tamanho, valor por peça; único por par | ● |
+| `PartnerEntry` | partner, tipo (`earning`, `adjustment`), job, valor com sinal, nota, repasse. Um ganho por job | ● |
+| `PartnerPayout` | partner, pago em, valor, comprovante, nota | ● |
+
+O extrato do parceiro segue a regra do dinheiro: o valor de um `PartnerEntry` nunca muda e correção é um novo ajuste. O repasse só liga os lançamentos que quita. A receber é a soma dos lançamentos sem repasse.
 
 ### Auditoria e apoio
 
@@ -329,9 +339,9 @@ stateDiagram-v2
 | Modelo | Transições |
 |---|---|
 | `Charge` | `pending → paid`, `pending → expired`, `pending → failed`, `paid → refunded`, `expired → paid` (tardio). Disputa é marcada com um campo e gera alerta, sem liquidar nem desfazer automaticamente |
-| `ProductionJob` | `unassigned → assigned → in_production → ready_to_ship → shipped`. `cancelled` a partir de qualquer estado anterior a `shipped` |
+| `ProductionJob` (`fulfillment/fsm.py`) | `unassigned →assign→ assigned →start→ in_production →mark_ready→ ready_to_ship →post→ shipped`. `assigned →refuse→ unassigned`. `cancel` a partir de qualquer estado anterior a `shipped` |
 
-**No MVP**, o pagamento cria os jobs em `unassigned`, e nenhuma tela os avança. As transições de produção e envio só serão acionadas pelo app de parceiros, com o status do pedido derivado dos jobs. Neste app, os estados alcançáveis do pedido são `pending_payment`, `paid`, `expired` e `refunded`.
+O pagamento cria os jobs em `unassigned`, com o prazo de postagem. As ações valem para o pedido inteiro, em todos os jobs dele, e movem o pedido ([RN-PAR-02 e RN-PAR-03](PRD-parceiros.md#6-regras-de-negócio)): iniciar leva o pedido a `in_production`, postar a `shipped`, e o reembolso cancela os jobs não postados. Atribuir e anexar a etiqueta são services da equipe (`assign_order`, `attach_label`), sem endpoint até o app Staff.
 
 **Rótulos para o cliente:** `pending_payment` = Aguardando pagamento · `paid` = Confirmado · `in_production` = Em produção · `shipped` = Enviado · `delivered` = Entregue · `expired` = Expirado · `refunded` = Reembolsado.
 
@@ -423,7 +433,7 @@ Os ports ficam em `integrations/ports/`, e cada adapter é escolhido por um cami
 |---|---|---|---|
 | `ImageGenerationPort` | gerar de foto, editar; recebe o modelo de cada chamada | Runware (`openai:gpt-image@2`, reserva `google:4@2`) | Sim |
 | `ImageClassificationPort` | classificar foto, classificar versão; devolve resultado, confiança, probabilidades e a versão do conjunto de perguntas | Jev 1.14 (TypeSafe); reserva de outro provedor a definir | Sim |
-| `PaymentGatewayPort` | criar cobrança (PIX ou cartão), consultar; reembolsar com o app de parceiros | AbacatePay | Sim |
+| `PaymentGatewayPort` | criar cobrança (PIX ou cartão), consultar; reembolsar com o app Staff | AbacatePay | Sim |
 | `ShippingPort` | cotar | Melhor Envio | Sim |
 | `MediaStoragePort` | URL de upload, URL de download, gravar, apagar | S3 | Disco local |
 | `EmailPort` | enviar | SMTP | Console |
@@ -483,9 +493,9 @@ Só à vista e só Visa e Mastercard. O cartão precisa estar ativo na loja (sem
 
 ### Reembolso
 
-Este app não tem tela nem endpoint de reembolso. Até o app de parceiros existir, o reembolso é feito **direto no painel do gateway**. O webhook `transparent.refunded` registra o lançamento compensatório e leva a cobrança e o pedido a `refunded`.
+Este app não tem tela nem endpoint de reembolso. Até o app Staff ganhar o reembolso, o reembolso é feito **direto no painel do gateway**. O webhook `transparent.refunded` registra o lançamento compensatório e leva a cobrança e o pedido a `refunded`.
 
-Quando o app de parceiros existir, ele chamará `POST /v2/transparents/refund`, observando que:
+Quando o app Staff tiver o reembolso, ele chamará `POST /v2/transparents/refund`, observando que:
 
 - **Só há reembolso integral**: a API não aceita valor parcial.
 - É preciso tratar `TRANSACTION_NOT_REFUNDABLE`, `TRANSACTION_UNDER_DISPUTE` e `INSUFFICIENT_FUNDS` (saldo insuficiente), mostrando o erro sem alterar o pedido.
@@ -505,7 +515,7 @@ Quando o app de parceiros existir, ele chamará `POST /v2/transparents/refund`, 
 - **No fechamento:** o backend cota de novo. Se o valor mudou, retorna 409 `shipping_changed` com o novo valor, e o cliente confirma.
 - **Indisponibilidade:** retorna 503 `shipping_unavailable`, e o checkout não avança. Sem tabela de contingência no MVP.
 - **Autenticação:** OAuth 2.0 com token de 30 dias. A tarefa `refresh_shipping_token` o renova antes do vencimento. A API exige `User-Agent` com nome da aplicação e e-mail técnico de contato, configurado por variável de ambiente.
-- **Fora do MVP:** compra e impressão de etiqueta, e registro do rastreio. Pertencem ao app de parceiros.
+- **Fora do MVP:** compra e impressão de etiqueta, e registro do rastreio. No app Staff, a etiqueta é comprada no painel do Melhor Envio e anexada ao pedido; o parceiro a imprime e posta.
 
 **[Verificar]** A referência da API tem inconsistências (como `heigth` e `lenght` em `volumes`). Testar em sandbox e usar `products`.
 
@@ -553,7 +563,7 @@ Como as URLs assinadas mudam a cada resposta, o frontend reaproveita a URL de ca
 
 - **Upload de foto:** o frontend envia à API, que valida o tipo real, corrige a orientação e grava duas versões sem metadados (EXIF, GPS, XMP): o **original**, na resolução e no formato enviados, e a **normalizada**, em PNG de no máximo 1.024 px, usada na geração e na classificação. Imagens com o menor lado abaixo de 280 px são ampliadas até esse mínimo, porque o classificador as recusa. O caminho é mais simples que um upload pré-assinado e garante a validação no servidor. A limitação de 10 MB fica no servidor e no Next.
 - **Leitura:** a API verifica a posse e devolve URLs assinadas de curta duração (5 min [Proposta]) nos detalhes da criação. O original nunca é entregue ao cliente.
-- **Produção:** arquivos e downloads só pelo app de parceiros, com acesso registrado. Nenhum endpoint deste app os entrega.
+- **Produção:** arquivos e downloads só pelos apps Staff e de parceiros, com acesso registrado. Nenhum endpoint deste app os entrega.
 
 ### Retenção [Proposta, depende de validação jurídica]
 
@@ -696,13 +706,30 @@ Valores vêm do protótipo: `accent #7C3AED`, `accent-soft #F0E9FF`, `highlight 
 | `POST /api/webhooks/abacatepay/` | Gateway | Webhook |
 | `POST /api/events/` | Ator | Evento de produto |
 
+### Endpoints do app de parceiros
+
+Todos com `IsPartnerMember`, menos o aceite do convite. Pedido de outro parceiro responde 404. Nenhum devolve e-mail, CPF, telefone, endereço, preço pago nem a foto original ([RN-PAR-09](PRD-parceiros.md#6-regras-de-negócio)).
+
+| Método e caminho | Função |
+|---|---|
+| `POST /api/partner/invite/accept/` | Público: e-mail, código do convite e senha. Depois, login normal |
+| `GET /api/partner/me/` | Nome, CEP de origem, chave PIX mascarada. 403 se a conta não é de parceiro ativo |
+| `GET /api/partner/orders/?group=` | Fila por grupo: `to_print`, `in_production`, `awaiting_label`, `to_post`, `posted`, `cancelled` |
+| `GET /api/partner/orders/summary/` | Contagem por grupo e atrasados |
+| `GET /api/partner/orders/{id}/` | Itens, 3MF, etiqueta, fotos e problemas |
+| `POST /api/partner/orders/{id}/items/{item_id}/download/` | URL assinada do 3MF ou da imagem, com registro em `AssetDownload` |
+| `POST /api/partner/orders/{id}/label/download/` | URL assinada da etiqueta, com registro |
+| `POST /api/partner/orders/{id}/{refuse,start,ready,post}/` | Ações. `ready` recebe de 1 a 5 fotos |
+| `POST /api/partner/orders/{id}/issues/` | Reportar problema, com foto opcional |
+| `GET /api/partner/earnings/`, `GET /api/partner/earnings/entries/`, `GET /api/partner/payouts/` | Saldo, extrato e repasses |
+
 ---
 
 ## 18. Temas transversais
 
 ### Sem painel de operação
 
-Não há Django Admin nem outro painel. Tudo que for operação entra com o app de parceiros. Enquanto ele não existe:
+Não há Django Admin nem outro painel. Tudo que for operação entra com o app Staff. Enquanto ele não existe:
 
 - **Preços, tamanhos e parâmetros de custo** vêm de migração de dados e mudam por novo deploy.
 - **Alertas internos** ficam no log, marcados com `alert=true`. Ninguém é avisado automaticamente: é preciso consultar o log.
@@ -741,7 +768,7 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 - Aceites de termos ficam registrados com versão e data.
 - Fotos seguem para provedores no exterior, inclusive o classificador, o que deve constar da política de privacidade.
 - O e-mail da lista de espera só é gravado quando a pessoa o envia no formulário do aviso, que diz a finalidade, e só serve para o aviso da categoria.
-- **Parceiros futuros:** veem apenas nome e endereço para envio, por meio de serializers próprios.
+- **Parceiros:** não veem dados do cliente na tela; nome e endereço chegam só impressos na etiqueta ([RN-PAR-09](PRD-parceiros.md#6-regras-de-negócio)). Os serializers de `fulfillment` garantem isso, e um teste confere a ausência desses campos.
 
 ### Observabilidade
 
@@ -763,36 +790,35 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 | Item | Decisão |
 |---|---|
 | **Ambientes** | Local (desenvolvimento e homologação) e produção. Uma homologação em servidor próprio pode vir depois, com os mesmos arquivos, nunca na máquina da produção |
-| **Hospedagem** | Um VPS (Hostinger KVM 2, Campinas, Ubuntu 26.04 LTS) com Docker Compose: `postgres`, `web` (gunicorn), `worker`, `scheduler`, `consumer` (Next) e `cloudflared`. Arquivos em [`infra/`](../infra/) |
-| **Exposição** | O firewall da Hostinger só deixa entrar a porta 22 (SSH só com chave, só o usuário `deploy`, sem root). O site não usa porta: chega pelo Cloudflare Tunnel (`eumini.com`, e `www` redireciona). HTTPS obrigatório, TLS 1.2+ e HSTS na zona da Cloudflare |
+| **Hospedagem** | Um VPS (Hostinger KVM 2, Campinas, Ubuntu 26.04 LTS) com Docker Compose: `postgres`, `web` (gunicorn), `worker`, `scheduler`, `consumer` e `partners` (Next) e `cloudflared`. Arquivos em [`infra/`](../infra/) |
+| **Exposição** | O firewall da Hostinger só deixa entrar a porta 22 (SSH só com chave, só o usuário `deploy`, sem root). O site não usa porta: chega pelo Cloudflare Tunnel (`eumini.com`, e `www` redireciona; `parceiros.eumini.com` vai para o serviço `partners`). HTTPS obrigatório, TLS 1.2+ e HSTS na zona da Cloudflare |
 | **Antes do lançamento** | A produção roda aberta com as mesmas chaves e serviços do desenvolvimento (AbacatePay dev, Gmail, bucket `kubo-media-dev`, frete simulado). O teto diário de IA e os limites por IP contêm abuso. No lançamento: zerar o banco e trocar as chaves |
 | **Servidor** | Criado do zero pelo `infra/server/post-install.sh` (post-install script da Hostinger): patches automáticos (reboot às 04:00), Docker com `live-restore`, swap e usuário `deploy`. Segredos da aplicação gerados no próprio servidor (`bootstrap-secrets.sh`) |
 | **Banco** | Postgres no mesmo VPS. Um gerenciado na mesma região quando o faturamento justificar: muda só a `DATABASE_URL` |
-| **Deploy** | Automático: quando o CI passa num push na `main`, o workflow `Deploy` (environment `production`, liberado só para a `main`) envia o commit testado por SSH e o servidor gera as imagens (`eumini-backend` e `eumini-consumer`, com os `NEXT_PUBLIC_*` no build), aplica as migrações e sobe a versão, esperando ficar saudável. Um deploy por vez. A chave do GitHub é própria e restrita no servidor: só roda o `receive.sh`, sem shell nem túnel. `make deploy` faz o mesmo do PC, para emergência. Imagens dos últimos 7 dias ficam para voltar versão |
+| **Deploy** | Automático: quando o CI passa num push na `main`, o workflow `Deploy` (environment `production`, liberado só para a `main`) envia o commit testado por SSH e o servidor gera as imagens (`eumini-backend`, `eumini-consumer` e `eumini-partners`, com os `NEXT_PUBLIC_*` no build), aplica as migrações e sobe a versão, esperando ficar saudável. Um deploy por vez. A chave do GitHub é própria e restrita no servidor: só roda o `receive.sh`, sem shell nem túnel. `make deploy` faz o mesmo do PC, para emergência. Imagens dos últimos 7 dias ficam para voltar versão |
 | **Backup** | Diário às 03:00: `pg_dump` criptografado com `age` (o servidor só tem a chave pública; a privada fica com o dono) em `backups/db/` do bucket da aplicação, com 30 dias de retenção. No lançamento, um bucket próprio com credencial que só grava |
 | **CI** | Em todo PR e push na `main`. Backend: ruff, verificação contra `__all__`, migrações, pytest, geração de schema. Web: lint, typecheck, teste, build |
-| **Teste local da produção** | `make prod-local` constrói as imagens e sobe tudo, menos o túnel, em `http://127.0.0.1:3100` |
+| **Teste local da produção** | `make prod-local` constrói as imagens e sobe tudo, menos o túnel, em `http://127.0.0.1:3100` (cliente) e `http://127.0.0.1:3101` (parceiros) |
 | **Desenvolvimento** | `make db` sobe um Postgres local sem Docker, na porta 5433 |
 
 **Para escalar:** primeiro um plano maior de VPS; com mais de uma máquina, as imagens passam a ser geradas no CI e publicadas num registro; depois mais réplicas de `worker` (já dividem as tarefas com `SKIP LOCKED`), o banco gerenciado e mais máquinas atrás da Cloudflare. As mídias já ficam no S3, fora do servidor.
 
 ---
 
-## 19. Terreno preparado para os parceiros
+## 19. Apps Staff e de parceiros
 
-| Já no MVP | Falta construir |
+O app de parceiros está construído (`apps/web/partners` e os endpoints `/api/partner/...`). Ele usa `CoreProviders` no modo `account`, que não cria visitante nem traz criações de visitante ao entrar. O que falta é o lado da equipe:
+
+| Já existe | Falta construir no app Staff |
 |---|---|
-| Monorepo com `ui`, `web-core`, `api-client`, `api-types` e `design-tokens` compartilháveis | `apps/web/partners`, usando esses pacotes |
-| Pedidos, cobranças, eventos e tarefas de IA completos no banco | **Toda a operação:** pedidos, arquivos, status, rastreio, reembolso, remoção de conteúdo, preços e parâmetros |
-| Tabela única de usuários, papéis reservados, login via BFF reaproveitável | Candidatura e aprovação de parceiros |
-| `Partner`, `PartnerMember`, `ProductionJob`, `ProductionFile`, `Shipment` | Telas e endpoints `/api/partner/...` com `IsPartnerMember` e escopo |
-| `ProductionJob.partner` nulo e atribuível, com cada atribuição em `DomainEvent` | Regra de atribuição: manual e depois automática |
-| Máquina de estados e eventos genéricos | Status do pedido derivado dos jobs |
-| Imagem, modelo, prompt e categoria congelados por item | `PrintPreparationPort` e pipeline que preenche `ProductionFile` |
-| Ledger com tipo `partner_payable` reservado | Repasse a parceiros |
-| Serializers explícitos e regras de PII | Serializer do parceiro: sem e-mail nem CPF do cliente |
+| `assign_order`: atribui o pedido inteiro e congela o ganho | Tela e endpoint para atribuir, reatribuir e retirar |
+| `add_production_file`: sobe o 3MF de um item, em nova versão | Tela de envio do 3MF |
+| `attach_label`: anexa a etiqueta a um pedido pronto | Tela da etiqueta e "marcar entregue" |
+| `invite_partner_member`: cria o login e envia o convite | Cadastro de parceiros e tabela de ganhos (`PartnerRate`) |
+| `PartnerEntry` e `PartnerPayout` | Registrar repasse e ajuste, e o e-mail de repasse pago |
+| `ProductionIssue` | Ver e resolver os problemas reportados |
 
-**Por que entra sem migração destrutiva:** o app novo acrescenta endpoints e telas sobre tabelas que já existem. Pedidos do MVP ficam ligados ao parceiro interno (a própria EuMini), e cada tamanho, arquivo e evento já está registrado por item.
+Até lá, em desenvolvimento, os comandos `dev_tool_partner_create`, `dev_tool_partner_assign` e `dev_tool_partner_label` (só com `DEBUG`) fazem o papel da equipe. Em produção, nenhum parceiro entra antes do app Staff.
 
 ---
 
