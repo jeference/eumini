@@ -1,12 +1,14 @@
-"""Prompts do 2D: um estilo único, montado em camadas (estilo, categoria, pedido do cliente).
+"""Prompts do 2D: um estilo único, montado em camadas (estilo, categoria e o tema opcional).
 
-Aprovados no teste de 19/11 (`docs/prompts/`, rodada r3). Mudar um prompt exige rodar o teste de
-novo. Suba `PROMPT_VERSION` a cada mudança: cada `ProviderTask` guarda a versão e o texto enviado.
+Estilo e categorias aprovados no teste de 19/11 (`docs/prompts/`, rodada r3); temas, no de 25/11.
+Mudar um prompt exige rodar o teste de novo. Suba `PROMPT_VERSION` a cada mudança: cada
+`ProviderTask` guarda a versão e o texto enviado.
 """
 
 from catalog.categories import Category
+from catalog.themes import Theme
 
-PROMPT_VERSION = "2026-11-19"
+PROMPT_VERSION = "2026-11-25"
 
 MAX_PRINT_COLORS = 4
 # Colors we have PLA filament for: name sent to the image model -> hex. Starting values
@@ -54,10 +56,12 @@ _STYLE = (
     "Turn the main subject of this reference image into a 3D model from a modern animated "
     f"family movie: {_LOOK} Keep it recognizably the same: {_KEEP}"
 )
-_STYLE_WITH_REQUEST = (
+# O tema troca acessórios e roupa, então a lista do que manter não inclui a roupa.
+_STYLE_WITH_THEME = (
     "Turn the main subject of this reference image into a 3D model from a modern animated "
-    "family movie, with this one change: {request}. Style: "
-    f"{_LOOK} Apart from that change, keep it recognizably the same: {_KEEP}"
+    "family movie, dressed up for a theme: {theme} Style: "
+    f"{_LOOK} Apart from the theme, keep it recognizably the same: same faces, features, hair and "
+    "distinctive details, and do not add anyone or anything else that is not in the reference."
 )
 
 # Sem estas regras, braços, pernas e dedos saíam finos demais para uma peça de 6 cm.
@@ -148,19 +152,145 @@ _COLOR_PLAN = {
     ),
 }
 
+# --- Tema ---
+# Uma versão por categoria: o gorro no cachorro é diferente do gorro no casal. O tema só põe
+# acessórios e roupa, nunca pessoas ou animais (a classificação da versão mudaria a categoria),
+# e tudo fica grosso e encostado no corpo. Marcas e jogos não são citados: o modelo recusa
+# propriedade intelectual, então o prompt descreve o visual.
+
+_SANTA_HAT = (
+    "a red Santa Claus hat with a thick white fur band and a white pom-pom, fitted snugly on the "
+    "head, with its tip folded down against the side of the hat and the pom-pom resting on it"
+)
+_PET_SANTA_HAT = (
+    "a small red Santa Claus hat with a thick white fur band and a white pom-pom, fitted snugly "
+    "on its head between the ears, with its tip folded down against the hat"
+)
+_SUNGLASSES = "dark aviator sunglasses"
+_MIAMI_SHIRT = "a short-sleeve 1980s Miami-style shirt, worn open at the collar"
+# Apontada para baixo e encostada na coxa: imprimível e sem ameaça na pose.
+_PISTOL = (
+    "a chunky, rounded cartoon pistol held in one hand, pointing at the ground and pressed flat "
+    "against the outside of the thigh, touching it"
+)
+_THEME = {
+    Theme.CHRISTMAS: {
+        Category.PERSON: (
+            f"Christmas. They wear {_SANTA_HAT}, and a cozy red Christmas sweater as their top."
+        ),
+        Category.PET: (
+            f"Christmas. It wears {_PET_SANTA_HAT}, and a small red scarf wrapped snugly around "
+            "its neck."
+        ),
+        Category.COUPLE: (
+            f"Christmas. Both people wear {_SANTA_HAT}, and a cozy red Christmas sweater as their "
+            "top."
+        ),
+        Category.PERSON_PET: (
+            f"Christmas. The person wears {_SANTA_HAT}, and a cozy red Christmas sweater as their "
+            f"top. The animal wears {_PET_SANTA_HAT}."
+        ),
+    },
+    Theme.GTA6: {
+        Category.PERSON: (
+            f"a 1980s Miami crime movie. They wear {_SUNGLASSES} and {_MIAMI_SHIRT}, with "
+            f"{_PISTOL}."
+        ),
+        Category.PET: (
+            f"a 1980s Miami crime movie. It wears {_SUNGLASSES} resting on its face and a small "
+            "bandana tied snugly around its neck."
+        ),
+        Category.COUPLE: (
+            f"a 1980s Miami crime movie. Both people wear {_SUNGLASSES} and {_MIAMI_SHIRT}. One "
+            f"of them has {_PISTOL}; the other's hand stays on their partner."
+        ),
+        Category.PERSON_PET: (
+            f"a 1980s Miami crime movie. The person wears {_SUNGLASSES} and {_MIAMI_SHIRT}, with "
+            f"{_PISTOL}, and the animal sits at their feet pressed against their legs. The "
+            f"animal wears {_SUNGLASSES} resting on its face."
+        ),
+    },
+}
+
+# Com tema, o plano de cores da categoria dá lugar a este: o tema traz as próprias cores e ainda
+# precisa caber nas quatro.
+_THEME_COLOR_PLAN = {
+    Theme.CHRISTMAS: {
+        Category.PERSON: (
+            f"Use {_SKIN}; one dark color (black or brown) shared by the hair, beard, eyebrows, "
+            "eyes, trousers or skirt, shoes and base; red for the Santa hat and the sweater; and "
+            "white for the hat's fur band and pom-pom."
+        ),
+        Category.PET: (
+            "Use the animal's main color; black shared by the eyes, nose and base; red for the "
+            "Santa hat and the scarf; and white for the hat's fur band and pom-pom, also used for "
+            "a light marking, belly, muzzle or chest. Other markings, paws, mouth and tongue reuse "
+            "one of these colors."
+        ),
+        Category.COUPLE: (
+            f"The two people share the same {MAX_PRINT_COLORS} colors: {_SKIN}; one dark color "
+            "(black or brown) shared by both people's hair, eyes, trousers or skirts, shoes and "
+            "the base; red for both Santa hats and both sweaters; and white for the hats' fur "
+            "bands and pom-poms. If their skin tones differ, light skin and brown both count, so "
+            "the fur bands and pom-poms reuse light skin."
+        ),
+        Category.PERSON_PET: (
+            f"The person and the animal share the same {MAX_PRINT_COLORS} colors: {_SKIN}; one "
+            "dark color (black or brown) shared by the person's hair, eyes, trousers and shoes, "
+            "the animal's eyes and nose, and the base; red for both Santa hats and the sweater; "
+            "and the animal's fur color, also used for both hats' fur bands and pom-poms. The "
+            "animal's markings, mouth and tongue reuse one of these colors."
+        ),
+    },
+    Theme.GTA6: {
+        Category.PERSON: (
+            f"Use {_SKIN}; black shared by the hair, eyebrows, eyes, sunglasses, pistol, shoes "
+            "and base; pink for the shirt; and white for the trousers or skirt."
+        ),
+        Category.PET: (
+            "Use the animal's main color; a second color for its largest marking, or for the "
+            "belly, muzzle or chest; black shared by the eyes, nose, sunglasses and base; and pink "
+            "for the bandana. Beak, paws, claws, mouth and tongue reuse one of these colors."
+        ),
+        Category.COUPLE: (
+            f"The two people share the same {MAX_PRINT_COLORS} colors: {_SKIN}; black shared by "
+            "both people's hair, eyes, sunglasses, the pistol, belts, shoes and the base; pink for "
+            "all of one person's clothes, trousers or skirt included; and purple for all of the "
+            "other person's clothes, trousers or skirt included. If their skin tones differ, light "
+            "skin and brown both count, so both outfits are pink."
+        ),
+        Category.PERSON_PET: (
+            f"The person and the animal share the same {MAX_PRINT_COLORS} colors: {_SKIN}; black "
+            "shared by the person's hair, eyes and shoes, both pairs of sunglasses, the pistol, "
+            "the animal's eyes and nose, and the base; pink for all of the person's clothes; and "
+            "one color for the animal's fur, feathers or coat. The animal's markings, mouth and "
+            "tongue reuse one of these colors."
+        ),
+    },
+}
+_COLOR_PLAN_END_WITH_THEME = (
+    " Do not add any person, animal or object that is not in the reference, apart from the "
+    "theme's accessories."
+)
+
 # Sent with the current image as reference. Tested 2026-11-01: vague requests ("make it
 # prettier") otherwise lose the white background, which print preparation relies on.
 _EDIT = "{instruction}. Keep everything else exactly the same, on a plain white background"
 
 
-def photo_prompt(*, category: str, request: str = "") -> str:
-    """A foto do cliente vira a imagem da figura na categoria detectada."""
+def photo_prompt(*, category: str, theme: str = "") -> str:
+    """A foto do cliente vira a imagem da figura na categoria detectada, com o tema, se houver."""
     category = Category(category)
-    request = request.strip().rstrip(".")
-    style = _STYLE_WITH_REQUEST.replace("{request}", request) if request else _STYLE
+    if theme:
+        theme = Theme(theme)
+        style = _STYLE_WITH_THEME.replace("{theme}", _THEME[theme][category])
+        color_plan = _THEME_COLOR_PLAN[theme][category] + _COLOR_PLAN_END_WITH_THEME
+    else:
+        style = _STYLE
+        color_plan = _COLOR_PLAN[category] + _COLOR_PLAN_END
     return (
         f"{_COLOR_RULE}{style} {_CATEGORY[category]} {_PRINT_RULES} {_FRAME}"
-        f"{_COLOR_PLAN_START}{_COLOR_PLAN[category]}{_COLOR_PLAN_END}"
+        f"{_COLOR_PLAN_START}{color_plan}"
     )
 
 

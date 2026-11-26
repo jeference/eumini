@@ -211,7 +211,7 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 | Entidade | Campos principais | Uso |
 |---|---|---|
 | `Creation` | user **ou** visitor, status, categoria pedida (da página), categoria da foto, motivo da recusa, versão atual, excluída em | ● |
-| `CreationInput` | creation, pedido de alteração do cliente, foto (`Asset`, obrigatória), versão dos termos | ● |
+| `CreationInput` | creation, tema opcional, foto (`Asset`, obrigatória), versão dos termos | ● |
 | `ImageVersion` | creation, parent (árvore de versões), origem (`photo`, `edit`), instrução, asset, tarefa, categoria ou motivo de recusa (os dois vazios até ser classificada) | ● |
 | `Classification` | creation, versão (nula quando é a foto), tarefa, categoria pedida, resultado (categoria vendida ou motivo de recusa), confiança e probabilidades por classe de quem aparece, probabilidade de personagem, decisão (`accepted`, `rejected`), modelo, versão do conjunto de perguntas | ● |
 | `WaitlistEntry` | e-mail, classificação que recusou, motivo, ator, consentimento (versão do texto e data), avisado em | ● |
@@ -229,7 +229,7 @@ Todo modelo herda `BaseModel` (`id` interno, `globalid` UUID, `created_at`, `upd
 
 **Categorias são um enum em código:** `person`, `pet`, `couple`, `person_pet`. Os motivos de recusa também: `three_or_more_people`, `multiple_pets`, `group_with_pets`, `no_subject`, `protected_character`. Os quatro primeiros seguem a taxonomia da Pockella.
 
-**O estilo e os prompts ficam em código** (`catalog/prompts.py`), com uma versão explícita, montados em camadas: o estilo único, mais o bloco da categoria, mais o pedido do cliente. Os templates futuros entram como mais uma camada, entre a categoria e o pedido ([PRD](PRD.md#templates)). Mudar um prompt exige novo deploy e reteste contra as referências, e cada `ProviderTask` guarda o texto final enviado. O estilo único é o que hoje se chama Pixar no código: o nome interno não importa, porque o cliente nunca vê o estilo. Os estilos Livre, Mini Pop e Chibi saem do código, sem camada de compatibilidade.
+**O estilo e os prompts ficam em código** (`catalog/prompts.py`), com uma versão explícita, montados em camadas: o estilo único, mais o bloco da categoria, mais o bloco do tema, se houver ([PRD](PRD.md#temas)). **Temas também são um enum em código** (`catalog/themes.py`: `christmas`, `gta6`), com um bloco e um plano de cores por categoria em `catalog/prompts.py`. O envio da foto não tem pedido em texto. Mudar um prompt exige novo deploy e reteste contra as referências, e cada `ProviderTask` guarda o texto final enviado. O estilo único é o que hoje se chama Pixar no código: o nome interno não importa, porque o cliente nunca vê o estilo. Os estilos Livre, Mini Pop e Chibi saem do código, sem camada de compatibilidade.
 
 ### Pedido (`orders`, `shipping`)
 
@@ -600,7 +600,7 @@ apps/web/consumer/src/
 | Rota | Função |
 |---|---|
 | `/` | Início, com as quatro categorias logo na primeira dobra |
-| `/criar/[categoria]` | Página da categoria (`pessoa`, `pet`, `casal`, `pessoa-e-pet`), com exemplos, preço "a partir de" e o envio de foto. Templates futuros ganham rotas próprias sobre o mesmo componente |
+| `/criar/[categoria]` | Página da categoria (`pessoa`, `pet`, `casal`, `pessoa-e-pet`), com exemplos, preço "a partir de" e o envio de foto. O tema é escolhido em cards abaixo da foto; temas podem ganhar rotas próprias sobre o mesmo componente |
 | `/criacoes` | Minhas criações |
 | `/criacoes/[id]` | **Hub:** mostra a geração ou, com a imagem pronta, a compra ao lado dela |
 | `/carrinho`, `/checkout` | Carrinho e checkout. `?item=` limita o checkout a um item (Comprar agora). `?etapa=` guarda a etapa (dados, entrega, pagar) |
@@ -677,7 +677,7 @@ Valores vêm do protótipo: `accent #7C3AED`, `accent-soft #F0E9FF`, `highlight 
 | `GET /api/me/addresses/` | Conta | Endereços salvos, para o checkout |
 | `GET /api/quota/` | Ator | Cota restante |
 | `GET /api/catalog/products/` | Público | Categorias, com tamanhos ativos e preços |
-| `GET, POST /api/creations/` | Ator | Listar e criar (foto e categoria pedida obrigatórias, pedido de alteração opcional) |
+| `GET, POST /api/creations/` | Ator | Listar e criar (foto e categoria pedida obrigatórias, tema opcional) |
 | `POST /api/waitlist/` | Ator | Entrar na lista de espera a partir de uma criação recusada; o envio é o consentimento |
 | `GET, DELETE /api/creations/{id}/` | Dono | Detalhe (status, versões, edições) e exclusão |
 | `POST /api/creations/{id}/retry/` | Dono | Tentar de novo |

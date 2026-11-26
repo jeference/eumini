@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@eumini/ui/button";
-import { Textarea } from "@eumini/ui/input";
 import { formatBRL } from "@eumini/ui/lib/format";
 import { cn } from "@eumini/ui/lib/utils";
+import { RadioCard } from "@eumini/ui/radio-card";
 import { CircleCheck, ImagePlus, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ import { toast } from "sonner";
 
 import { type Category, categoryInfo } from "@/features/catalog/categories";
 import { useProduct } from "@/features/catalog/hooks";
+import { type Theme, THEMES } from "@/features/catalog/themes";
 import { useStartCreation } from "@/features/creations/hooks";
 import { messageOf } from "@/lib/errors";
 
@@ -34,16 +35,15 @@ export function PromptStep({ category }: { category: Category }) {
   const start = useStartCreation();
   const info = categoryInfo(category);
   const product = useProduct(category);
-  const [prompt, setPrompt] = useState("");
+  const [theme, setTheme] = useState<Theme | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const trimmed = prompt.trim();
 
   function submit() {
     if (!photo || start.isPending) return;
     start.mutate(
-      { text: trimmed, requestedCategory: category, photo },
+      { requestedCategory: category, theme, photo },
       {
         onSuccess: (creation) => router.push(`/criacoes/${creation.id}`),
         onError: (error) => toast.error(messageOf(error)),
@@ -127,19 +127,7 @@ export function PromptStep({ category }: { category: Category }) {
               onRemove={() => setPhoto(null)}
             />
           </div>
-          <Textarea
-            value={prompt}
-            onChange={(event) => setPrompt(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) submit();
-            }}
-            rows={2}
-            maxLength={1000}
-            autoFocus
-            aria-label="Pedido de mudança"
-            placeholder="Opcional: peça uma mudança, como “com um chapéu de mago”"
-            className="p-4 lg:text-base"
-          />
+          <ThemePicker noThemeImage={info.image} value={theme} onChange={setTheme} />
 
           {isDragging && (
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -163,6 +151,46 @@ export function PromptStep({ category }: { category: Category }) {
         </Button>
       </form>
     </div>
+  );
+}
+
+/** Tema opcional, abaixo da foto. "Sem tema" mostra a miniatura da própria categoria. */
+function ThemePicker({
+  noThemeImage,
+  value,
+  onChange,
+}: {
+  noThemeImage: string;
+  value: Theme | null;
+  onChange: (theme: Theme | null) => void;
+}) {
+  const options = [{ id: null, label: "Sem tema", image: noThemeImage }, ...THEMES];
+  return (
+    <fieldset>
+      <legend className="mb-2 text-center text-sm font-medium">Escolha um tema</legend>
+      <div className="grid grid-cols-3 gap-2">
+        {options.map((option) => (
+          <RadioCard
+            key={option.id ?? "none"}
+            name="theme"
+            checked={value === option.id}
+            onSelect={() => onChange(option.id)}
+            indicator={false}
+            className="justify-center p-2 sm:p-2.5"
+          >
+            <span className="flex flex-col items-center gap-1.5">
+              {/* eslint-disable-next-line @next/next/no-img-element -- miniatura do bucket público */}
+              <img
+                src={option.image}
+                alt=""
+                className="size-12 rounded-xl object-contain sm:size-16"
+              />
+              <span className="text-sm font-medium">{option.label}</span>
+            </span>
+          </RadioCard>
+        ))}
+      </div>
+    </fieldset>
   );
 }
 
@@ -191,7 +219,7 @@ function PhotoPicker({
 
   return (
     // A altura da tela define o tamanho, para o formulário inteiro caber sem rolar até o Gerar.
-    <div className="relative size-[clamp(5.5rem,calc(100svh-30rem),13rem)] sm:size-[clamp(5.5rem,calc(100svh-31.5rem),13rem)]">
+    <div className="relative size-[clamp(5.5rem,calc(100svh-33rem),13rem)] sm:size-[clamp(5.5rem,calc(100svh-36rem),13rem)]">
       <button
         type="button"
         onClick={onPick}

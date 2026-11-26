@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 
 from catalog.categories import Category
+from catalog.themes import Theme
 from common.models import BaseModel
 
 # Categoria vendida ou motivo de recusa: o resultado de uma classificação.
@@ -50,7 +51,7 @@ class Creation(BaseModel):
 
 class CreationInput(BaseModel):
     creation = models.OneToOneField(Creation, on_delete=models.CASCADE, related_name="input")
-    text = models.TextField(blank=True)
+    theme = models.CharField(max_length=20, choices=Theme.choices, blank=True)
     photo = models.ForeignKey("media.Asset", on_delete=models.PROTECT, related_name="+")
     original_photo = models.ForeignKey(
         "media.Asset", null=True, blank=True, on_delete=models.PROTECT, related_name="+"

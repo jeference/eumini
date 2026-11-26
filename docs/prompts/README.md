@@ -49,7 +49,22 @@ As camadas aprovadas (estilo, categoria, regras de impressão, base e plano de c
 - **A r3 vai para produção** (19/11): estilo, bloco da categoria, regras de impressão, plano de cores por categoria e base na cor escura da figura.
 - **O limite de 4 cores vale para todas as categorias**, inclusive casal e pessoa com pet.
 
+## Temas
+
+| | |
+|---|---|
+| **Data** | 25/11/2026 |
+| **Objetivo** | Testar os temas Natal e GTA VI (`catalog/themes.py`), com um bloco e um plano de cores por categoria |
+| **Resultado** | 10 de 10 imagens geradas no GPT Image 2, sem recusa, e todas mantiveram a categoria (Jev) |
+| **Custo** | US$ 0,22 |
+
+- **Casos:** um por categoria (`f-pessoa-mulher`, `f-pet-cachorro`, `f-casal-parque`, `f-pessoa-pet-abraco`). Para rodar: `teste_prompts.py <rodada> --tema <christmas|gta6> [id ...]`.
+- **Como entra no prompt:** o tema ocupa o lugar do antigo pedido do cliente ("dressed up for a theme"), porque o estilo sem tema manda manter a roupa e não acrescentar nada. Com tema, o plano de cores do tema substitui o da categoria.
+- **Natal (t1-natal):** gorro vermelho com barra e pompom brancos em todos, inclusive no cachorro; blusa vermelha nas pessoas e cachecol no pet. As figuras ficaram em 4 cores (pele, escuro, vermelho, branco).
+- **GTA VI (t1-gta6, t2-gta6):** óculos escuros e camisa rosa ou roxa estilo Miami anos 80; a pessoa segura uma pistola apontada para baixo. O pet ganhou óculos e bandana rosa, sem arma. O prompt não cita o jogo nem a cidade, para evitar recusa por propriedade intelectual, e nenhuma imagem foi recusada.
+- **Ajuste da t1 para a t2:** no casal, a calça branca e o cinto cinza passavam de 4 cores, e a pistola ficava solta da perna. A t2 pede a roupa inteira de cada pessoa numa cor só, cinto preto, e a pistola encostada na coxa. As duas coisas foram corrigidas.
+
 ## Pendente
 
 - Apertar o plano de cores dos casos de duas figuras, que ainda passam de 4.
-- Testar com pedido do cliente e com edição.
+- Testar a edição.

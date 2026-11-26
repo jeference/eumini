@@ -1,0 +1,37 @@
+{
+ "resumo": {
+  "rodada": "t2-gta6",
+  "tema": "gta6",
+  "casos": 2,
+  "geradas": 2,
+  "no_reserva": 0,
+  "categoria_mantida": 2,
+  "custo_total_usd": 0.0369
+ },
+ "resultados": [
+  {
+   "id": "f-pessoa-homem-moderno",
+   "categoria": "person",
+   "prompt": "This figurine is 3D printed, and only these filament colors exist: white (#FFFFFF), black (#000000), gray (#8E9089), red (#C12E1F), orange (#FF6A13), yellow (#F4EE2A), green (#00AE42), blue (#0A2989), purple (#5E43B7), pink (#F5547C), brown (#9D432C), beige (#F7E6DE), light skin (#EBC8B0). No other color can be printed. Use at most 4 of them on the whole figurine, counting the base and small details such as eyes, mouth and buttons. Do not reproduce colors from the request or the reference that are not on the list, such as turquoise, teal, gold, tan or light blue: repaint them in the closest listed color, even if that changes how it looks. Each part is one uniform matte color but stays a sculpted 3D form with volume, never a flat drawing. The white background does not count as a color. Do not draw the list, color swatches or any text.\n\nTurn the main subject of this reference image into a 3D model from a modern animated family movie, dressed up for a theme: a 1980s Miami crime movie. They wear dark aviator sunglasses and a short-sleeve 1980s Miami-style shirt, worn open at the collar, with a chunky, rounded cartoon pistol held in one hand, pointing at the ground and pressed flat against the outside of the thigh, touching it. Style: soft rounded stylized forms, clean smooth materials, a warm friendly look. Apart from the theme, keep it recognizably the same: same faces, features, hair and distinctive details, and do not add anyone or anything else that is not in the reference. The subject is one person. Give them stylized proportions about four heads tall, a head only slightly larger than realistic and large expressive eyes, and show them full body, standing on both feet with the arms relaxed at the sides, even if the photo shows only part of them. It will be 3D printed as a small figurine, so it must be sturdy: chunky simplified forms, thick arms and legs, simple hands with the fingers together, kept close to the body or touching it, nothing thin sticking out, and ears, tails and accessories attached to the body. Ignore the background and whatever is underneath the subject. Whole subject alone, centered and large, with a clear white margin on every side so that nothing touches the edge of the image, standing on a small plain round base in the figure's dark color, isolated on a plain white background with a soft contact shadow.\n\nColor plan, more important than color accuracy: the finished figurine, base included, uses exactly 4 colors from the list, no more, and each part is one flat color with no prints, patterns, stripes or logos. These rules change only the colors, never what the subject is: every shape and feature above stays. Use skin (light skin, or brown for dark skin); black shared by the hair, eyebrows, eyes, sunglasses, pistol, shoes and base; pink for the shirt; and white for the trousers or skirt. Do not add any person, animal or object that is not in the reference, apart from the theme's accessories.",
+   "tentativas": [],
+   "modelo": "openai:gpt-image@2",
+   "custo_usd": 0.014224,
+   "jev": "person",
+   "jev_personagem": 0.59,
+   "categoria_mantida": true,
+   "segundos": 18.2
+  },
+  {
+   "id": "f-casal-parque",
+   "categoria": "couple",
+   "prompt": "This figurine is 3D printed, and only these filament colors exist: white (#FFFFFF), black (#000000), gray (#8E9089), red (#C12E1F), orange (#FF6A13), yellow (#F4EE2A), green (#00AE42), blue (#0A2989), purple (#5E43B7), pink (#F5547C), brown (#9D432C), beige (#F7E6DE), light skin (#EBC8B0). No other color can be printed. Use at most 4 of them on the whole figurine, counting the base and small details such as eyes, mouth and buttons. Do not reproduce colors from the request or the reference that are not on the list, such as turquoise, teal, gold, tan or light blue: repaint them in the closest listed color, even if that changes how it looks. Each part is one uniform matte color but stays a sculpted 3D form with volume, never a flat drawing. The white background does not count as a color. Do not draw the list, color swatches or any text.\n\nTurn the main subject of this reference image into a 3D model from a modern animated family movie, dressed up for a theme: a 1980s Miami crime movie. Both people wear dark aviator sunglasses and a short-sleeve 1980s Miami-style shirt, worn open at the collar. One of them has a chunky, rounded cartoon pistol held in one hand, pointing at the ground and pressed flat against the outside of the thigh, touching it; the other's hand stays on their partner. Style: soft rounded stylized forms, clean smooth materials, a warm friendly look. Apart from the theme, keep it recognizably the same: same faces, features, hair and distinctive details, and do not add anyone or anything else that is not in the reference. The subject is two people, made as one single figurine. Both are shown full body, standing side by side and touching, with an arm around each other or holding hands, so that the two figures are joined into one piece. Give both stylized proportions about four heads tall, a head only slightly larger than realistic and large expressive eyes. The two figures share the same few colors. It will be 3D printed as a small figurine, so it must be sturdy: chunky simplified forms, thick arms and legs, simple hands with the fingers together, kept close to the body or touching it, nothing thin sticking out, and ears, tails and accessories attached to the body. Ignore the background and whatever is underneath the subject. Whole subject alone, centered and large, with a clear white margin on every side so that nothing touches the edge of the image, standing on a small plain round base in the figure's dark color, isolated on a plain white background with a soft contact shadow.\n\nColor plan, more important than color accuracy: the finished figurine, base included, uses exactly 4 colors from the list, no more, and each part is one flat color with no prints, patterns, stripes or logos. These rules change only the colors, never what the subject is: every shape and feature above stays. The two people share the same 4 colors: skin (light skin, or brown for dark skin); black shared by both people's hair, eyes, sunglasses, the pistol, belts, shoes and the base; pink for all of one person's clothes, trousers or skirt included; and purple for all of the other person's clothes, trousers or skirt included. If their skin tones differ, light skin and brown both count, so both outfits are pink. Do not add any person, animal or object that is not in the reference, apart from the theme's accessories.",
+   "tentativas": [],
+   "modelo": "openai:gpt-image@2",
+   "custo_usd": 0.022682,
+   "jev": "couple",
+   "jev_personagem": 0.08,
+   "categoria_mantida": true,
+   "segundos": 21.8
+  }
+ ]
+}

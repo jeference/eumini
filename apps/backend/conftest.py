@@ -103,19 +103,18 @@ def photo_upload(size=(64, 64), image_format="PNG", name="foto.png"):
     return buffer
 
 
-def creation_payload(text="um dragão azul", **fields):
-    """Corpo de `POST /api/creations/`: foto, categoria da página e o pedido de alteração."""
+def creation_payload(**fields):
+    """Corpo de `POST /api/creations/`: foto, categoria da página e, se quiser, o tema."""
     return {
-        "text": text,
         "requested_category": "person",
         "photo": photo_upload(),
         **fields,
     }
 
 
-def make_ready_creation(client, text="um dragão azul"):
+def make_ready_creation(client, **fields):
     """Criação pronta para comprar, passando pela API e pelo worker."""
-    response = client.post("/api/creations/", creation_payload(text), format="multipart")
+    response = client.post("/api/creations/", creation_payload(**fields), format="multipart")
     assert response.status_code == 202, response.data
     creation_id = response.data["id"]
     drain_worker()

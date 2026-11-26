@@ -1,7 +1,10 @@
 """Teste dos prompts por categoria no estilo único (o antigo "pixar").
 
 Usa o prompt de produção (`apps/backend/catalog/prompts.py`). Uso, a partir da raiz:
-    apps/backend/.venv/Scripts/python.exe -I docs/prompts/teste_prompts.py <rodada> [id ...]
+    apps/backend/.venv/Scripts/python.exe -I docs/prompts/teste_prompts.py \
+        <rodada> [--tema <id>] [id ...]
+
+Com `--tema` (`christmas`, `gta6`), o prompt leva o tema de `catalog/themes.py`.
 
 Gera uma imagem por caso de `casos.json` na Runware, como o worker faz (modelo principal e,
 se falhar, o reserva), classifica a imagem gerada com o Jev e grava em
@@ -36,8 +39,11 @@ TAMANHO = 1024
 # anterior (r0 a r3) fica em `resultados/<rodada>/resultado.json`, no campo `prompt`.
 
 
+TEMA = ""
+
+
 def prompt_da_rodada(categoria: str) -> str:
-    return P.photo_prompt(category=categoria)
+    return P.photo_prompt(category=categoria, theme=TEMA)
 
 
 # --- Runware ----------------------------------------------------------------------------
@@ -150,8 +156,14 @@ def folha(pasta: Path, casos: list[dict], resultados: list[dict]) -> None:
 
 
 def main() -> None:
-    rodada = sys.argv[1]
-    filtro = set(sys.argv[2:])
+    global TEMA
+    args = sys.argv[1:]
+    if "--tema" in args:
+        i = args.index("--tema")
+        TEMA = args[i + 1]
+        del args[i : i + 2]
+    rodada = args[0]
+    filtro = set(args[1:])
     todos = json.loads((BASE / "casos.json").read_text(encoding="utf-8"))
     casos = [c for c in todos if c["id"] in filtro] if filtro else todos
     pasta = BASE / "resultados" / rodada
@@ -176,6 +188,7 @@ def main() -> None:
     custos = [r["custo_usd"] for r in resultados if r.get("custo_usd")]
     resumo = {
         "rodada": rodada,
+        "tema": TEMA,
         "casos": len(resultados),
         "geradas": sum("modelo" in r for r in resultados),
         "no_reserva": sum(r.get("modelo") == MODELOS[1] for r in resultados),
@@ -186,7 +199,7 @@ def main() -> None:
         json.dumps({"resumo": resumo, "resultados": resultados}, ensure_ascii=False, indent=1),
         encoding="utf-8",
     )
-    folha(pasta, todos, resultados)
+    folha(pasta, [c for c in todos if c["id"] in por_id], resultados)
     print(json.dumps(resumo, ensure_ascii=False, indent=1))
 
 

@@ -11,8 +11,8 @@ from creations.models import Creation, ProviderTask
 from integrations import ports
 
 
-def _create(client, text="um gato"):
-    return client.post("/api/creations/", creation_payload(text), format="multipart")
+def _create(client):
+    return client.post("/api/creations/", creation_payload(), format="multipart")
 
 
 def test_claim_skips_locked_and_future_tasks(visitor_client):

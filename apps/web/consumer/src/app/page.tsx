@@ -3,7 +3,7 @@ import { CategoryPicker } from "@/features/catalog/components/category-picker";
 const STEPS = [
   {
     title: "Envie uma foto",
-    text: "Escolha a miniatura e envie uma foto. A IA cria a imagem em segundos. Se quiser, peça uma mudança.",
+    text: "Escolha a miniatura e envie uma foto. Se quiser, escolha um tema, como Natal. A IA cria a imagem em segundos.",
   },
   {
     title: "Ajuste até ficar do seu jeito",

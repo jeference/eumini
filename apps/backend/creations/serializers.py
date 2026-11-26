@@ -6,6 +6,7 @@ from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from catalog.categories import Category, RejectionReason
+from catalog.themes import Theme
 from common.serializers import GlobalIdSerializer
 from creations.fsm import TASK_ACTIVE
 from creations.models import Creation, ImageVersion, ProviderTask
@@ -76,11 +77,13 @@ class CreationErrorSerializer(serializers.Serializer):
 class CreationListSerializer(GlobalIdSerializer):
     category = serializers.ChoiceField(choices=Category.choices, allow_blank=True, read_only=True)
     thumbnail_url = serializers.SerializerMethodField()
-    text = serializers.CharField(source="input.text", read_only=True)
+    theme = serializers.ChoiceField(
+        source="input.theme", choices=Theme.choices, allow_blank=True, read_only=True
+    )
 
     class Meta:
         model = Creation
-        fields = ["id", "status", "category", "text", "thumbnail_url", "created_at"]
+        fields = ["id", "status", "category", "theme", "thumbnail_url", "created_at"]
         read_only_fields = fields
 
     def get_thumbnail_url(self, creation) -> str:
@@ -89,7 +92,9 @@ class CreationListSerializer(GlobalIdSerializer):
 
 
 class CreationDetailSerializer(GlobalIdSerializer):
-    text = serializers.CharField(source="input.text", read_only=True)
+    theme = serializers.ChoiceField(
+        source="input.theme", choices=Theme.choices, allow_blank=True, read_only=True
+    )
     category = serializers.ChoiceField(choices=Category.choices, allow_blank=True, read_only=True)
     rejection_reason = serializers.ChoiceField(
         choices=RejectionReason.choices, allow_blank=True, read_only=True
@@ -111,7 +116,7 @@ class CreationDetailSerializer(GlobalIdSerializer):
             "requested_category",
             "category",
             "rejection_reason",
-            "text",
+            "theme",
             "active_started_at",
             "current_version_id",
             "versions",
@@ -156,8 +161,8 @@ class CreationDetailSerializer(GlobalIdSerializer):
 
 
 class CreationCreateSerializer(serializers.Serializer):
-    text = serializers.CharField(required=False, allow_blank=True, max_length=1000)
     requested_category = serializers.ChoiceField(choices=Category.choices)
+    theme = serializers.ChoiceField(choices=Theme.choices, required=False, allow_blank=True)
     photo = serializers.ImageField()
 
 

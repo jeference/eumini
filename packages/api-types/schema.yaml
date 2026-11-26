@@ -1154,11 +1154,12 @@ components:
     CreationCreateRequest:
       type: object
       properties:
-        text:
-          type: string
-          maxLength: 1000
         requested_category:
           $ref: '#/components/schemas/CategoryEnum'
+        theme:
+          oneOf:
+          - $ref: '#/components/schemas/ThemeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
         photo:
           type: string
           format: binary
@@ -1190,9 +1191,11 @@ components:
           oneOf:
           - $ref: '#/components/schemas/RejectionReasonEnum'
           - $ref: '#/components/schemas/BlankEnum'
-        text:
-          type: string
+        theme:
           readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ThemeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
         active_started_at:
           type: string
           format: date-time
@@ -1239,7 +1242,7 @@ components:
       - rejection_reason
       - requested_category
       - status
-      - text
+      - theme
       - versions
     CreationError:
       type: object
@@ -1267,9 +1270,11 @@ components:
           oneOf:
           - $ref: '#/components/schemas/CategoryEnum'
           - $ref: '#/components/schemas/BlankEnum'
-        text:
-          type: string
+        theme:
           readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ThemeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
         thumbnail_url:
           type: string
           readOnly: true
@@ -1282,7 +1287,7 @@ components:
       - created_at
       - id
       - status
-      - text
+      - theme
       - thumbnail_url
     CreationStatusEnum:
       enum:
@@ -2170,6 +2175,14 @@ components:
       - price_cents
       - service_name
       - shipping_days
+    ThemeEnum:
+      enum:
+      - christmas
+      - gta6
+      type: string
+      description: |-
+        * `christmas` - Natal
+        * `gta6` - GTA VI
     TokenPair:
       type: object
       properties:

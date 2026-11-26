@@ -694,8 +694,8 @@ export interface components {
             orders: number;
         };
         CreationCreateRequest: {
-            text?: string;
             requested_category: components["schemas"]["CategoryEnum"];
+            theme?: components["schemas"]["ThemeEnum"] | components["schemas"]["BlankEnum"];
             /** Format: binary */
             photo: string;
         };
@@ -706,7 +706,7 @@ export interface components {
             readonly requested_category: components["schemas"]["CategoryEnum"];
             readonly category: components["schemas"]["CategoryEnum"] | components["schemas"]["BlankEnum"];
             readonly rejection_reason: components["schemas"]["RejectionReasonEnum"] | components["schemas"]["BlankEnum"];
-            readonly text: string;
+            readonly theme: components["schemas"]["ThemeEnum"] | components["schemas"]["BlankEnum"];
             /**
              * Format: date-time
              * @description Início da etapa em andamento: o tempo na tela sobrevive a recarregar a página.
@@ -730,7 +730,7 @@ export interface components {
             readonly id: string;
             readonly status: components["schemas"]["CreationStatusEnum"];
             readonly category: components["schemas"]["CategoryEnum"] | components["schemas"]["BlankEnum"];
-            readonly text: string;
+            readonly theme: components["schemas"]["ThemeEnum"] | components["schemas"]["BlankEnum"];
             readonly thumbnail_url: string;
             /** Format: date-time */
             readonly created_at: string;
@@ -1078,6 +1078,12 @@ export interface components {
             /** Format: date-time */
             readonly expires_at: string;
         };
+        /**
+         * @description * `christmas` - Natal
+         *     * `gta6` - GTA VI
+         * @enum {string}
+         */
+        ThemeEnum: "christmas" | "gta6";
         TokenPair: {
             access: string;
             refresh: string;

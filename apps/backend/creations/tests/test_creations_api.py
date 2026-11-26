@@ -6,16 +6,16 @@ from media.models import Asset
 
 
 def _create(client, **fields):
-    payload = creation_payload(**{"text": "um gato", **fields})
-    return client.post("/api/creations/", payload, format="multipart")
+    return client.post("/api/creations/", creation_payload(**fields), format="multipart")
 
 
-def test_create_from_photo_and_request_is_ready_to_buy(visitor_client):
-    response = _create(visitor_client)
+def test_create_from_photo_and_theme_is_ready_to_buy(visitor_client):
+    response = _create(visitor_client, theme="christmas")
     assert response.status_code == 202
     assert response.data["status"] == "classifying"
     assert response.data["requested_category"] == "person"
     assert response.data["is_generating"] is True
+    assert response.data["theme"] == "christmas"
     drain_worker()
     detail = visitor_client.get(f"/api/creations/{response.data['id']}/").data
     assert detail["status"] == "ready"
@@ -33,7 +33,7 @@ def test_create_from_photo_and_request_is_ready_to_buy(visitor_client):
         (ProviderTask.Kind.CLASSIFY, True),
     ]
     generate = tasks[1]
-    assert "um gato" in generate.rendered_prompt and generate.prompt_version
+    assert "Santa Claus hat" in generate.rendered_prompt and generate.prompt_version
     assert all(t.status == ProviderTask.Status.SUCCEEDED for t in tasks)
 
 
@@ -60,7 +60,7 @@ def test_create_accepts_iphone_heic_photo(visitor_client):
 
 def test_create_requires_photo(visitor_client):
     response = visitor_client.post(
-        "/api/creations/", {"text": "um gato", "requested_category": "person"}, format="multipart"
+        "/api/creations/", {"requested_category": "person"}, format="multipart"
     )
     assert response.status_code == 400
     assert not ProviderTask.objects.exists()
@@ -72,13 +72,24 @@ def test_invalid_category(visitor_client):
     assert not ProviderTask.objects.exists()
 
 
-def test_photo_without_request(visitor_client):
-    response = _create(visitor_client, text="")
+def test_invalid_theme(visitor_client):
+    response = _create(visitor_client, theme="inexistente")
+    assert response.status_code == 400
+    assert not ProviderTask.objects.exists()
+
+
+def test_photo_without_theme(visitor_client):
+    response = _create(visitor_client)
     assert response.status_code == 202, response.data
+    assert response.data["theme"] == ""
     drain_worker()
     detail = visitor_client.get(f"/api/creations/{response.data['id']}/").data
     assert detail["status"] == "ready"
     assert detail["versions"][0]["origin"] == "photo"
+    generate = ProviderTask.objects.get(
+        creation__globalid=response.data["id"], kind=ProviderTask.Kind.GENERATE
+    )
+    assert "theme" not in generate.rendered_prompt
 
 
 def test_other_visitor_cannot_see_or_act(visitor_client, other_visitor_client, user_client):
@@ -97,8 +108,9 @@ def test_list_is_scoped_and_paginated(visitor_client):
     assert data["results"][0]["status"] == "classifying"
 
 
-def test_content_refusal_shows_message_and_releases_quota(visitor_client):
-    creation_id = _create(visitor_client, text="__recusar__").data["id"]
+def test_content_refusal_shows_message_and_releases_quota(visitor_client, settings):
+    settings.STUB_IMAGE_ERROR = "__recusar__"
+    creation_id = _create(visitor_client).data["id"]
     drain_worker()
     detail = visitor_client.get(f"/api/creations/{creation_id}/").data
     assert detail["status"] == "failed"
@@ -111,8 +123,9 @@ def test_content_refusal_shows_message_and_releases_quota(visitor_client):
     assert visitor_client.get("/api/quota/").data["image"]["used"] == 0
 
 
-def test_provider_failure_retries_then_fails_and_user_can_retry(visitor_client):
-    creation_id = _create(visitor_client, text="__falhar__").data["id"]
+def test_provider_failure_retries_then_fails_and_user_can_retry(visitor_client, settings):
+    settings.STUB_IMAGE_ERROR = "__falhar__"
+    creation_id = _create(visitor_client).data["id"]
     drain_worker()
     task = ProviderTask.objects.get(creation__globalid=creation_id, kind=ProviderTask.Kind.GENERATE)
     assert task.attempts == 3
@@ -145,8 +158,9 @@ def test_main_model_generates_and_edits(visitor_client):
     assert _edit_task_model(visitor_client, detail) == "stub-image"
 
 
-def test_fallback_model_takes_over_and_keeps_the_edits(visitor_client):
-    detail = make_ready_creation(visitor_client, text="__recusar_principal__")
+def test_fallback_model_takes_over_and_keeps_the_edits(visitor_client, settings):
+    settings.STUB_IMAGE_ERROR = "__recusar_principal__"
+    detail = make_ready_creation(visitor_client)
     photo = ProviderTask.objects.get(
         creation__globalid=detail["id"], kind=ProviderTask.Kind.GENERATE
     )

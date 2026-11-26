@@ -37,7 +37,10 @@ AWS_CLI_WINDOWS = Path(r"C:\Program Files\Amazon\AWSCLIV2\aws.exe")
 # acesso a ele: só este script grava, com a sessão do `aws login`.
 ASSETS_BUCKET = "eumini-assets"
 # Prefixo no bucket -> pasta com os originais no repositório.
-ASSET_FOLDERS = {"categories": BACKEND_DIR.parent.parent / "docs/assets-plataforma/categorias"}
+ASSET_FOLDERS = {
+    "categories": BACKEND_DIR.parent.parent / "docs/assets-plataforma/categorias",
+    "themes": BACKEND_DIR.parent.parent / "docs/assets-plataforma/temas",
+}
 ASSET_TYPES = {".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg"}
 # Os nomes levam versão (`person-v1.webp`): trocar a imagem é subir outro nome.
 ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable"

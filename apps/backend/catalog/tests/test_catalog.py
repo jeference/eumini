@@ -5,6 +5,7 @@ import pytest
 from catalog import prompts
 from catalog.categories import Category
 from catalog.models import ProductPrice, ProductSize
+from catalog.themes import Theme
 
 
 def _prices(products) -> dict:
@@ -52,9 +53,28 @@ def test_prompt_per_category(category):
     prompt = prompts.photo_prompt(category=category)
     assert "one single figurine" in prompt or category in (Category.PERSON, Category.PET)
     assert f"exactly {prompts.MAX_PRINT_COLORS} colors" in prompt
-    assert "sem chapéu" in prompts.photo_prompt(category=category, request="sem chapéu.")
-    # Chaves no pedido do cliente não quebram a montagem do prompt.
-    assert "com {chaves}" in prompts.photo_prompt(category=category, request="com {chaves}")
+    assert "theme" not in prompt
+
+
+@pytest.mark.parametrize("theme", Theme.values)
+@pytest.mark.parametrize("category", Category.values)
+def test_theme_prompt_per_category(theme, category):
+    prompt = prompts.photo_prompt(category=category, theme=theme)
+    assert prompts._THEME[theme][category] in prompt
+    assert prompts._THEME_COLOR_PLAN[theme][category] in prompt
+    # O plano de cores do tema substitui o da categoria, e o tema pode acrescentar acessórios.
+    assert prompts._COLOR_PLAN[category] not in prompt
+    assert "apart from the theme's accessories" in prompt
+    assert "{" not in prompt
+
+
+def test_theme_never_arms_the_pet():
+    assert "pistol" not in prompts.photo_prompt(category=Category.PET, theme=Theme.GTA6)
+
+
+def test_unknown_theme_is_rejected():
+    with pytest.raises(ValueError):
+        prompts.photo_prompt(category=Category.PERSON, theme="halloween")
 
 
 def test_two_figure_prompts_ask_for_one_piece():

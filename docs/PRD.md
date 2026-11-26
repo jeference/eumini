@@ -60,7 +60,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 - **Categorias além das quatro:** grupos de 3 ou mais pessoas, mais de um pet, objetos e personagens.
 - Chaveiros.
 - Assinaturas, créditos pagos, cupons e programas de desconto.
-- Galeria pública, Remix, compartilhamento e templates (ver [seção 11](#templates)).
+- Galeria pública, Remix e compartilhamento. Temas além de Natal e GTA VI, com página própria (ver [seção 11](#temas)).
 - Venda internacional e aplicativo nativo.
 
 ---
@@ -80,8 +80,8 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 
 | Área | Dentro do MVP | Fora do MVP |
 |---|---|---|
-| **Criação** | Entrada por categoria, foto com pedido de alteração opcional, classificação da foto, estilo único, imagem 2D, edição por chat com versões | Criar só a partir de texto, escolha de estilo, categorias além das quatro, modelo e visualizador 3D, 4 opções por geração, desenho livre |
-| **Continuidade** | Retomar criação ao recarregar, "Minhas criações", excluir | Galeria pública, Remix, templates |
+| **Criação** | Entrada por categoria, foto com tema opcional (Natal, GTA VI), classificação da foto, estilo único, imagem 2D, edição por chat com versões | Criar só a partir de texto, escolha de estilo, categorias além das quatro, modelo e visualizador 3D, 4 opções por geração, desenho livre |
+| **Continuidade** | Retomar criação ao recarregar, "Minhas criações", excluir | Galeria pública, Remix, página própria por tema |
 | **Compra** | Tamanho, quantidade, carrinho, Comprar agora, cotação de frete, PIX, cartão de crédito à vista, acompanhamento do pedido | Parcelamento, cartão salvo, cupons, assinatura, venda de arquivo, realidade aumentada |
 | **Conta** | Opcional, com transferência de criações e pedidos ao entrar | Login social |
 | **Operação** | Nada neste app | Pedidos, arquivos, status, rastreio, cancelamento, reembolso, preços, atribuição e arquivo de impressão: tudo no app de parceiros |
@@ -126,7 +126,7 @@ Quem quer uma peça personalizada hoje precisa saber modelar em 3D, contratar um
 | # | Tela | O cliente faz | O sistema faz |
 |---|---|---|---|
 | 1 | **Início** | Escolhe a categoria: Pessoa, Pet, Casal ou Pessoa + Pet | Cria a sessão de visitante, se ainda não existir |
-| 2 | **Página da categoria** | Envia a foto e, se quiser, escreve um pedido de alteração | Mostra exemplos, tamanhos e o preço "a partir de" da categoria |
+| 2 | **Página da categoria** | Envia a foto e, se quiser, escolhe um tema abaixo dela | Mostra exemplos, tamanhos e o preço "a partir de" da categoria |
 | 3 | **Lendo a foto** | Aguarda alguns segundos | Classifica a foto. Se a foto estiver fora das categorias, explica o motivo e o que fazer |
 | 4 | **Gerando imagem** | Aguarda | Mostra etapas e tempo decorrido. Pode recarregar sem perder a criação |
 | 5 | **Comprar** | Vê a imagem e, ao lado, escolhe tamanho e quantidade. Pode **Editar** a imagem antes | Mostra os tamanhos e preços da categoria e informa que a peça pode diferir da imagem. Mantém a criação salva |
@@ -169,7 +169,7 @@ O pedido pago fica registrado com tudo congelado, e o cliente o vê como **Confi
 
 | ID | Requisito | Prioridade |
 |---|---|---|
-| RF-CRI-01 | Criar a partir de uma foto, que é obrigatória, com pedido de alteração opcional (até 1.000 caracteres) | P0 |
+| RF-CRI-01 | Criar a partir de uma foto, que é obrigatória, com tema opcional. Não há pedido em texto no envio: mudanças são feitas depois, na edição | P0 |
 | RF-CRI-02 | Aceitar JPG, PNG, WEBP, HEIC (iPhone) e AVIF de até 10 MB [Proposta], corrigindo a orientação da foto; HEIC e AVIF são convertidos no servidor | P0 |
 | RF-CRI-03 | Gerar todas as figuras num estilo único, sem seletor de estilo | P0 |
 | RF-CRI-04 | Gerar uma imagem por solicitação | P0 |
@@ -416,29 +416,29 @@ Os demais itens têm ordem sugerida, a confirmar com os dados do MVP:
 3. **Cartão de crédito:** o gateway já oferece, com parcelamento.
 4. **Troca de cor pelo cliente:** depende de inspecionar um 3MF real.
 5. **Atribuição automática de pedidos e repasse a parceiros.**
-6. **Crescimento:** templates (abaixo), novas categorias na ordem que a lista de espera indicar, galeria, Remix, cupons e 4 opções por geração.
+6. **Crescimento:** mais temas (abaixo), novas categorias na ordem que a lista de espera indicar, galeria, Remix, cupons e 4 opções por geração.
 
-### Templates
+### Temas
 
-Um template é um tema que o cliente aplica à figura, como Natal: gorro de Papai Noel e cachecol no cachorro, no casal ou na pessoa. Ele é uma terceira camada, separada das outras duas:
+Um tema é aplicado à figura pelo cliente, como Natal: gorro de Papai Noel e cachecol no cachorro, no casal ou na pessoa. Ele é uma terceira camada, separada das outras duas. **No MVP já existem Natal e GTA VI**, escolhidos em cards abaixo da foto, na página da categoria; o envio não tem mais pedido em texto (25/11).
 
 | Camada | Pergunta | Quem define | O que controla |
 |---|---|---|---|
 | Categoria | Quem está na foto? | O classificador | Tamanhos e preço |
 | Estilo | Com que cara fica? | Fixo: o estilo único | O visual base |
-| Template | Qual o tema? | O cliente, opcional | Acessórios, roupa e pose |
+| Tema | Qual o tema? | O cliente, opcional | Acessórios, roupa e pose |
 
-O prompt final é a soma: estilo, mais o bloco da categoria, mais o bloco do template, mais o pedido do cliente. Cada template tem uma versão por categoria, porque o gorro no cachorro é diferente do gorro no casal.
+O prompt final é a soma: estilo, mais o bloco da categoria, mais o bloco do tema. Cada tema tem uma versão por categoria, porque o gorro no cachorro é diferente do gorro no casal, e um plano de cores próprio, que substitui o da categoria para o tema caber nas 4 cores. No GTA VI, só pessoas seguram a arma; o pet ganha óculos escuros e bandana. Os testes estão em [`prompts/README.md`](prompts/README.md#temas).
 
 **Regras:**
 
-1. **O template não é um produto.** O preço continua vindo de categoria e tamanho. Um custo extra, se existir, entra como adicional.
-2. **Cada template declara as categorias que aceita.** Natal serve para todas; "noivos" só para Casal. Se a foto cair numa categoria que o template não aceita, o cliente é avisado antes de gerar.
-3. **O template nunca acrescenta pessoas nem animais.** Senão a nova classificação da versão (RN-34) muda a categoria e o preço. Acessórios e roupas podem; uma rena, não.
-4. **O template não pode sair do imprimível.** Gorro e cachecol cabem; árvore, trenó e cenário, não. Templates são curados e testados, e o cliente não cria template.
-5. **Templates sazonais têm data de início, de fim e de último pedido**, calculada pelo prazo de produção mais o frete, para chegar antes da data.
+1. **O tema não é um produto.** O preço continua vindo de categoria e tamanho. Um custo extra, se existir, entra como adicional.
+2. **Cada tema declara as categorias que aceita.** Natal e GTA VI servem para todas; "noivos" só para Casal. Se a foto cair numa categoria que o tema não aceita, o cliente é avisado antes de gerar.
+3. **O tema nunca acrescenta pessoas nem animais.** Senão a nova classificação da versão (RN-34) muda a categoria e o preço. Acessórios e roupas podem; uma rena, não.
+4. **O tema não pode sair do imprimível.** Gorro, cachecol e uma arma grossa encostada na coxa cabem; árvore, trenó e cenário, não. Temas são curados e testados, e o cliente não cria tema.
+5. **Temas sazonais têm data de início, de fim e de último pedido** (ainda não implementado), calculada pelo prazo de produção mais o frete, para chegar antes da data.
 
-Cada template ganha uma página de entrada própria ("Seu pet no Natal"), com o mesmo envio de foto e o tema já escolhido, como a Jujubit faz com cerca de 30 templates. Depois, o tema pode ser aplicado também a uma criação existente, como uma edição pronta.
+Depois, cada tema pode ganhar uma página de entrada própria ("Seu pet no Natal"), com o mesmo envio de foto e o tema já escolhido, como a Jujubit faz com cerca de 30 temas. O tema pode ser aplicado também a uma criação existente, como uma edição pronta.
 
 ### O que o app de parceiros precisa cobrir
 
@@ -473,7 +473,7 @@ Cada template ganha uma página de entrada própria ("Seu pet no Natal"), com o 
 | **Categoria** | Quem está na figura: Pessoa, Pet, Casal ou Pessoa + Pet. Define tamanhos e preço |
 | **Classificação** | Leitura da foto ou da versão que decide a categoria, ou a recusa |
 | **Lista de espera** | E-mails de quem foi recusado e quer ser avisado quando a categoria existir |
-| **Template** | Tema opcional aplicado à figura, como Natal (futuro) |
+| **Tema** | Camada opcional aplicada à figura, como Natal ou GTA VI, escolhida no envio da foto |
 | **Versão** | Cada imagem 2D de uma criação |
 | **Prévia** | A imagem 2D que o cliente compra |
 | **Modelo 3D** | Modelo feito a partir da imagem do pedido, depois do pagamento (fora do MVP) |

@@ -6,9 +6,7 @@ from orders.tests.helpers import add_to_cart, size_id
 
 
 def test_add_requires_ready_creation(visitor_client):
-    creation = visitor_client.post(
-        "/api/creations/", creation_payload("a"), format="multipart"
-    ).data
+    creation = visitor_client.post("/api/creations/", creation_payload(), format="multipart").data
     size = {"id": size_id(visitor_client)}
     response = visitor_client.post(
         "/api/cart/items/", {"creation_id": creation["id"], "size_id": size["id"], "quantity": 1}
