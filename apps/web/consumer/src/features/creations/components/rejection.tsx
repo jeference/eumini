@@ -17,7 +17,7 @@ import {
 } from "@/features/catalog/categories";
 import { useJoinWaitlist } from "@/features/creations/hooks";
 import type { Creation } from "@/features/creations/types";
-import { messageOf } from "@/lib/errors";
+import { messageOf } from "@eumini/web-core/lib/errors";
 
 function reasonOf(creation: Creation): RejectionReason | null {
   return creation.rejection_reason || null;

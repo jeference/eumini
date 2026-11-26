@@ -47,7 +47,7 @@ import {
   STEPS,
   stepOfField,
 } from "@/features/checkout/schemas";
-import { messageOf } from "@/lib/errors";
+import { messageOf } from "@eumini/web-core/lib/errors";
 
 type Quote = Schemas["ShippingQuote"];
 

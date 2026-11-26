@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 import { useCart, useRemoveCartItem, useUpdateCartItem } from "@/features/cart/hooks";
 import { categoryLabel } from "@/features/catalog/categories";
-import { messageOf } from "@/lib/errors";
+import { messageOf } from "@eumini/web-core/lib/errors";
 
 export default function CartPage() {
   const { data: cart, isLoading } = useCart();

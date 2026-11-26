@@ -5,7 +5,7 @@ import { qk, useApiClient } from "@eumini/api-client/react";
 import { useSession } from "@eumini/web-core/session";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { stableUrl } from "@/lib/stable-url";
+import { stableUrl } from "@eumini/web-core/lib/stable-url";
 
 export type PartnerOrder = Schemas["PartnerOrderDetail"];
 export type PartnerOrderRow = Schemas["PartnerOrderList"];

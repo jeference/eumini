@@ -37,6 +37,23 @@ class IsActor(BasePermission):
         return actor_from_request(request).is_identified
 
 
+class IsStaff(BasePermission):
+    """Conta da equipe (papel `staff` ou `admin`), conferida a cada requisição.
+
+    Tirar o papel corta o acesso na hora, mesmo com o token ainda válido.
+    """
+
+    message = "Esta conta não é da equipe."
+
+    def has_permission(self, request, view):
+        from accounts.models import Role
+
+        user = getattr(request, "user", None)
+        if user is None or not user.is_authenticated or not user.is_active:
+            return False
+        return user.user_roles.filter(name__in=(Role.Name.STAFF, Role.Name.ADMIN)).exists()
+
+
 class IsPartnerMember(BasePermission):
     """Conta ligada a um parceiro ativo, conferida a cada requisição.
 

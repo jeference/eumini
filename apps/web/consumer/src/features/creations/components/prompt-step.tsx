@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { type Category, categoryInfo } from "@/features/catalog/categories";
 import { useProduct } from "@/features/catalog/hooks";
 import { useStartCreation } from "@/features/creations/hooks";
-import { messageOf } from "@/lib/errors";
+import { messageOf } from "@eumini/web-core/lib/errors";
 
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 // HEIC é o formato das fotos do iPhone; o servidor converte. Fora do Safari, um .heic costuma

@@ -782,6 +782,342 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/staff/issues/{issue_id}/resolve/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_issues_resolve_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/orders/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff_orders_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/orders/{order_id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff_orders_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/orders/{order_id}/assign/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_orders_assign_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/orders/{order_id}/deliver/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_orders_deliver_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/orders/{order_id}/events/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff_orders_events_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/orders/{order_id}/items/{item_id}/download/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_orders_items_download_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/orders/{order_id}/items/{item_id}/files/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_orders_items_files_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/orders/{order_id}/label/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_orders_label_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/orders/{order_id}/label/download/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_orders_label_download_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/orders/{order_id}/unassign/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_orders_unassign_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/orders/summary/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff_orders_summary_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/partners/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff_partners_list"];
+        put?: never;
+        post: operations["staff_partners_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/partners/{partner_id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff_partners_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["staff_partners_partial_update"];
+        trace?: never;
+    };
+    "/api/staff/partners/{partner_id}/adjustments/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_partners_adjustments_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/partners/{partner_id}/deactivate/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_partners_deactivate_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/partners/{partner_id}/entries/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff_partners_entries_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/partners/{partner_id}/invite/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_partners_invite_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/partners/{partner_id}/payouts/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff_partners_payouts_list"];
+        put?: never;
+        post: operations["staff_partners_payouts_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/partners/{partner_id}/reactivate/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["staff_partners_reactivate_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff/rates/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["staff_rates_list"];
+        put: operations["staff_rates_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/visitors/": {
         parameters: {
             query?: never;
@@ -860,9 +1196,18 @@ export interface components {
             city: string;
             state: string;
         };
+        AdjustmentCreateRequest: {
+            amount_cents: number;
+            note: string;
+        };
         ApplyVersionRequest: {
             /** Format: uuid */
             version_id: string;
+        };
+        AssignRequest: {
+            /** Format: uuid */
+            partner_id: string;
+            reason?: string;
         };
         AuthSessionResponse: {
             user: components["schemas"]["User"];
@@ -991,8 +1336,14 @@ export interface components {
             url: string;
             filename: string;
         };
+        /**
+         * @description * `3mf` - 3MF
+         *     * `image` - Imagem de referência
+         * @enum {string}
+         */
+        DownloadRequestFileEnum: "3mf" | "image";
         DownloadRequestRequest: {
-            file: components["schemas"]["FileEnum"];
+            file: components["schemas"]["DownloadRequestFileEnum"];
         };
         EditRequestRequest: {
             /** Format: uuid */
@@ -1009,12 +1360,10 @@ export interface components {
                 [key: string]: unknown;
             };
         };
-        /**
-         * @description * `3mf` - 3MF
-         *     * `image` - Imagem de referência
-         * @enum {string}
-         */
-        FileEnum: "3mf" | "image";
+        FileUploadRequest: {
+            /** Format: binary */
+            file: string;
+        };
         ImageVersion: {
             /** Format: uuid */
             readonly id: string;
@@ -1039,6 +1388,12 @@ export interface components {
             text: string;
             /** Format: binary */
             photo?: string;
+        };
+        LabelRequest: {
+            /** Format: binary */
+            pdf: string;
+            carrier: string;
+            tracking_code: string;
         };
         LoginRequest: {
             /** Format: email */
@@ -1071,6 +1426,9 @@ export interface components {
          * @enum {string}
          */
         NameEnum: "buy_now_clicked" | "card_declined" | "card_submitted" | "category_selected" | "checkout_started" | "checkout_step_completed" | "edit_requested" | "item_added_to_cart" | "page_viewed" | "payment_method_selected" | "pix_copied" | "pix_generated" | "prompt_submitted" | "shipping_quoted" | "size_selected" | "waitlist_joined";
+        NoteRequest: {
+            note: string;
+        };
         OrderCreateRequest: {
             item_ids: string[];
             /** Format: uuid */
@@ -1263,9 +1621,61 @@ export interface components {
             previous?: string | null;
             results: components["schemas"]["PartnerPayout"][];
         };
+        PaginatedStaffOrderListList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=4
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=2
+             */
+            previous?: string | null;
+            results: components["schemas"]["StaffOrderList"][];
+        };
+        PaginatedStaffPartnerList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=4
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=2
+             */
+            previous?: string | null;
+            results: components["schemas"]["StaffPartner"][];
+        };
+        PaginatedStaffPayoutList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=4
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=2
+             */
+            previous?: string | null;
+            results: components["schemas"]["StaffPayout"][];
+        };
         PartnerBalance: {
             to_receive_cents: number;
             paid_cents: number;
+        };
+        PartnerCreateRequest: {
+            name: string;
+            /** Format: email */
+            email: string;
+            origin_postal_code: string;
+            pix_key?: string;
         };
         PartnerEntry: {
             /** Format: uuid */
@@ -1393,6 +1803,11 @@ export interface components {
             /** Format: date-time */
             created_at: string;
         };
+        PartnerRef: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+        };
         PasswordChangeRequest: {
             old_password: string;
             new_password: string;
@@ -1406,9 +1821,23 @@ export interface components {
         PatchedCartItemUpdateRequest: {
             quantity?: number;
         };
+        PatchedPartnerUpdateRequest: {
+            name?: string;
+            origin_postal_code?: string;
+            pix_key?: string;
+        };
         PatchedProfileUpdateRequest: {
             first_name?: string;
             phone?: string;
+        };
+        PayoutCreateRequest: {
+            entry_ids: string[];
+            /** Format: date */
+            paid_on: string;
+            amount_cents: number;
+            note?: string;
+            /** Format: binary */
+            receipt?: string;
         };
         /** @description Uma categoria vendida, com os tamanhos e preços dela. */
         Product: {
@@ -1486,8 +1915,28 @@ export interface components {
             postal_code: string;
             item_ids: string[];
         };
+        RateInputRequest: {
+            category: string;
+            /** Format: uuid */
+            size_id: string;
+            amount_cents: number | null;
+        };
+        RateRow: {
+            category: string;
+            /** Format: uuid */
+            size_id: string;
+            size_label: string;
+            price_cents: number;
+            amount_cents: number | null;
+        };
+        RatesUpdateRequest: {
+            rates: components["schemas"]["RateInputRequest"][];
+        };
         ReadyRequest: {
             photos: string[];
+        };
+        ReasonRequest: {
+            reason: string;
         };
         RefreshTokenRequestRequest: {
             refresh: string;
@@ -1538,6 +1987,220 @@ export interface components {
             /** Format: date-time */
             readonly expires_at: string;
         };
+        StaffCharge: {
+            /** Format: uuid */
+            readonly id: string;
+            readonly method: components["schemas"]["MethodEnum"];
+            readonly status: components["schemas"]["ChargeStatusEnum"];
+            readonly amount_cents: number;
+            readonly card_brand: string;
+            readonly card_last_four: string;
+            /** Format: date-time */
+            readonly expires_at: string | null;
+            /** Format: date-time */
+            readonly paid_at: string | null;
+            /** Format: date-time */
+            readonly disputed_at: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        /**
+         * @description * `image` - Imagem comprada
+         *     * `photo` - Foto do cliente
+         *     * `3mf` - 3MF
+         * @enum {string}
+         */
+        StaffDownloadRequestFileEnum: "image" | "photo" | "3mf";
+        StaffDownloadRequestRequest: {
+            file: components["schemas"]["StaffDownloadRequestFileEnum"];
+        };
+        StaffEvent: {
+            /** Format: uuid */
+            readonly id: string;
+            readonly aggregate: string;
+            readonly event: string;
+            readonly from_state: string;
+            readonly to_state: string;
+            /** @description E-mail de quem fez, "cliente" para o visitante e "sistema" para o resto. */
+            readonly actor: string;
+            readonly payload: unknown;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        StaffFile: {
+            /** Format: uuid */
+            id: string;
+            version: number;
+            size_bytes: number;
+            /** Format: date-time */
+            uploaded_at: string;
+        };
+        StaffIssue: {
+            /** Format: uuid */
+            id: string;
+            partner: components["schemas"]["PartnerRef"];
+            text: string;
+            readonly photo_url: string;
+            /** Format: date-time */
+            resolved_at: string | null;
+            resolution_note: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        StaffItem: {
+            /** Format: uuid */
+            id: string;
+            readonly image_url: string;
+            readonly photo_url: string;
+            category: string;
+            size_label: string;
+            longest_side_mm: number;
+            quantity: number;
+            unit_price_cents: number;
+            readonly customer_text: string;
+            prompt_text: string;
+            job_status: components["schemas"]["ProductionJobStatusEnum"];
+            payout_cents: number | null;
+            readonly files: components["schemas"]["StaffFile"][];
+        };
+        StaffOrderDetail: {
+            /** Format: uuid */
+            readonly id: string;
+            readonly number: string;
+            readonly status: components["schemas"]["OrderStatusEnum"];
+            readonly customer_name: string;
+            /** Format: email */
+            readonly customer_email: string;
+            readonly cpf_masked: string;
+            readonly postal_code: string;
+            readonly street: string;
+            readonly address_number: string;
+            readonly complement: string;
+            readonly neighborhood: string;
+            readonly city: string;
+            readonly state: string;
+            readonly subtotal_cents: number;
+            readonly shipping_cents: number;
+            readonly total_cents: number;
+            readonly shipping_service_name: string;
+            readonly shipping_company: string;
+            readonly delivery_days: number;
+            readonly stage: components["schemas"]["StageEnum"];
+            readonly partner: components["schemas"]["PartnerRef"] | null;
+            /** Format: date-time */
+            readonly assigned_at: string | null;
+            /** Format: date */
+            readonly post_by: string | null;
+            readonly is_overdue: boolean;
+            readonly piece_count: number;
+            readonly open_issues: number;
+            readonly thumbnail_url: string;
+            readonly items: components["schemas"]["StaffItem"][];
+            readonly charges: components["schemas"]["StaffCharge"][];
+            readonly shipment: components["schemas"]["StaffShipment"] | null;
+            readonly photos: components["schemas"]["StaffPhoto"][];
+            readonly issues: components["schemas"]["StaffIssue"][];
+            /** Format: date-time */
+            readonly paid_at: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        StaffOrderList: {
+            /** Format: uuid */
+            readonly id: string;
+            readonly number: string;
+            readonly status: components["schemas"]["OrderStatusEnum"];
+            readonly customer_name: string;
+            /** Format: email */
+            readonly customer_email: string;
+            readonly total_cents: number;
+            readonly stage: components["schemas"]["StageEnum"];
+            readonly partner: components["schemas"]["PartnerRef"] | null;
+            /** Format: date */
+            readonly post_by: string | null;
+            readonly is_overdue: boolean;
+            readonly piece_count: number;
+            readonly open_issues: number;
+            readonly thumbnail_url: string;
+            /** Format: date-time */
+            readonly paid_at: string | null;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        StaffPartner: {
+            /** Format: uuid */
+            readonly id: string;
+            readonly name: string;
+            readonly status: components["schemas"]["StaffPartnerStatusEnum"];
+            readonly is_internal: boolean;
+            readonly origin_postal_code: string;
+            readonly pix_key: string;
+            readonly login_email: string;
+            readonly invite_accepted: boolean;
+            readonly active_orders: number;
+            readonly overdue_orders: number;
+            readonly to_receive_cents: number;
+            readonly paid_cents: number;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        /**
+         * @description * `active` - Ativo
+         *     * `inactive` - Inativo
+         * @enum {string}
+         */
+        StaffPartnerStatusEnum: "active" | "inactive";
+        StaffPayout: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: date */
+            readonly paid_on: string;
+            readonly amount_cents: number;
+            readonly note: string;
+            readonly entry_count: number;
+            readonly receipt_url: string;
+            /** Format: date-time */
+            readonly created_at: string;
+        };
+        StaffPhoto: {
+            /** Format: uuid */
+            id: string;
+            readonly url: string;
+            /** Format: date-time */
+            created_at: string;
+        };
+        StaffQueueSummary: {
+            to_assign: number;
+            missing_file: number;
+            awaiting_label: number;
+            overdue: number;
+            issues: number;
+            to_deliver: number;
+        };
+        StaffShipment: {
+            /** Format: uuid */
+            id: string;
+            carrier: string;
+            tracking_code: string;
+            readonly has_label: boolean;
+            /** Format: date-time */
+            shipped_at: string | null;
+            /** Format: date-time */
+            delivered_at: string | null;
+        };
+        /**
+         * @description * `none` - Sem produÃ§Ã£o
+         *     * `unassigned` - Sem parceiro
+         *     * `assigned` - AtribuÃ­da
+         *     * `in_production` - Em produÃ§Ã£o
+         *     * `awaiting_label` - Aguardando etiqueta
+         *     * `to_post` - Para postar
+         *     * `shipped` - Postada
+         *     * `cancelled` - Cancelada
+         *     * `mixed` - Itens em etapas diferentes
+         * @enum {string}
+         */
+        StageEnum: "none" | "unassigned" | "assigned" | "in_production" | "awaiting_label" | "to_post" | "shipped" | "cancelled" | "mixed";
         TokenPair: {
             access: string;
             refresh: string;
@@ -2780,6 +3443,601 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ShippingQuote"][];
+                };
+            };
+        };
+    };
+    staff_issues_resolve_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                issue_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NoteRequest"];
+                "multipart/form-data": components["schemas"]["NoteRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffOrderDetail"];
+                };
+            };
+        };
+    };
+    staff_orders_list: {
+        parameters: {
+            query?: {
+                /** @description AAAA-MM-DD */
+                ate?: string;
+                /** @description AAAA-MM-DD */
+                desde?: string;
+                fila?: "awaiting_label" | "issues" | "missing_file" | "overdue" | "to_assign" | "to_deliver";
+                /** @description Um número de página dentro do conjunto de resultados paginado. */
+                page?: number;
+                /** @description Número de resultados a serem retornados por página. */
+                page_size?: number;
+                parceiro?: string;
+                /** @description NÃºmero ou e-mail */
+                q?: string;
+                status?: "delivered" | "expired" | "in_production" | "paid" | "pending_payment" | "refunded" | "shipped";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedStaffOrderListList"];
+                };
+            };
+        };
+    };
+    staff_orders_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffOrderDetail"];
+                };
+            };
+        };
+    };
+    staff_orders_assign_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssignRequest"];
+                "multipart/form-data": components["schemas"]["AssignRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffOrderDetail"];
+                };
+            };
+        };
+    };
+    staff_orders_deliver_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffOrderDetail"];
+                };
+            };
+        };
+    };
+    staff_orders_events_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffEvent"][];
+                };
+            };
+        };
+    };
+    staff_orders_items_download_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                item_id: string;
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StaffDownloadRequestRequest"];
+                "multipart/form-data": components["schemas"]["StaffDownloadRequestRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Download"];
+                };
+            };
+        };
+    };
+    staff_orders_items_files_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                item_id: string;
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["FileUploadRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffOrderDetail"];
+                };
+            };
+        };
+    };
+    staff_orders_label_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["LabelRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffOrderDetail"];
+                };
+            };
+        };
+    };
+    staff_orders_label_download_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Download"];
+                };
+            };
+        };
+    };
+    staff_orders_unassign_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonRequest"];
+                "multipart/form-data": components["schemas"]["ReasonRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffOrderDetail"];
+                };
+            };
+        };
+    };
+    staff_orders_summary_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffQueueSummary"];
+                };
+            };
+        };
+    };
+    staff_partners_list: {
+        parameters: {
+            query?: {
+                /** @description Um número de página dentro do conjunto de resultados paginado. */
+                page?: number;
+                /** @description Número de resultados a serem retornados por página. */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedStaffPartnerList"];
+                };
+            };
+        };
+    };
+    staff_partners_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PartnerCreateRequest"];
+                "multipart/form-data": components["schemas"]["PartnerCreateRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffPartner"];
+                };
+            };
+        };
+    };
+    staff_partners_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                partner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffPartner"];
+                };
+            };
+        };
+    };
+    staff_partners_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                partner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedPartnerUpdateRequest"];
+                "multipart/form-data": components["schemas"]["PatchedPartnerUpdateRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffPartner"];
+                };
+            };
+        };
+    };
+    staff_partners_adjustments_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                partner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdjustmentCreateRequest"];
+                "multipart/form-data": components["schemas"]["AdjustmentCreateRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartnerEntry"];
+                };
+            };
+        };
+    };
+    staff_partners_deactivate_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                partner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffPartner"];
+                };
+            };
+        };
+    };
+    staff_partners_entries_list: {
+        parameters: {
+            query?: {
+                aberto?: "1";
+                /** @description Um número de página dentro do conjunto de resultados paginado. */
+                page?: number;
+                /** @description Número de resultados a serem retornados por página. */
+                page_size?: number;
+            };
+            header?: never;
+            path: {
+                partner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedPartnerEntryList"];
+                };
+            };
+        };
+    };
+    staff_partners_invite_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                partner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    staff_partners_payouts_list: {
+        parameters: {
+            query?: {
+                /** @description Um número de página dentro do conjunto de resultados paginado. */
+                page?: number;
+                /** @description Número de resultados a serem retornados por página. */
+                page_size?: number;
+            };
+            header?: never;
+            path: {
+                partner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedStaffPayoutList"];
+                };
+            };
+        };
+    };
+    staff_partners_payouts_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                partner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["PayoutCreateRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffPayout"];
+                };
+            };
+        };
+    };
+    staff_partners_reactivate_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                partner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffPartner"];
+                };
+            };
+        };
+    };
+    staff_rates_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RateRow"][];
+                };
+            };
+        };
+    };
+    staff_rates_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RatesUpdateRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RateRow"][];
                 };
             };
         };

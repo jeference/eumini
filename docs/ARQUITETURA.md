@@ -57,8 +57,8 @@ flowchart LR
 |---|---|---|
 | `apps/backend` | API, webhooks, worker e tarefas agendadas | MVP |
 | `apps/web/consumer` | Clientes | MVP |
-| `apps/web/partners` | Parceiros que imprimem ([PRD](PRD-parceiros.md)), em `parceiros.eumini.com` | Construído. Recebe pedidos quando o app Staff existir |
-| `apps/web/staff` | Equipe da EuMini, toda a operação interna ([PRD](PRD-staff.md)) | Próximo passo |
+| `apps/web/partners` | Parceiros que imprimem ([PRD](PRD-parceiros.md)), em `parceiros.eumini.com` | Construído |
+| `apps/web/staff` | Equipe da EuMini, toda a operação interna ([PRD](PRD-staff.md)), em `equipe.eumini.com` | Construído |
 
 Cada app web tem domínio próprio, portanto cookies e sessões são independentes. O Next reescreve `/api/*` para o Django, então o navegador fala sempre com a mesma origem e não há CORS a configurar.
 
@@ -86,11 +86,11 @@ apps/
   backend/
   web/
     consumer/                 app do cliente
-    partners/                 futuro: app de parceiros
-    staff/                    futuro: app Staff
+    partners/                 app de parceiros
+    staff/                    app Staff
     packages/
       ui/                     componentes visuais, nunca importa web-core
-      web-core/               sessão, auth, BFF, guards, layout base
+      web-core/               sessão, auth, BFF, guards, helpers comuns (lib/)
       analytics/              eventos de produto
 packages/
   api-types/                  schema.yaml e tipos gerados, nunca editados à mão
@@ -175,8 +175,8 @@ Quem ainda está com a sessão de visitante que fez o pedido também pode vê-lo
 
 | Papel | Situação | Uso |
 |---|---|---|
-| `staff` | Reservado | Operação no app Staff |
-| `admin` | Reservado | Inclui `staff`. Gerencia preços e parâmetros |
+| `staff` | Em uso | Entra no app Staff. Criado e removido pelo comando `staff_user` |
+| `admin` | Reservado | Inclui `staff`. Gerencia preços e parâmetros (P1) |
 
 - **Cliente não é papel.** Ser dono de uma criação ou de um pedido deriva da relação.
 - **Parceiro também não é papel.** Vem de `PartnerMember`: a conta ligada a um `Partner` ativo entra no app de parceiros. `IsPartnerMember` confere isso a cada requisição, então desativar o parceiro corta o acesso na hora, mesmo com o token ainda válido.
@@ -185,7 +185,7 @@ Quem ainda está com a sessão de visitante que fez o pedido também pode vê-lo
 **Camadas no backend:**
 
 1. Padrão global `DenyAll`.
-2. Classes de capacidade por endpoint: `IsActor` e `IsAuthenticatedUser` no app do cliente, `IsPartnerMember` no de parceiros e `IsStaff` com o app Staff.
+2. Classes de capacidade por endpoint: `IsActor` e `IsAuthenticatedUser` no app do cliente, `IsPartnerMember` no de parceiros e `IsStaff` no Staff. `IsStaff` confere o papel a cada requisição, então tirar o papel corta o acesso na hora.
 3. Escopo no service, que limita cada consulta ao que o ator pode ver (`orders_for`, `partner_orders`). Recurso de outro ator responde 404.
 4. Guards da máquina de estados nos services.
 5. Regras de visibilidade de dados pessoais nos serializers.
@@ -341,7 +341,7 @@ stateDiagram-v2
 | `Charge` | `pending → paid`, `pending → expired`, `pending → failed`, `paid → refunded`, `expired → paid` (tardio). Disputa é marcada com um campo e gera alerta, sem liquidar nem desfazer automaticamente |
 | `ProductionJob` (`fulfillment/fsm.py`) | `unassigned →assign→ assigned →start→ in_production →mark_ready→ ready_to_ship →post→ shipped`. `assigned →refuse→ unassigned`. `cancel` a partir de qualquer estado anterior a `shipped` |
 
-O pagamento cria os jobs em `unassigned`, com o prazo de postagem. As ações valem para o pedido inteiro, em todos os jobs dele, e movem o pedido ([RN-PAR-02 e RN-PAR-03](PRD-parceiros.md#6-regras-de-negócio)): iniciar leva o pedido a `in_production`, postar a `shipped`, e o reembolso cancela os jobs não postados. Atribuir e anexar a etiqueta são services da equipe (`assign_order`, `attach_label`), sem endpoint até o app Staff.
+O pagamento cria os jobs em `unassigned`, com o prazo de postagem. As ações valem para o pedido inteiro, em todos os jobs dele, e movem o pedido ([RN-PAR-02 e RN-PAR-03](PRD-parceiros.md#6-regras-de-negócio)): iniciar leva o pedido a `in_production`, postar a `shipped`, e o reembolso cancela os jobs não postados. A equipe também atribui, retira e reatribui (`unassign`, de qualquer estado antes de `shipped`, volta a `unassigned` e descarta a etiqueta não postada), anexa a etiqueta e marca a entrega. Essas operações ficam em `fulfillment/operations.py`.
 
 **Rótulos para o cliente:** `pending_payment` = Aguardando pagamento · `paid` = Confirmado · `in_production` = Em produção · `shipped` = Enviado · `delivered` = Entregue · `expired` = Expirado · `refunded` = Reembolsado.
 
@@ -723,15 +723,34 @@ Todos com `IsPartnerMember`, menos o aceite do convite. Pedido de outro parceiro
 | `POST /api/partner/orders/{id}/issues/` | Reportar problema, com foto opcional |
 | `GET /api/partner/earnings/`, `GET /api/partner/earnings/entries/`, `GET /api/partner/payouts/` | Saldo, extrato e repasses |
 
+### Endpoints do app Staff
+
+Todos com `IsStaff`, em `/api/staff/` (app Django `staff`: só views, serializers e consultas; as regras ficam em `fulfillment`). A equipe vê os dados do cliente, com o CPF mascarado.
+
+| Método e caminho | Função |
+|---|---|
+| `GET orders/summary/` | Fila do dia: a atribuir, sem 3MF, aguardando etiqueta, atrasados, com problema e a confirmar entrega |
+| `GET orders/?fila=&status=&q=&parceiro=&desde=&ate=` | Lista com filtros. `q` busca no número e no e-mail |
+| `GET orders/{id}/`, `GET orders/{id}/events/` | Pedido completo e histórico (`DomainEvent` do pedido, jobs, cobranças e envios) |
+| `POST orders/{id}/items/{item_id}/download/` | Imagem, foto original ou 3MF, com registro em `AssetDownload` |
+| `POST orders/{id}/items/{item_id}/files/` | Sobe o 3MF (até 100 MB) |
+| `POST orders/{id}/{assign,unassign,deliver}/` | Atribuir ou reatribuir, retirar com motivo, marcar entregue |
+| `POST orders/{id}/label/`, `POST orders/{id}/label/download/` | Anexar ou substituir a etiqueta, baixar |
+| `POST issues/{id}/resolve/` | Resolver problema reportado |
+| `GET, POST partners/`, `GET, PATCH partners/{id}/` | Parceiros: lista, cadastro com convite, edição |
+| `POST partners/{id}/{invite,deactivate,reactivate}/` | Reenviar convite, desativar (sem pedidos ativos), reativar |
+| `GET partners/{id}/entries/?aberto=1`, `GET, POST partners/{id}/payouts/`, `POST partners/{id}/adjustments/` | Extrato, repasses e ajustes. O repasse precisa bater com a soma dos lançamentos |
+| `GET, PUT rates/` | Tabela de ganhos por categoria e tamanho |
+
 ---
 
 ## 18. Temas transversais
 
 ### Sem painel de operação
 
-Não há Django Admin nem outro painel. Tudo que for operação entra com o app Staff. Enquanto ele não existe:
+Não há Django Admin. A operação é o app Staff. O que ele ainda não cobre (P1 no [PRD](PRD-staff.md)):
 
-- **Preços, tamanhos e parâmetros de custo** vêm de migração de dados e mudam por novo deploy.
+- **Preços e tamanhos do cliente** vêm de migração de dados e mudam por novo deploy.
 - **Alertas internos** ficam no log, marcados com `alert=true`. Ninguém é avisado automaticamente: é preciso consultar o log.
 - **Reembolsos** são feitos no painel do gateway (seção 12).
 
@@ -790,15 +809,15 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 | Item | Decisão |
 |---|---|
 | **Ambientes** | Local (desenvolvimento e homologação) e produção. Uma homologação em servidor próprio pode vir depois, com os mesmos arquivos, nunca na máquina da produção |
-| **Hospedagem** | Um VPS (Hostinger KVM 2, Campinas, Ubuntu 26.04 LTS) com Docker Compose: `postgres`, `web` (gunicorn), `worker`, `scheduler`, `consumer` e `partners` (Next) e `cloudflared`. Arquivos em [`infra/`](../infra/) |
-| **Exposição** | O firewall da Hostinger só deixa entrar a porta 22 (SSH só com chave, só o usuário `deploy`, sem root). O site não usa porta: chega pelo Cloudflare Tunnel (`eumini.com`, e `www` redireciona; `parceiros.eumini.com` vai para o serviço `partners`). HTTPS obrigatório, TLS 1.2+ e HSTS na zona da Cloudflare |
+| **Hospedagem** | Um VPS (Hostinger KVM 2, Campinas, Ubuntu 26.04 LTS) com Docker Compose: `postgres`, `web` (gunicorn), `worker`, `scheduler`, `consumer`, `partners` e `staff` (Next) e `cloudflared`. Arquivos em [`infra/`](../infra/) |
+| **Exposição** | O firewall da Hostinger só deixa entrar a porta 22 (SSH só com chave, só o usuário `deploy`, sem root). O site não usa porta: chega pelo Cloudflare Tunnel (`eumini.com`, e `www` redireciona; `parceiros.eumini.com` vai para o serviço `partners` e `equipe.eumini.com` para o `staff`). HTTPS obrigatório, TLS 1.2+ e HSTS na zona da Cloudflare |
 | **Antes do lançamento** | A produção roda aberta com as mesmas chaves e serviços do desenvolvimento (AbacatePay dev, Gmail, bucket `kubo-media-dev`, frete simulado). O teto diário de IA e os limites por IP contêm abuso. No lançamento: zerar o banco e trocar as chaves |
 | **Servidor** | Criado do zero pelo `infra/server/post-install.sh` (post-install script da Hostinger): patches automáticos (reboot às 04:00), Docker com `live-restore`, swap e usuário `deploy`. Segredos da aplicação gerados no próprio servidor (`bootstrap-secrets.sh`) |
 | **Banco** | Postgres no mesmo VPS. Um gerenciado na mesma região quando o faturamento justificar: muda só a `DATABASE_URL` |
-| **Deploy** | Automático: quando o CI passa num push na `main`, o workflow `Deploy` (environment `production`, liberado só para a `main`) envia o commit testado por SSH e o servidor gera as imagens (`eumini-backend`, `eumini-consumer` e `eumini-partners`, com os `NEXT_PUBLIC_*` no build), aplica as migrações e sobe a versão, esperando ficar saudável. Um deploy por vez. A chave do GitHub é própria e restrita no servidor: só roda o `receive.sh`, sem shell nem túnel. `make deploy` faz o mesmo do PC, para emergência. Imagens dos últimos 7 dias ficam para voltar versão |
+| **Deploy** | Automático: quando o CI passa num push na `main`, o workflow `Deploy` (environment `production`, liberado só para a `main`) envia o commit testado por SSH e o servidor gera as imagens (`eumini-backend`, `eumini-consumer`, `eumini-partners` e `eumini-staff`, com os `NEXT_PUBLIC_*` no build), aplica as migrações e sobe a versão, esperando ficar saudável. Um deploy por vez. A chave do GitHub é própria e restrita no servidor: só roda o `receive.sh`, sem shell nem túnel. `make deploy` faz o mesmo do PC, para emergência. Imagens dos últimos 7 dias ficam para voltar versão |
 | **Backup** | Diário às 03:00: `pg_dump` criptografado com `age` (o servidor só tem a chave pública; a privada fica com o dono) em `backups/db/` do bucket da aplicação, com 30 dias de retenção. No lançamento, um bucket próprio com credencial que só grava |
 | **CI** | Em todo PR e push na `main`. Backend: ruff, verificação contra `__all__`, migrações, pytest, geração de schema. Web: lint, typecheck, teste, build |
-| **Teste local da produção** | `make prod-local` constrói as imagens e sobe tudo, menos o túnel, em `http://127.0.0.1:3100` (cliente) e `http://127.0.0.1:3101` (parceiros) |
+| **Teste local da produção** | `make prod-local` constrói as imagens e sobe tudo, menos o túnel, em `http://127.0.0.1:3100` (cliente), `http://127.0.0.1:3101` (parceiros) e `http://127.0.0.1:3102` (Staff) |
 | **Desenvolvimento** | `make db` sobe um Postgres local sem Docker, na porta 5433 |
 
 **Para escalar:** primeiro um plano maior de VPS; com mais de uma máquina, as imagens passam a ser geradas no CI e publicadas num registro; depois mais réplicas de `worker` (já dividem as tarefas com `SKIP LOCKED`), o banco gerenciado e mais máquinas atrás da Cloudflare. As mídias já ficam no S3, fora do servidor.
@@ -807,18 +826,13 @@ Envio síncrono, melhor esforço e fora da transação, com modelos Django e `Em
 
 ## 19. Apps Staff e de parceiros
 
-O app de parceiros está construído (`apps/web/partners` e os endpoints `/api/partner/...`). Ele usa `CoreProviders` no modo `account`, que não cria visitante nem traz criações de visitante ao entrar. O que falta é o lado da equipe:
+Os dois apps estão construídos: `apps/web/partners` (`/api/partner/...`) e `apps/web/staff` (`/api/staff/...`). Os dois usam `CoreProviders` no modo `account`, que não cria visitante nem traz criações de visitante ao entrar, e compartilham com o consumer os helpers de `web-core/lib` (`safeNext`, `stableUrl`, `messageOf`) e o `PasswordResetForm`.
 
-| Já existe | Falta construir no app Staff |
-|---|---|
-| `assign_order`: atribui o pedido inteiro e congela o ganho | Tela e endpoint para atribuir, reatribuir e retirar |
-| `add_production_file`: sobe o 3MF de um item, em nova versão | Tela de envio do 3MF |
-| `attach_label`: anexa a etiqueta a um pedido pronto | Tela da etiqueta e "marcar entregue" |
-| `invite_partner_member`: cria o login e envia o convite | Cadastro de parceiros e tabela de ganhos (`PartnerRate`) |
-| `PartnerEntry` e `PartnerPayout` | Registrar repasse e ajuste, e o e-mail de repasse pago |
-| `ProductionIssue` | Ver e resolver os problemas reportados |
+**Ciclo de um pedido pago:** a equipe sobe o 3MF e atribui → o parceiro inicia e marca pronta, com foto → a equipe anexa a etiqueta → o parceiro posta → a equipe marca entregue e registra o repasse. O cliente acompanha Confirmado, Em produção, Enviado e Entregue.
 
-Até lá, em desenvolvimento, os comandos `dev_tool_partner_create`, `dev_tool_partner_assign` e `dev_tool_partner_label` (só com `DEBUG`) fazem o papel da equipe. Em produção, nenhum parceiro entra antes do app Staff.
+**Primeiro acesso:** a conta da equipe nasce pelo comando `staff_user add` e define a senha em "Esqueci a senha". O parceiro nasce pelo cadastro no app Staff, que envia o convite.
+
+**Ainda fora (P1):** reembolso pela API do gateway, tela de alertas, preços e tamanhos do cliente, subir o mesmo 3MF em vários itens e avançar o pedido no lugar do parceiro.
 
 ---
 

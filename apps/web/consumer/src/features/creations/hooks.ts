@@ -8,7 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { Category } from "@/features/catalog/categories";
 import type { Creation } from "@/features/creations/types";
-import { stableUrl } from "@/lib/stable-url";
+import { stableUrl } from "@eumini/web-core/lib/stable-url";
 
 const GENERATION_POLL_MS = 2000;
 

@@ -19,4 +19,16 @@ export const qk = {
   partnerEarnings: () => ["partner", "earnings"] as const,
   partnerEntries: () => ["partner", "earnings", "entries"] as const,
   partnerPayouts: () => ["partner", "payouts"] as const,
+  // App Staff: tudo sob "staff", pelo mesmo motivo.
+  staff: () => ["staff"] as const,
+  staffSummary: () => ["staff", "summary"] as const,
+  staffOrders: (filters: Record<string, string>) => ["staff", "orders", filters] as const,
+  staffOrder: (id: string) => ["staff", "order", id] as const,
+  staffOrderEvents: (id: string) => ["staff", "order", id, "events"] as const,
+  staffPartners: () => ["staff", "partners"] as const,
+  staffPartner: (id: string) => ["staff", "partner", id] as const,
+  staffPartnerEntries: (id: string, open: boolean) =>
+    ["staff", "partner", id, "entries", open] as const,
+  staffPartnerPayouts: (id: string) => ["staff", "partner", id, "payouts"] as const,
+  staffRates: () => ["staff", "rates"] as const,
 };

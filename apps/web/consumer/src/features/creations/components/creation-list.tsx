@@ -12,7 +12,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 import { useCreations, useDeleteCreation } from "@/features/creations/hooks";
-import { messageOf } from "@/lib/errors";
+import { messageOf } from "@eumini/web-core/lib/errors";
 
 export function CreationList() {
   const { data, isLoading } = useCreations();

@@ -26,7 +26,7 @@ import {
 } from "@/features/creations/components/rejection";
 import { useCreation, useCreationAction } from "@/features/creations/hooks";
 import type { Creation } from "@/features/creations/types";
-import { messageOf } from "@/lib/errors";
+import { messageOf } from "@eumini/web-core/lib/errors";
 
 /** Hub da criação: o que aparece depende só do status vindo do servidor. */
 export function Studio({ id }: { id: string }) {

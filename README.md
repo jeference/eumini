@@ -12,6 +12,7 @@ Plataforma que conecta quem quer comprar objetos impressos em 3D a parceiros que
 | `apps/backend` | API Django, webhooks, worker de geração e tarefas agendadas |
 | `apps/web/consumer` | App do cliente (Next.js) |
 | `apps/web/partners` | App de parceiros, quem imprime (Next.js) |
+| `apps/web/staff` | App Staff, a operação da equipe (Next.js) |
 | `apps/web/packages` | Código web compartilhado: `ui`, `web-core`, `analytics` |
 | `packages` | Contrato e identidade: `api-types`, `api-client`, `design-tokens` |
 | `prototipo/` | Protótipo anterior. Fica até a remoção combinada |
@@ -25,6 +26,7 @@ make install
 cp apps/backend/.env.example apps/backend/.env
 cp apps/web/consumer/.env.example apps/web/consumer/.env.local
 cp apps/web/partners/.env.example apps/web/partners/.env.local
+cp apps/web/staff/.env.example apps/web/staff/.env.local
 ```
 
 Em terminais separados:
@@ -36,23 +38,27 @@ make backend    # API em :8000
 make worker     # executa as gerações
 make frontend   # app em :3000
 make frontend-partners  # app de parceiros em :3001
+make frontend-staff     # app Staff em :3002
 make scheduler  # opcional: expira PIX e aplica a retenção
 ```
 
 Reinicie `make backend` e `make worker` sempre que mudar o `.env`.
 
-### App de parceiros em desenvolvimento
+### Contas da equipe e parceiros
 
-Até o app Staff existir, estes comandos (só com `DEBUG`) fazem o papel da equipe:
+As contas da equipe são criadas por comando, também em produção:
 
 ```sh
 cd apps/backend
-.venv/Scripts/python manage.py dev_tool_partner_create parceiro@teste.com Senha-forte-123
-.venv/Scripts/python manage.py dev_tool_partner_assign EM... parceiro@teste.com --3mf caminho/para/peca.3mf
-.venv/Scripts/python manage.py dev_tool_partner_label EM...
+.venv/Scripts/python manage.py staff_user add fulana@eumini.com     # depois, "Esqueci a senha" no app Staff
+.venv/Scripts/python manage.py staff_user remove fulana@eumini.com
 ```
 
-O primeiro cria o parceiro e as tarifas de exemplo. O segundo atribui um pedido pago e sobe o 3MF. O terceiro anexa uma etiqueta, depois que o parceiro marca as peças como prontas.
+O resto é pelo app Staff:
+1. Cadastrar o parceiro. O convite sai no terminal do `make backend`.
+2. Definir as tarifas.
+3. Subir o 3MF e atribuir o pedido.
+4. Anexar a etiqueta, marcar entregue e registrar o repasse.
 
 ### Fornecedores
 

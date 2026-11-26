@@ -1205,6 +1205,708 @@ paths:
                 items:
                   $ref: '#/components/schemas/ShippingQuote'
           description: ''
+  /api/staff/issues/{issue_id}/resolve/:
+    post:
+      operationId: staff_issues_resolve_create
+      parameters:
+      - in: path
+        name: issue_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NoteRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffOrderDetail'
+          description: ''
+  /api/staff/orders/:
+    get:
+      operationId: staff_orders_list
+      parameters:
+      - in: query
+        name: ate
+        schema:
+          type: string
+        description: AAAA-MM-DD
+      - in: query
+        name: desde
+        schema:
+          type: string
+        description: AAAA-MM-DD
+      - in: query
+        name: fila
+        schema:
+          type: string
+          enum:
+          - awaiting_label
+          - issues
+          - missing_file
+          - overdue
+          - to_assign
+          - to_deliver
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      - in: query
+        name: parceiro
+        schema:
+          type: string
+      - in: query
+        name: q
+        schema:
+          type: string
+        description: NÃºmero ou e-mail
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - delivered
+          - expired
+          - in_production
+          - paid
+          - pending_payment
+          - refunded
+          - shipped
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedStaffOrderListList'
+          description: ''
+  /api/staff/orders/{order_id}/:
+    get:
+      operationId: staff_orders_retrieve
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffOrderDetail'
+          description: ''
+  /api/staff/orders/{order_id}/assign/:
+    post:
+      operationId: staff_orders_assign_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AssignRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffOrderDetail'
+          description: ''
+  /api/staff/orders/{order_id}/deliver/:
+    post:
+      operationId: staff_orders_deliver_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffOrderDetail'
+          description: ''
+  /api/staff/orders/{order_id}/events/:
+    get:
+      operationId: staff_orders_events_list
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StaffEvent'
+          description: ''
+  /api/staff/orders/{order_id}/items/{item_id}/download/:
+    post:
+      operationId: staff_orders_items_download_create
+      parameters:
+      - in: path
+        name: item_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffDownloadRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StaffDownloadRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Download'
+          description: ''
+  /api/staff/orders/{order_id}/items/{item_id}/files/:
+    post:
+      operationId: staff_orders_items_files_create
+      parameters:
+      - in: path
+        name: item_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileUploadRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffOrderDetail'
+          description: ''
+  /api/staff/orders/{order_id}/label/:
+    post:
+      operationId: staff_orders_label_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LabelRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffOrderDetail'
+          description: ''
+  /api/staff/orders/{order_id}/label/download/:
+    post:
+      operationId: staff_orders_label_download_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Download'
+          description: ''
+  /api/staff/orders/{order_id}/unassign/:
+    post:
+      operationId: staff_orders_unassign_create
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReasonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReasonRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffOrderDetail'
+          description: ''
+  /api/staff/orders/summary/:
+    get:
+      operationId: staff_orders_summary_retrieve
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffQueueSummary'
+          description: ''
+  /api/staff/partners/:
+    get:
+      operationId: staff_partners_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedStaffPartnerList'
+          description: ''
+    post:
+      operationId: staff_partners_create
+      tags:
+      - staff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PartnerCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffPartner'
+          description: ''
+  /api/staff/partners/{partner_id}/:
+    get:
+      operationId: staff_partners_retrieve
+      parameters:
+      - in: path
+        name: partner_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffPartner'
+          description: ''
+    patch:
+      operationId: staff_partners_partial_update
+      parameters:
+      - in: path
+        name: partner_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPartnerUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPartnerUpdateRequest'
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffPartner'
+          description: ''
+  /api/staff/partners/{partner_id}/adjustments/:
+    post:
+      operationId: staff_partners_adjustments_create
+      parameters:
+      - in: path
+        name: partner_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustmentCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AdjustmentCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerEntry'
+          description: ''
+  /api/staff/partners/{partner_id}/deactivate/:
+    post:
+      operationId: staff_partners_deactivate_create
+      parameters:
+      - in: path
+        name: partner_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffPartner'
+          description: ''
+  /api/staff/partners/{partner_id}/entries/:
+    get:
+      operationId: staff_partners_entries_list
+      parameters:
+      - in: query
+        name: aberto
+        schema:
+          type: string
+          enum:
+          - '1'
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      - in: path
+        name: partner_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPartnerEntryList'
+          description: ''
+  /api/staff/partners/{partner_id}/invite/:
+    post:
+      operationId: staff_partners_invite_create
+      parameters:
+      - in: path
+        name: partner_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '204':
+          description: No response body
+  /api/staff/partners/{partner_id}/payouts/:
+    get:
+      operationId: staff_partners_payouts_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      - in: path
+        name: partner_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedStaffPayoutList'
+          description: ''
+    post:
+      operationId: staff_partners_payouts_create
+      parameters:
+      - in: path
+        name: partner_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PayoutCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffPayout'
+          description: ''
+  /api/staff/partners/{partner_id}/reactivate/:
+    post:
+      operationId: staff_partners_reactivate_create
+      parameters:
+      - in: path
+        name: partner_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffPartner'
+          description: ''
+  /api/staff/rates/:
+    get:
+      operationId: staff_rates_list
+      tags:
+      - staff
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RateRow'
+          description: ''
+    put:
+      operationId: staff_rates_update
+      tags:
+      - staff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatesUpdateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - visitorCookie: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RateRow'
+          description: ''
   /api/visitors/:
     post:
       operationId: visitors_create
@@ -1328,6 +2030,18 @@ components:
       - postal_code
       - state
       - street
+    AdjustmentCreateRequest:
+      type: object
+      properties:
+        amount_cents:
+          type: integer
+        note:
+          type: string
+          minLength: 1
+          maxLength: 1000
+      required:
+      - amount_cents
+      - note
     ApplyVersionRequest:
       type: object
       properties:
@@ -1336,6 +2050,17 @@ components:
           format: uuid
       required:
       - version_id
+    AssignRequest:
+      type: object
+      properties:
+        partner_id:
+          type: string
+          format: uuid
+        reason:
+          type: string
+          maxLength: 500
+      required:
+      - partner_id
     AuthSessionResponse:
       type: object
       properties:
@@ -1680,11 +2405,19 @@ components:
       required:
       - filename
       - url
+    DownloadRequestFileEnum:
+      enum:
+      - 3mf
+      - image
+      type: string
+      description: |-
+        * `3mf` - 3MF
+        * `image` - Imagem de referência
     DownloadRequestRequest:
       type: object
       properties:
         file:
-          $ref: '#/components/schemas/FileEnum'
+          $ref: '#/components/schemas/DownloadRequestFileEnum'
       required:
       - file
     EditRequestRequest:
@@ -1719,14 +2452,14 @@ components:
           additionalProperties: {}
       required:
       - name
-    FileEnum:
-      enum:
-      - 3mf
-      - image
-      type: string
-      description: |-
-        * `3mf` - 3MF
-        * `image` - Imagem de referência
+    FileUploadRequest:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+      required:
+      - file
     ImageVersion:
       type: object
       properties:
@@ -1808,6 +2541,24 @@ components:
           format: binary
       required:
       - text
+    LabelRequest:
+      type: object
+      properties:
+        pdf:
+          type: string
+          format: binary
+        carrier:
+          type: string
+          minLength: 1
+          maxLength: 64
+        tracking_code:
+          type: string
+          minLength: 1
+          maxLength: 64
+      required:
+      - carrier
+      - pdf
+      - tracking_code
     LoginRequest:
       type: object
       properties:
@@ -1866,6 +2617,15 @@ components:
         * `shipping_quoted` - shipping_quoted
         * `size_selected` - size_selected
         * `waitlist_joined` - waitlist_joined
+    NoteRequest:
+      type: object
+      properties:
+        note:
+          type: string
+          minLength: 1
+          maxLength: 1000
+      required:
+      - note
     OrderCreateRequest:
       type: object
       properties:
@@ -2342,6 +3102,75 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PartnerPayout'
+    PaginatedStaffOrderListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffOrderList'
+    PaginatedStaffPartnerList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffPartner'
+    PaginatedStaffPayoutList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffPayout'
     PartnerBalance:
       type: object
       properties:
@@ -2352,6 +3181,28 @@ components:
       required:
       - paid_cents
       - to_receive_cents
+    PartnerCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          minLength: 1
+        origin_postal_code:
+          type: string
+          minLength: 1
+          maxLength: 9
+        pix_key:
+          type: string
+          maxLength: 140
+      required:
+      - email
+      - name
+      - origin_postal_code
     PartnerEntry:
       type: object
       properties:
@@ -2707,6 +3558,17 @@ components:
       - created_at
       - id
       - url
+    PartnerRef:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+      required:
+      - id
+      - name
     PasswordChangeRequest:
       type: object
       properties:
@@ -2747,6 +3609,20 @@ components:
           type: integer
           maximum: 10
           minimum: 1
+    PatchedPartnerUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        origin_postal_code:
+          type: string
+          minLength: 1
+          maxLength: 9
+        pix_key:
+          type: string
+          maxLength: 140
     PatchedProfileUpdateRequest:
       type: object
       properties:
@@ -2756,6 +3632,30 @@ components:
         phone:
           type: string
           maxLength: 32
+    PayoutCreateRequest:
+      type: object
+      properties:
+        entry_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+        paid_on:
+          type: string
+          format: date
+        amount_cents:
+          type: integer
+          minimum: 1
+        note:
+          type: string
+          maxLength: 1000
+        receipt:
+          type: string
+          format: binary
+      required:
+      - amount_cents
+      - entry_ids
+      - paid_on
     Product:
       type: object
       description: Uma categoria vendida, com os tamanhos e preços dela.
@@ -2938,6 +3838,53 @@ components:
       required:
       - item_ids
       - postal_code
+    RateInputRequest:
+      type: object
+      properties:
+        category:
+          type: string
+          minLength: 1
+        size_id:
+          type: string
+          format: uuid
+        amount_cents:
+          type: integer
+          minimum: 1
+          nullable: true
+      required:
+      - amount_cents
+      - category
+      - size_id
+    RateRow:
+      type: object
+      properties:
+        category:
+          type: string
+        size_id:
+          type: string
+          format: uuid
+        size_label:
+          type: string
+        price_cents:
+          type: integer
+        amount_cents:
+          type: integer
+          nullable: true
+      required:
+      - amount_cents
+      - category
+      - price_cents
+      - size_id
+      - size_label
+    RatesUpdateRequest:
+      type: object
+      properties:
+        rates:
+          type: array
+          items:
+            $ref: '#/components/schemas/RateInputRequest'
+      required:
+      - rates
     ReadyRequest:
       type: object
       properties:
@@ -2948,6 +3895,15 @@ components:
             format: binary
       required:
       - photos
+    ReasonRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+      required:
+      - reason
     RefreshTokenRequestRequest:
       type: object
       properties:
@@ -3072,6 +4028,643 @@ components:
       - price_cents
       - service_name
       - shipping_days
+    StaffCharge:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        method:
+          allOf:
+          - $ref: '#/components/schemas/MethodEnum'
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ChargeStatusEnum'
+          readOnly: true
+        amount_cents:
+          type: integer
+          readOnly: true
+        card_brand:
+          type: string
+          readOnly: true
+        card_last_four:
+          type: string
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        paid_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        disputed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount_cents
+      - card_brand
+      - card_last_four
+      - created_at
+      - disputed_at
+      - expires_at
+      - id
+      - method
+      - paid_at
+      - status
+    StaffDownloadRequestFileEnum:
+      enum:
+      - image
+      - photo
+      - 3mf
+      type: string
+      description: |-
+        * `image` - Imagem comprada
+        * `photo` - Foto do cliente
+        * `3mf` - 3MF
+    StaffDownloadRequestRequest:
+      type: object
+      properties:
+        file:
+          $ref: '#/components/schemas/StaffDownloadRequestFileEnum'
+      required:
+      - file
+    StaffEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        aggregate:
+          type: string
+          readOnly: true
+        event:
+          type: string
+          readOnly: true
+        from_state:
+          type: string
+          readOnly: true
+        to_state:
+          type: string
+          readOnly: true
+        actor:
+          type: string
+          description: E-mail de quem fez, "cliente" para o visitante e "sistema"
+            para o resto.
+          readOnly: true
+        payload:
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - actor
+      - aggregate
+      - created_at
+      - event
+      - from_state
+      - id
+      - payload
+      - to_state
+    StaffFile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: integer
+        size_bytes:
+          type: integer
+        uploaded_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - size_bytes
+      - uploaded_at
+      - version
+    StaffIssue:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        partner:
+          $ref: '#/components/schemas/PartnerRef'
+        text:
+          type: string
+        photo_url:
+          type: string
+          readOnly: true
+        resolved_at:
+          type: string
+          format: date-time
+          nullable: true
+        resolution_note:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - created_at
+      - id
+      - partner
+      - photo_url
+      - resolution_note
+      - resolved_at
+      - text
+    StaffItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        image_url:
+          type: string
+          readOnly: true
+        photo_url:
+          type: string
+          readOnly: true
+        category:
+          type: string
+        size_label:
+          type: string
+        longest_side_mm:
+          type: integer
+        quantity:
+          type: integer
+        unit_price_cents:
+          type: integer
+        customer_text:
+          type: string
+          readOnly: true
+        prompt_text:
+          type: string
+        job_status:
+          $ref: '#/components/schemas/ProductionJobStatusEnum'
+        payout_cents:
+          type: integer
+          nullable: true
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffFile'
+          readOnly: true
+      required:
+      - category
+      - customer_text
+      - files
+      - id
+      - image_url
+      - job_status
+      - longest_side_mm
+      - payout_cents
+      - photo_url
+      - prompt_text
+      - quantity
+      - size_label
+      - unit_price_cents
+    StaffOrderDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        number:
+          type: string
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/OrderStatusEnum'
+          readOnly: true
+        customer_name:
+          type: string
+          readOnly: true
+        customer_email:
+          type: string
+          format: email
+          readOnly: true
+        cpf_masked:
+          type: string
+          readOnly: true
+        postal_code:
+          type: string
+          readOnly: true
+        street:
+          type: string
+          readOnly: true
+        address_number:
+          type: string
+          readOnly: true
+        complement:
+          type: string
+          readOnly: true
+        neighborhood:
+          type: string
+          readOnly: true
+        city:
+          type: string
+          readOnly: true
+        state:
+          type: string
+          readOnly: true
+        subtotal_cents:
+          type: integer
+          readOnly: true
+        shipping_cents:
+          type: integer
+          readOnly: true
+        total_cents:
+          type: integer
+          readOnly: true
+        shipping_service_name:
+          type: string
+          readOnly: true
+        shipping_company:
+          type: string
+          readOnly: true
+        delivery_days:
+          type: integer
+          readOnly: true
+        stage:
+          allOf:
+          - $ref: '#/components/schemas/StageEnum'
+          readOnly: true
+        partner:
+          allOf:
+          - $ref: '#/components/schemas/PartnerRef'
+          nullable: true
+          readOnly: true
+        assigned_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        post_by:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+        is_overdue:
+          type: boolean
+          readOnly: true
+        piece_count:
+          type: integer
+          readOnly: true
+        open_issues:
+          type: integer
+          readOnly: true
+        thumbnail_url:
+          type: string
+          readOnly: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffItem'
+          readOnly: true
+        charges:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffCharge'
+          readOnly: true
+        shipment:
+          allOf:
+          - $ref: '#/components/schemas/StaffShipment'
+          nullable: true
+          readOnly: true
+        photos:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffPhoto'
+          readOnly: true
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffIssue'
+          readOnly: true
+        paid_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - address_number
+      - assigned_at
+      - charges
+      - city
+      - complement
+      - cpf_masked
+      - created_at
+      - customer_email
+      - customer_name
+      - delivery_days
+      - id
+      - is_overdue
+      - issues
+      - items
+      - neighborhood
+      - number
+      - open_issues
+      - paid_at
+      - partner
+      - photos
+      - piece_count
+      - post_by
+      - postal_code
+      - shipment
+      - shipping_cents
+      - shipping_company
+      - shipping_service_name
+      - stage
+      - state
+      - status
+      - street
+      - subtotal_cents
+      - thumbnail_url
+      - total_cents
+    StaffOrderList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        number:
+          type: string
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/OrderStatusEnum'
+          readOnly: true
+        customer_name:
+          type: string
+          readOnly: true
+        customer_email:
+          type: string
+          format: email
+          readOnly: true
+        total_cents:
+          type: integer
+          readOnly: true
+        stage:
+          allOf:
+          - $ref: '#/components/schemas/StageEnum'
+          readOnly: true
+        partner:
+          allOf:
+          - $ref: '#/components/schemas/PartnerRef'
+          nullable: true
+          readOnly: true
+        post_by:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+        is_overdue:
+          type: boolean
+          readOnly: true
+        piece_count:
+          type: integer
+          readOnly: true
+        open_issues:
+          type: integer
+          readOnly: true
+        thumbnail_url:
+          type: string
+          readOnly: true
+        paid_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - customer_email
+      - customer_name
+      - id
+      - is_overdue
+      - number
+      - open_issues
+      - paid_at
+      - partner
+      - piece_count
+      - post_by
+      - stage
+      - status
+      - thumbnail_url
+      - total_cents
+    StaffPartner:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StaffPartnerStatusEnum'
+          readOnly: true
+        is_internal:
+          type: boolean
+          readOnly: true
+        origin_postal_code:
+          type: string
+          readOnly: true
+        pix_key:
+          type: string
+          readOnly: true
+        login_email:
+          type: string
+          readOnly: true
+        invite_accepted:
+          type: boolean
+          readOnly: true
+        active_orders:
+          type: integer
+          readOnly: true
+        overdue_orders:
+          type: integer
+          readOnly: true
+        to_receive_cents:
+          type: integer
+          readOnly: true
+        paid_cents:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - active_orders
+      - created_at
+      - id
+      - invite_accepted
+      - is_internal
+      - login_email
+      - name
+      - origin_postal_code
+      - overdue_orders
+      - paid_cents
+      - pix_key
+      - status
+      - to_receive_cents
+    StaffPartnerStatusEnum:
+      enum:
+      - active
+      - inactive
+      type: string
+      description: |-
+        * `active` - Ativo
+        * `inactive` - Inativo
+    StaffPayout:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        paid_on:
+          type: string
+          format: date
+          readOnly: true
+        amount_cents:
+          type: integer
+          readOnly: true
+        note:
+          type: string
+          readOnly: true
+        entry_count:
+          type: integer
+          readOnly: true
+        receipt_url:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount_cents
+      - created_at
+      - entry_count
+      - id
+      - note
+      - paid_on
+      - receipt_url
+    StaffPhoto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - created_at
+      - id
+      - url
+    StaffQueueSummary:
+      type: object
+      properties:
+        to_assign:
+          type: integer
+        missing_file:
+          type: integer
+        awaiting_label:
+          type: integer
+        overdue:
+          type: integer
+        issues:
+          type: integer
+        to_deliver:
+          type: integer
+      required:
+      - awaiting_label
+      - issues
+      - missing_file
+      - overdue
+      - to_assign
+      - to_deliver
+    StaffShipment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        carrier:
+          type: string
+        tracking_code:
+          type: string
+        has_label:
+          type: boolean
+          readOnly: true
+        shipped_at:
+          type: string
+          format: date-time
+          nullable: true
+        delivered_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - carrier
+      - delivered_at
+      - has_label
+      - id
+      - shipped_at
+      - tracking_code
+    StageEnum:
+      enum:
+      - none
+      - unassigned
+      - assigned
+      - in_production
+      - awaiting_label
+      - to_post
+      - shipped
+      - cancelled
+      - mixed
+      type: string
+      description: |-
+        * `none` - Sem produÃ§Ã£o
+        * `unassigned` - Sem parceiro
+        * `assigned` - AtribuÃ­da
+        * `in_production` - Em produÃ§Ã£o
+        * `awaiting_label` - Aguardando etiqueta
+        * `to_post` - Para postar
+        * `shipped` - Postada
+        * `cancelled` - Cancelada
+        * `mixed` - Itens em etapas diferentes
     TokenPair:
       type: object
       properties:

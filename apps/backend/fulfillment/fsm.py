@@ -9,6 +9,11 @@ JOB_FSM = FSM(
         Transition(S.ASSIGNED, S.IN_PRODUCTION, "start"),
         Transition(S.IN_PRODUCTION, S.READY_TO_SHIP, "mark_ready"),
         Transition(S.READY_TO_SHIP, S.SHIPPED, "post"),
+        # A equipe retira o pedido do parceiro enquanto ele não foi postado.
+        *(
+            Transition(source, S.UNASSIGNED, "unassign")
+            for source in (S.ASSIGNED, S.IN_PRODUCTION, S.READY_TO_SHIP)
+        ),
         *(
             Transition(source, S.CANCELLED, "cancel")
             for source in (S.UNASSIGNED, S.ASSIGNED, S.IN_PRODUCTION, S.READY_TO_SHIP)
