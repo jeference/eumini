@@ -146,7 +146,7 @@ class OrderItem(BaseModel):
     unit_price_cents = models.PositiveIntegerField()
     # Congelada na compra (RN-17): a categoria da versão comprada define o preço.
     category = models.CharField(max_length=16)
-    theme = models.CharField(max_length=20, blank=True)
+    prompt_text = models.TextField(blank=True)
 
     class Meta(BaseModel.Meta):
         ordering = ["created_at"]

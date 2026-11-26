@@ -302,7 +302,7 @@ def create_order(
                     quantity=item.quantity,
                     unit_price_cents=prices[item.pk],
                     category=item.version.category,
-                    theme=item.creation.input.theme,
+                    prompt_text=item.creation.input.text,
                 )
             if actor.user is not None:
                 _save_address(actor.user, address)

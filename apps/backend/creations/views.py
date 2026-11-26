@@ -57,8 +57,8 @@ class CreationListView(ListAPIView):
         creation = services.start_creation(
             actor=actor,
             ip_hash=ip_hash,
+            text=values.get("text", ""),
             requested_category=values["requested_category"],
-            theme=values.get("theme", ""),
             photo_bytes=values["photo"].read(),
             request_id=request_id_of(request),
         )

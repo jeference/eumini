@@ -2,9 +2,7 @@
 
 Palavras no prompt simulam situações difíceis: `__recusar__` (conteúdo recusado em todos os
 modelos), `__recusar_principal__` (recusado só no modelo principal, para o reserva assumir) e
-`__falhar__` (erro do provedor). Na edição, vêm do pedido; na geração a partir da foto, que não
-tem texto do cliente, vêm da setting `STUB_IMAGE_ERROR`. O estado do PIX fica no cache,
-compartilhado entre processos.
+`__falhar__` (erro do provedor). O estado do PIX fica no cache, compartilhado entre processos.
 """
 
 from __future__ import annotations
@@ -83,7 +81,6 @@ class StubImageGenerationAdapter(ImageGenerationPort):
 
     def edit(self, *, image: bytes, prompt: str, size: int, model: str) -> GeneratedImage:
         _delay("STUB_IMAGE_SECONDS", 1)
-        prompt += getattr(settings, "STUB_IMAGE_ERROR", "")
         refuse_main = "__recusar_principal__" in prompt and model == self.models[0]
         if "__recusar__" in prompt or refuse_main:
             raise ContentRefused("Conteúdo recusado pelo stub.")

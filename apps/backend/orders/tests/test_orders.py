@@ -3,14 +3,12 @@ from __future__ import annotations
 import uuid
 
 from catalog.models import ProductPrice, ProductSize
-from conftest import make_ready_creation
 from orders.models import Address, Order
 from orders.tests.helpers import add_to_cart, order_payload, place_order, post_order, quote_for
 
 
 def test_create_order_freezes_values_and_masks_cpf(visitor_client):
-    creation = make_ready_creation(visitor_client, theme="christmas")
-    item = add_to_cart(visitor_client, quantity=2, creation=creation)
+    item = add_to_cart(visitor_client, quantity=2)
     quote = quote_for(visitor_client, [item["id"]])[0]
     response = post_order(visitor_client, order_payload([item["id"]], quote["id"]))
     assert response.status_code == 201, response.data
@@ -25,7 +23,7 @@ def test_create_order_freezes_values_and_masks_cpf(visitor_client):
     order = Order.objects.get(globalid=data["id"])
     assert "52998224725" not in order.cpf_encrypted
     item = order.items.get()
-    assert item.theme == "christmas"
+    assert item.prompt_text == "um dragão azul"
     assert (item.category, item.unit_price_cents) == ("person", 12990)
 
     ProductPrice.objects.filter(category="person", size__code="6cm").update(price_cents=1)

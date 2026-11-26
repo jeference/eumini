@@ -15,7 +15,7 @@ const display = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" }
 export const metadata: Metadata = {
   title: { default: "EuMini: crie e receba sua peça impressa em 3D", template: "%s · EuMini" },
   description:
-    "Envie uma foto e escolha um tema, se quiser. A gente cria o modelo com IA, e você recebe a peça impressa em 3D em casa.",
+    "Descreva o que você imagina ou envie uma foto. A gente cria o modelo com IA, e você recebe a peça impressa em 3D em casa.",
   manifest: "/manifest.webmanifest",
   icons: { icon: "/icon.svg" },
 };

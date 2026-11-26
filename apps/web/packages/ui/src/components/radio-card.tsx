@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { cn } from "../lib/utils";
 
-/** Opção de escolha única em cartão (frete, pagamento, tema): bolinha à esquerda (opcional), valor à direita. */
+/** Opção de escolha única em cartão (frete, pagamento): bolinha à esquerda (opcional), valor à direita. */
 export function RadioCard({
   name,
   checked,
@@ -11,7 +11,6 @@ export function RadioCard({
   disabled = false,
   size = "default",
   indicator = true,
-  className,
   children,
 }: {
   name: string;
@@ -24,7 +23,6 @@ export function RadioCard({
   size?: "default" | "sm";
   /** `false`: sem a bolinha; a borda roxa já mostra a escolhida. */
   indicator?: boolean;
-  className?: string;
   children: ReactNode;
 }) {
   return (
@@ -39,7 +37,6 @@ export function RadioCard({
           : checked
             ? "cursor-pointer border-accent bg-accent-soft"
             : "cursor-pointer border-stroke bg-surface hover:border-stroke-hover",
-        className,
       )}
     >
       <span className="flex items-center gap-3">

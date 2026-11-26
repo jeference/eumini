@@ -8,7 +8,7 @@ from creations.quota import daily_spend_usd
 
 
 def _create(client):
-    return client.post("/api/creations/", creation_payload(), format="multipart")
+    return client.post("/api/creations/", creation_payload("um gato"), format="multipart")
 
 
 def _business(settings, **overrides):

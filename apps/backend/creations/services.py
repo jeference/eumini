@@ -10,7 +10,6 @@ from django.utils import timezone
 
 from catalog import prompts
 from catalog.categories import GROUP_REASONS, Category
-from catalog.themes import Theme
 from common.exceptions import GuardFailed, ResourceNotFound
 from common.fsm import apply_transition
 from creations import quota
@@ -68,16 +67,15 @@ def start_creation(
     *,
     actor,
     ip_hash: str,
+    text: str,
     requested_category: str,
     photo_bytes: bytes,
-    theme: str = "",
     request_id: str = "",
 ) -> Creation:
     """Guarda a foto e pede a classificação. A imagem só é gerada se a foto for aceita (RN-33)."""
+    text = text.strip()
     if requested_category not in Category.values:
         raise GuardFailed("Categoria inválida.", code="invalid_category")
-    if theme and theme not in Theme.values:
-        raise GuardFailed("Tema inválido.", code="invalid_theme")
     prepared = media.prepare_photo(photo_bytes)
     original_photo = media.store(
         data=prepared.original, kind=Asset.Kind.ORIGINAL, mime=prepared.original_mime
@@ -92,7 +90,7 @@ def start_creation(
         )
         CreationInput.objects.create(
             creation=creation,
-            theme=theme,
+            text=text,
             photo=photo,
             original_photo=original_photo,
             terms_version=settings.BUSINESS["TERMS_VERSION"],
@@ -128,7 +126,7 @@ def enqueue_image(*, actor, ip_hash: str, creation: Creation) -> ProviderTask:
         creation=creation,
         kind=ProviderTask.Kind.GENERATE,
         rendered_prompt=prompts.photo_prompt(
-            category=creation.category, theme=creation.input.theme
+            category=creation.category, request=creation.input.text
         ),
     )
 

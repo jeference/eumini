@@ -11,7 +11,6 @@ import { ImageIcon, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
-import { themeLabel } from "@/features/catalog/themes";
 import { useCreations, useDeleteCreation } from "@/features/creations/hooks";
 import { messageOf } from "@/lib/errors";
 
@@ -62,7 +61,7 @@ export function CreationList() {
         <div className="mt-8">
           <EmptyState
             title="Nenhuma criação ainda"
-            description="Envie uma foto para começar."
+            description="Descreva uma ideia ou envie uma foto para começar."
             action={
               <Button asChild variant="primary">
                 <Link href="/">Criar agora</Link>
@@ -96,11 +95,7 @@ export function CreationList() {
                   </div>
                   <div className="space-y-1.5 p-3">
                     <StatusBadge label={badge.label} tone={badge.tone} />
-                    <p className="truncate text-sm">
-                      {creation.theme
-                        ? `Tema ${themeLabel(creation.theme)}`
-                        : "A partir de uma foto"}
-                    </p>
+                    <p className="truncate text-sm">{creation.text || "A partir de uma foto"}</p>
                     <p className="text-xs text-muted">{formatDate(creation.created_at)}</p>
                   </div>
                 </Link>

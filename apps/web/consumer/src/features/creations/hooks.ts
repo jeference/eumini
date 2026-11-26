@@ -7,7 +7,6 @@ import { useActorReady } from "@eumini/web-core/session";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { Category } from "@/features/catalog/categories";
-import type { Theme } from "@/features/catalog/themes";
 import type { Creation } from "@/features/creations/types";
 import { stableUrl } from "@/lib/stable-url";
 
@@ -60,9 +59,9 @@ function useCreationSetter() {
 }
 
 export interface StartCreationInput {
+  text: string;
   /** A página de entrada. Quem decide a categoria é o classificador. */
   requestedCategory: Category;
-  theme: Theme | null;
   photo: File;
 }
 
@@ -72,8 +71,8 @@ export function useStartCreation() {
   return useMutation({
     mutationFn: async (input: StartCreationInput) => {
       const form = new FormData();
+      form.set("text", input.text);
       form.set("requested_category", input.requestedCategory);
-      if (input.theme) form.set("theme", input.theme);
       form.set("photo", input.photo);
       return unwrap(
         await api.POST("/api/creations/", {
@@ -84,10 +83,7 @@ export function useStartCreation() {
     },
     onSuccess: (creation) => {
       setCreation(creation);
-      track("prompt_submitted", {
-        category: creation.requested_category,
-        theme: creation.theme || "none",
-      });
+      track("prompt_submitted", { category: creation.requested_category });
     },
   });
 }
