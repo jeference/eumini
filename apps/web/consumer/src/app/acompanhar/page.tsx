@@ -10,7 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { type FormEvent, useState } from "react";
 import { toast } from "sonner";
 
-import { messageOf } from "@/lib/errors";
+import { messageOf } from "@eumini/web-core/lib/errors";
 
 export default function TrackLookupPage() {
   const api = useApiClient();

@@ -18,7 +18,7 @@ import { REJECTION_MESSAGES, categoryInfo } from "@/features/catalog/categories"
 import { useProduct } from "@/features/catalog/hooks";
 import { useCreationAction } from "@/features/creations/hooks";
 import type { Creation, EditTask, ImageVersion } from "@/features/creations/types";
-import { messageOf } from "@/lib/errors";
+import { messageOf } from "@eumini/web-core/lib/errors";
 
 const MAX_INSTRUCTION = 200;
 const SWIPE_THRESHOLD = 20;

@@ -27,6 +27,9 @@ const nextConfig = {
     "@eumini/ui",
     "@eumini/web-core",
   ],
+  // Com middleware, o Next guarda o corpo da requisição e corta em 10 MB por padrão. As peças
+  // prontas são até 5 fotos de até 10 MB cada.
+  experimental: { middlewareClientMaxBodySize: "60mb" },
   // O navegador fica na mesma origem, sem CORS. As rotas do Django terminam em barra: evitamos
   // o redirecionamento do Next e devolvemos a barra no destino.
   skipTrailingSlashRedirect: true,

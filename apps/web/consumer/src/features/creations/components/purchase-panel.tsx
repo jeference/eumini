@@ -16,7 +16,7 @@ import { useAddToCart } from "@/features/cart/hooks";
 import { REJECTION_MESSAGES, categoryInfo } from "@/features/catalog/categories";
 import { useProduct } from "@/features/catalog/hooks";
 import type { Creation } from "@/features/creations/types";
-import { messageOf } from "@/lib/errors";
+import { messageOf } from "@eumini/web-core/lib/errors";
 
 const MAX_QUANTITY = 10;
 

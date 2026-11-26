@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "orders",
     "payments",
     "fulfillment",
+    "staff",
     "notifications",
     "analytics",
     "integrations",
@@ -133,6 +134,8 @@ REST_FRAMEWORK = {
         "partner_read": "240/min",
         "partner_write": "60/min",
         "partner_invite": "10/min",
+        "staff_read": "600/min",
+        "staff_write": "120/min",
     },
 }
 

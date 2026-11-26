@@ -106,12 +106,27 @@ services:
     security_opt: [no-new-privileges:true]
     logging: *logging
 
+  # App Staff, em equipe.eumini.com (rota pública do túnel para http://staff:3000).
+  staff:
+    image: eumini-staff:${TAG:?defina TAG}
+    build:
+      context: ${SRC_DIR:-..}
+      dockerfile: apps/web/staff/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://web:8000
+        NEXT_PUBLIC_SUPPORT_EMAIL: ${NEXT_PUBLIC_SUPPORT_EMAIL:-}
+    depends_on:
+      web: { condition: service_healthy }
+    restart: unless-stopped
+    security_opt: [no-new-privileges:true]
+    logging: *logging
+
   cloudflared:
     image: cloudflare/cloudflared:2026.10.7
     command: tunnel --no-autoupdate run
     environment:
       TUNNEL_TOKEN: ${TUNNEL_TOKEN:?}
-    depends_on: [consumer, partners]
+    depends_on: [consumer, partners, staff]
     restart: unless-stopped
     read_only: true
     security_opt: [no-new-privileges:true]

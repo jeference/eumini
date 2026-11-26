@@ -62,3 +62,4 @@ jobs:
       - run: pnpm -r test
       - run: pnpm --filter @eumini/consumer build
       - run: pnpm --filter @eumini/partners build
+      - run: pnpm --filter @eumini/staff build

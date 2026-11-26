@@ -1,0 +1,4 @@
+{% autoescape off %}A EuMini fez um repasse de {{ amount }} por PIX em {{ paid_on|date:"d/m/Y" }}.
+Ele quita {{ entries }} lançamento{{ entries|pluralize }} do seu extrato.
+
+Ver meus ganhos: {{ earnings_url }}{% endautoescape %}

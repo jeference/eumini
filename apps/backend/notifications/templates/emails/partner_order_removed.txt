@@ -1,0 +1,2 @@
+{% autoescape off %}O pedido {{ number }} saiu da sua fila. Não imprima nem poste.
+Se você já começou a imprimir, fale com a EuMini.{% endautoescape %}

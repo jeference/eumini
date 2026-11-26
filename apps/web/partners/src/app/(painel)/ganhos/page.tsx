@@ -9,7 +9,7 @@ import { StatusBadge } from "@eumini/ui/status-badge";
 import { useState } from "react";
 
 import { useBalance, useEntries, usePayouts } from "@/features/earnings/hooks";
-import { categoryLabel } from "@/lib/categories";
+import { categoryLabel } from "@eumini/ui/lib/categories";
 
 export default function EarningsPage() {
   const balance = useBalance();

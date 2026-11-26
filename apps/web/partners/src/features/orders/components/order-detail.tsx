@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { categoryLabel } from "@/lib/categories";
+import { categoryLabel } from "@eumini/ui/lib/categories";
 
 import { GROUPS } from "../groups";
 import { type PartnerOrder, useDownload, useOrder, useOrderActions } from "../hooks";

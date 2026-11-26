@@ -1,0 +1,6 @@
+{% extends "emails/base.html" %}
+{% block content %}
+<p>A EuMini fez um repasse de <strong>{{ amount }}</strong> por PIX em {{ paid_on|date:"d/m/Y" }}.</p>
+<p>Ele quita {{ entries }} lançamento{{ entries|pluralize }} do seu extrato.</p>
+<p style="margin:24px 0"><a href="{{ earnings_url }}" style="background:#faff00;color:#7c3aed;border:1px solid #7c3aed;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:bold">Ver meus ganhos</a></p>
+{% endblock %}

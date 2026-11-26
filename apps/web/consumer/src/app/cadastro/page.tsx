@@ -11,12 +11,12 @@ import { Suspense } from "react";
 import { useForm } from "react-hook-form";
 
 import { type RegisterValues, registerSchema } from "@/features/account/schemas";
-import { safeNext } from "@/lib/safe-next";
+import { safeNext } from "@eumini/web-core/lib/safe-next";
 
 function RegisterForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = safeNext(params.get("next"));
+  const next = safeNext(params.get("next"), "/criacoes");
   const register = useRegister();
   const form = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),

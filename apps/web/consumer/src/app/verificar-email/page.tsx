@@ -14,14 +14,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { type CodeValues, codeSchema } from "@/features/account/schemas";
-import { safeNext } from "@/lib/safe-next";
+import { safeNext } from "@eumini/web-core/lib/safe-next";
 
 function VerifyForm() {
   const api = useApiClient();
   const router = useRouter();
   const params = useSearchParams();
   const email = params.get("email") ?? "";
-  const next = safeNext(params.get("next"));
+  const next = safeNext(params.get("next"), "/criacoes");
   const verify = useVerifyEmail();
   const form = useForm<CodeValues>({
     resolver: zodResolver(codeSchema),

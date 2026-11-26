@@ -14,12 +14,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { type LoginValues, loginSchema } from "@/features/account/schemas";
-import { safeNext } from "@/lib/safe-next";
+import { safeNext } from "@eumini/web-core/lib/safe-next";
 
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = safeNext(params.get("next"));
+  const next = safeNext(params.get("next"), "/criacoes");
   const status = useSession((state) => state.status);
   const login = useLogin();
   const form = useForm<LoginValues>({

@@ -13,6 +13,7 @@ class Asset(BaseModel):
         IMAGE = "image", "Imagem gerada"
         PRODUCTION = "production", "Arquivo de produção"
         PARTNER_PHOTO = "partner_photo", "Foto enviada pelo parceiro"
+        RECEIPT = "receipt", "Comprovante de repasse"
 
     key = models.CharField(max_length=255, unique=True)
     kind = models.CharField(max_length=16, choices=Kind.choices)

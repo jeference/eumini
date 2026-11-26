@@ -11,6 +11,7 @@
     "./auth-client": "./src/auth-client.ts",
     "./providers": "./src/providers.tsx",
     "./components/*": "./src/components/*.tsx",
+    "./lib/*": "./src/lib/*.ts",
     "./server": "./src/server/index.ts",
     "./auth-constants": "./src/server/constants.ts"
   },

@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 import { PixPayment } from "@/features/orders/components/pix-payment";
 import { usePayOrder } from "@/features/orders/hooks";
-import { messageOf } from "@/lib/errors";
+import { messageOf } from "@eumini/web-core/lib/errors";
 
 /**
  * Pagamento de um pedido aguardando pagamento:
