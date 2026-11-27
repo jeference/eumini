@@ -73,7 +73,7 @@ Cada app web tem domínio próprio, portanto cookies e sessões são independent
 | **Frontend** | Next.js 15 (App Router), React 19, TypeScript estrito, Tailwind 3, componentes Radix no padrão shadcn, TanStack Query 5, Zustand 5, React Hook Form + Zod, sonner, lucide |
 | **Contrato** | drf-spectacular → openapi-typescript → openapi-fetch |
 | **Ferramentas** | pnpm (workspace, via `npx`), uv, Makefile, ruff, pytest + factory_boy + freezegun + responses, ESLint, Vitest + Testing Library, GitHub Actions |
-| **Serviços externos** | Runware (IA), TypeSafe (classificador Jev 1.14) [Proposta], AbacatePay (PIX e cartão), Melhor Envio (frete) [Proposta], storage compatível com S3, SMTP transacional |
+| **Serviços externos** | Runware (IA), TypeSafe (classificador Jev 1.14) [Proposta], AbacatePay (PIX e cartão), Melhor Envio (frete) [Proposta], storage compatível com S3, Mail API da Hostinger (e-mail transacional) |
 
 As versões exatas ficam nos arquivos de lock. PostGIS não é necessário, porque nenhuma regra do MVP depende de geolocalização.
 
@@ -436,7 +436,7 @@ Os ports ficam em `integrations/ports/`, e cada adapter é escolhido por um cami
 | `PaymentGatewayPort` | criar cobrança (PIX ou cartão), consultar; reembolsar com o app Staff | AbacatePay | Sim |
 | `ShippingPort` | cotar | Melhor Envio | Sim |
 | `MediaStoragePort` | URL de upload, URL de download, gravar, apagar | S3 | Disco local |
-| `EmailPort` | enviar | SMTP | Console |
+| `EmailPort` | enviar | Mail API da Hostinger | Console |
 | `AddressLookupPort` (P1) | buscar endereço por CEP | ViaCEP [Proposta] | Sim |
 | `PrintPreparationPort` | gerar o 3D a partir da imagem do pedido, analisar, reparar, multicolor | **Futuro**, só descrito aqui | - |
 

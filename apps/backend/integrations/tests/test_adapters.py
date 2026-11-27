@@ -12,9 +12,12 @@ import requests
 import responses
 from botocore.response import StreamingBody
 from botocore.stub import Stubber
+from hostinger_mail_api import SendApi
+from hostinger_mail_api.rest import ApiException
 
 from common.exceptions import PaymentDeclined, ServiceBusy, UpstreamUnavailable
 from integrations.adapters.abacatepay import AbacatePayAdapter
+from integrations.adapters.email_hostinger import HostingerEmailAdapter
 from integrations.adapters.media_s3 import S3MediaAdapter
 from integrations.adapters.melhor_envio import MelhorEnvioAdapter
 from integrations.adapters.runware import RunwareImageGenerationAdapter
@@ -457,3 +460,37 @@ def test_typesafe_unexpected_body_is_permanent(_keys):
     responses.post(TYPESAFE, json={"answers": {}})
     with pytest.raises(ProviderPermanentError):
         TypeSafeClassificationAdapter().classify(image=b"png", target="photo")
+
+
+@pytest.fixture
+def _mail(settings):
+    settings.HOSTINGER_MAIL_API_TOKEN = "chave"
+    settings.HOSTINGER_MAIL_MAILBOX_ID = "AC1a2b3c4d5e6f7g"
+    settings.HOSTINGER_MAIL_FROM_NAME = "EuMini"
+
+
+def test_hostinger_email_sends_from_the_mailbox(_mail, monkeypatch):
+    calls = []
+    monkeypatch.setattr(
+        SendApi,
+        "send_email",
+        lambda self, mailbox, request, **kw: calls.append((self, mailbox, request)),
+    )
+    HostingerEmailAdapter().send(
+        to="ana@exemplo.com", subject="Oi", body="texto", html_body="<b>x</b>"
+    )
+    ((api, mailbox, request),) = calls
+    assert mailbox == "AC1a2b3c4d5e6f7g"
+    assert api.api_client.configuration.access_token == "chave"
+    assert request.to == ["ana@exemplo.com"]
+    assert (request.subject, request.text, request.html) == ("Oi", "texto", "<b>x</b>")
+    assert request.display_name == "EuMini"
+
+
+def test_hostinger_email_error_propagates(_mail, monkeypatch):
+    def refuse(self, mailbox, request, **kw):
+        raise ApiException(status=403, reason="Forbidden")
+
+    monkeypatch.setattr(SendApi, "send_email", refuse)
+    with pytest.raises(ApiException):
+        HostingerEmailAdapter().send(to="ana@exemplo.com", subject="Oi", body="texto")

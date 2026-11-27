@@ -17,6 +17,8 @@ dependencies = [
     "pillow-heif>=1.0",
     "structlog>=24.0",
     "requests>=2.31",
+    # Envio de e-mail pela Mail API da Hostinger.
+    "hostinger_mail_api>=1.19",
     "cryptography>=42.0",
     "gunicorn>=23.0",
 ]

@@ -69,7 +69,7 @@ O resto é pelo app Staff:
 | Pagamento | **Simulado** | Chaves da AbacatePay |
 | Frete | **Simulado** | Credenciais do Melhor Envio |
 | Arquivos | Disco local | Credenciais da AWS |
-| E-mail | Terminal de `make backend` | Dados de SMTP |
+| E-mail | Terminal de `make backend` | Token e caixa da Mail API da Hostinger |
 
 Os nomes das classes reais estão em `.env.example`. Só os testes automatizados usam geração simulada.
 

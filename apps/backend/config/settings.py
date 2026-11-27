@@ -281,13 +281,10 @@ AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME", default="")
 AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME", default="")
 
 # E-mail.
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = env("EMAIL_HOST", default="localhost")
-EMAIL_PORT = env.int("EMAIL_PORT", default=587)
-EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
-EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="EuMini <nao-responda@exemplo.com>")
+# Mail API da Hostinger: o remetente é a caixa do ID (dev_tool_hostinger_mailboxes lista).
+HOSTINGER_MAIL_API_TOKEN = env("HOSTINGER_MAIL_API_TOKEN", default="")
+HOSTINGER_MAIL_MAILBOX_ID = env("HOSTINGER_MAIL_MAILBOX_ID", default="")
+HOSTINGER_MAIL_FROM_NAME = env("HOSTINGER_MAIL_FROM_NAME", default="EuMini")
 
 # --- Segurança em produção ---
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
